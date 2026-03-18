@@ -26,13 +26,8 @@
       --radius: 18px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -205,15 +200,8 @@
       -webkit-appearance: none;
     }
 
-    input,
-    select {
-      min-height: 52px;
-    }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
+    input, select { min-height: 52px; }
+    textarea { min-height: 120px; resize: vertical; }
 
     input[type="file"] {
       padding: 12px;
@@ -256,9 +244,7 @@
       min-height: 58px;
     }
 
-    .selector-trigger:hover {
-      background: #fafcff;
-    }
+    .selector-trigger:hover { background: #fafcff; }
 
     .selector-trigger strong {
       display: block;
@@ -295,9 +281,7 @@
       display: block;
     }
 
-    .accordion-group + .accordion-group {
-      margin-top: 10px;
-    }
+    .accordion-group + .accordion-group { margin-top: 10px; }
 
     .accordion-button {
       width: 100%;
@@ -315,9 +299,7 @@
       color: var(--text);
     }
 
-    .accordion-button:hover {
-      background: #f8fafc;
-    }
+    .accordion-button:hover { background: #f8fafc; }
 
     .accordion-button .meta {
       font-size: 0.82rem;
@@ -354,9 +336,7 @@
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .project-option.selectable {
-      cursor: pointer;
-    }
+    .project-option.selectable { cursor: pointer; }
 
     .project-option.selectable:hover {
       border-color: #94a3b8;
@@ -369,9 +349,7 @@
       background: #f8fafc;
     }
 
-    .project-option.coming-soon {
-      opacity: 0.7;
-    }
+    .project-option.coming-soon { opacity: 0.7; }
 
     .project-option h4 {
       margin: 0 0 6px;
@@ -420,9 +398,7 @@
       display: none;
     }
 
-    .selected-project.show {
-      display: block;
-    }
+    .selected-project.show { display: block; }
 
     .actions {
       display: flex;
@@ -443,27 +419,14 @@
       transition: transform 0.04s ease, background 0.2s ease, opacity 0.2s ease;
     }
 
-    .btn:active {
-      transform: translateY(1px);
-    }
+    .btn:active { transform: translateY(1px); }
 
     .btn-primary {
       background: var(--primary);
       color: #fff;
     }
 
-    .btn-primary:hover {
-      background: #111f34;
-    }
-
-    .btn-secondary {
-      background: #e8edf3;
-      color: var(--text);
-    }
-
-    .btn-secondary:hover {
-      background: #dde5ee;
-    }
+    .btn-primary:hover { background: #111f34; }
 
     .btn-ghost {
       background: #fff;
@@ -471,22 +434,16 @@
       border: 1px solid var(--line);
     }
 
-    .btn-ghost:hover {
-      background: #f8fafc;
-    }
+    .btn-ghost:hover { background: #f8fafc; }
 
     .btn-cta {
       background: #0f172a;
       color: #fff;
     }
 
-    .btn-cta:hover {
-      background: #16253f;
-    }
+    .btn-cta:hover { background: #16253f; }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     .results {
       display: none;
@@ -496,9 +453,7 @@
       padding: 16px 14px;
     }
 
-    .results.active {
-      display: block;
-    }
+    .results.active { display: block; }
 
     .results h2 {
       margin: 0 0 6px;
@@ -620,9 +575,7 @@
       display: none;
     }
 
-    .validation.active {
-      display: block;
-    }
+    .validation.active { display: block; }
 
     .completion-screen {
       display: none;
@@ -637,9 +590,7 @@
       flex-direction: column;
     }
 
-    .completion-screen.active {
-      display: flex;
-    }
+    .completion-screen.active { display: flex; }
 
     .completion-icon {
       width: 72px;
@@ -690,50 +641,20 @@
     }
 
     @media (min-width: 640px) {
-      .page {
-        padding: 24px 18px 48px;
-      }
-
-      .hero {
-        padding: 30px 24px;
-      }
-
-      .hero h1 {
-        font-size: 2rem;
-      }
-
-      .content {
-        padding: 22px 20px 24px;
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-      }
-
-      .actions {
-        flex-direction: row;
-      }
-
-      .actions .btn {
-        width: auto;
-        min-width: 170px;
-      }
-
-      .result-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .step-pill {
-        font-size: 0.8rem;
-      }
-
+      .page { padding: 24px 18px 48px; }
+      .hero { padding: 30px 24px; }
+      .hero h1 { font-size: 2rem; }
+      .content { padding: 22px 20px 24px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+      .actions { flex-direction: row; }
+      .actions .btn { width: auto; min-width: 170px; }
+      .result-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step-pill { font-size: 0.8rem; }
       .completion-actions {
         flex-direction: row;
         justify-content: center;
         max-width: none;
       }
-
       .completion-actions .btn {
         width: auto;
         min-width: 180px;
@@ -741,29 +662,12 @@
     }
 
     @media (min-width: 960px) {
-      .page {
-        padding: 34px 24px 60px;
-      }
-
-      .hero {
-        padding: 38px 34px;
-      }
-
-      .hero h1 {
-        font-size: 2.35rem;
-      }
-
-      .hero p {
-        font-size: 1.02rem;
-      }
-
-      .content {
-        padding: 28px 28px 30px;
-      }
-
-      .section-title {
-        font-size: 1.12rem;
-      }
+      .page { padding: 34px 24px 60px; }
+      .hero { padding: 38px 34px; }
+      .hero h1 { font-size: 2.35rem; }
+      .hero p { font-size: 1.02rem; }
+      .content { padding: 28px 28px 30px; }
+      .section-title { font-size: 1.12rem; }
     }
   </style>
 </head>
@@ -774,12 +678,8 @@
         <div class="hero">
           <div class="eyebrow">Project Cost Estimator</div>
           <h1>Want to know how much your project will cost?</h1>
-          <p>
-            Real Contractor Estimate — Powered by Tamay Enterprises
-          </p>
-          <div class="microcopy">
-            No obligation. No generic ranges. Just real-world pricing.
-          </div>
+          <p>Real Contractor Estimate — Powered by Tamay Enterprises</p>
+          <div class="microcopy">No obligation. No generic ranges. Just real-world pricing.</div>
         </div>
 
         <div class="content">
@@ -961,8 +861,8 @@
                 </div>
 
                 <div class="field">
-                  <label for="wallScope" id="wallScopeLabel">Size of the affected wall or area</label>
-                  <select id="wallScope"></select>
+                  <label for="scopeContext" id="scopeContextLabel">Size of the affected wall or area</label>
+                  <select id="scopeContext"></select>
                 </div>
 
                 <div class="field">
@@ -1022,7 +922,7 @@
                 </div>
 
                 <div class="field">
-                  <label for="ceilingHeight" id="ceilingHeightLabel">Height of the work area</label>
+                  <label for="workHeightLabelTarget" id="workHeightLabel">Height of the work area</label>
                   <select id="ceilingHeight">
                     <option value="standard">Less than 8 ft</option>
                     <option value="medium">8 to 10 ft</option>
@@ -1148,82 +1048,80 @@
         baseMin: 18,
         baseMax: 35,
         hours: 1.5,
-        materials: [
-          "Patch repair kit",
-          "Joint compound",
-          "Basic tape",
-          "Minor consumables"
-        ]
+        materials: ["Patch repair kit", "Joint compound", "Basic tape", "Minor consumables"]
       },
       medium: {
         label: "Medium patch",
         baseMin: 35,
         baseMax: 70,
         hours: 2.5,
-        materials: [
-          "1 drywall sheet or equivalent piece",
-          "Joint compound",
-          "Drywall tape",
-          "Screws",
-          "Minor consumables"
-        ]
+        materials: ["1 drywall sheet or equivalent piece", "Joint compound", "Drywall tape", "Screws", "Minor consumables"]
       },
       large: {
         label: "Large patch",
         baseMin: 70,
         baseMax: 125,
         hours: 4,
-        materials: [
-          "1 to 2 drywall sheets",
-          "Joint compound",
-          "Drywall tape",
-          "Screws",
-          "Minor consumables"
-        ]
+        materials: ["1 to 2 drywall sheets", "Joint compound", "Drywall tape", "Screws", "Minor consumables"]
       },
       xlarge: {
         label: "Very large patch",
         baseMin: 125,
         baseMax: 220,
         hours: 6,
-        materials: [
-          "2 to 3 drywall sheets",
-          "Additional joint compound",
-          "Drywall tape",
-          "Screws",
-          "Consumables and reinforcement"
-        ]
+        materials: ["2 to 3 drywall sheets", "Additional joint compound", "Drywall tape", "Screws", "Consumables and reinforcement"]
       }
     };
 
-    const wallScopeOptions = {
-      wall: [
-        { value: "small-area", label: "Small wall area (less than 4 ft)" },
-        { value: "standard-wall", label: "Standard wall (up to 8 ft)" },
-        { value: "large-wall", label: "Large wall (more than 8 ft)" },
-        { value: "connected-walls", label: "Multiple connected walls" }
-      ],
-      ceiling: [
-        { value: "small-area", label: "Small ceiling area (less than 4 ft)" },
-        { value: "standard-wall", label: "Standard ceiling section (up to 8 ft)" },
-        { value: "large-wall", label: "Large ceiling area (more than 8 ft)" },
-        { value: "connected-walls", label: "Multiple connected ceiling areas" }
-      ]
-    };
-
-    const paintBlendOptions = {
-      wall: [
-        { value: "patch-only", label: "Only the patch area" },
-        { value: "full-wall", label: "Entire wall" },
-        { value: "connected-walls", label: "Connected walls" },
-        { value: "not-sure", label: "Not sure" }
-      ],
-      ceiling: [
-        { value: "patch-only", label: "Only the patch area" },
-        { value: "full-wall", label: "Entire ceiling area" },
-        { value: "connected-walls", label: "Connected ceiling areas" },
-        { value: "not-sure", label: "Not sure" }
-      ]
+    const drywallContextConfig = {
+      wall: {
+        scopeLabel: "Size of the affected wall or area",
+        scopeOptions: [
+          { value: "small-area", label: "Small wall area (less than 4 ft)" },
+          { value: "standard-surface", label: "Standard wall (up to 8 ft)" },
+          { value: "large-surface", label: "Large wall (more than 8 ft)" },
+          { value: "connected-surfaces", label: "Multiple connected walls" }
+        ],
+        paintLabel: "What area should be painted?",
+        paintOptions: [
+          { value: "patch-only", label: "Only the patch area" },
+          { value: "full-surface", label: "Entire wall" },
+          { value: "connected-surfaces", label: "Connected walls" },
+          { value: "not-sure", label: "Not sure" }
+        ],
+        heightLabel: "Height of the work area",
+        summaryMap: {
+          standardSurface: "Adjustment for standard wall",
+          largeSurface: "Adjustment for large wall",
+          connectedSurfaces: "Adjustment for multiple connected walls",
+          fullSurfacePaint: "Includes painting the full wall",
+          connectedSurfacePaint: "Includes painting connected walls"
+        }
+      },
+      ceiling: {
+        scopeLabel: "Size of the affected ceiling area",
+        scopeOptions: [
+          { value: "small-area", label: "Small ceiling area (less than 4 ft)" },
+          { value: "standard-surface", label: "Standard ceiling section (up to 8 ft)" },
+          { value: "large-surface", label: "Large ceiling area (more than 8 ft)" },
+          { value: "connected-surfaces", label: "Multiple connected ceiling areas" }
+        ],
+        paintLabel: "What ceiling area should be painted?",
+        paintOptions: [
+          { value: "patch-only", label: "Only the patch area" },
+          { value: "full-surface", label: "Entire ceiling area" },
+          { value: "connected-surfaces", label: "Connected ceiling areas" },
+          { value: "not-sure", label: "Not sure" }
+        ],
+        heightLabel: "Height of the ceiling work area",
+        summaryMap: {
+          standardSurface: "Adjustment for standard ceiling section",
+          largeSurface: "Adjustment for large ceiling area",
+          connectedSurfaces: "Adjustment for multiple connected ceiling areas",
+          fullSurfacePaint: "Includes painting the full ceiling area",
+          connectedSurfacePaint: "Includes painting connected ceiling areas"
+        }
+      }
     };
 
     let currentStep = 1;
@@ -1248,11 +1146,11 @@
     const resultsProjectName = document.getElementById("resultsProjectName");
 
     const damageLocation = document.getElementById("damageLocation");
-    const wallScope = document.getElementById("wallScope");
+    const scopeContext = document.getElementById("scopeContext");
     const paintBlend = document.getElementById("paintBlend");
-    const wallScopeLabel = document.getElementById("wallScopeLabel");
+    const scopeContextLabel = document.getElementById("scopeContextLabel");
     const paintBlendLabel = document.getElementById("paintBlendLabel");
-    const ceilingHeightLabel = document.getElementById("ceilingHeightLabel");
+    const workHeightLabel = document.getElementById("workHeightLabel");
 
     const hotCompletionScreen = document.getElementById("hotCompletionScreen");
     const doneCompletionScreen = document.getElementById("doneCompletionScreen");
@@ -1277,6 +1175,29 @@
 
     function currency(value) {
       return "$" + Math.round(value).toLocaleString("en-US");
+    }
+
+    function getDrywallContext() {
+      return damageLocation.value === "ceiling" ? drywallContextConfig.ceiling : drywallContextConfig.wall;
+    }
+
+    function setOptions(selectEl, options, preferredValue = null) {
+      const safeValue = options.some(o => o.value === preferredValue) ? preferredValue : options[0].value;
+      selectEl.innerHTML = options.map(o => `<option value="${o.value}">${o.label}</option>`).join("");
+      selectEl.value = safeValue;
+    }
+
+    function updateDrywallContextUI() {
+      const ctx = getDrywallContext();
+      const previousScope = scopeContext.value;
+      const previousPaint = paintBlend.value;
+
+      scopeContextLabel.textContent = ctx.scopeLabel;
+      paintBlendLabel.textContent = ctx.paintLabel;
+      workHeightLabel.textContent = ctx.heightLabel;
+
+      setOptions(scopeContext, ctx.scopeOptions, previousScope);
+      setOptions(paintBlend, ctx.paintOptions, previousPaint);
     }
 
     function hideAllEndStates() {
@@ -1313,38 +1234,6 @@
       box.classList.remove("active");
     }
 
-    function populateSelect(selectEl, options, selectedValue = null) {
-      selectEl.innerHTML = "";
-      options.forEach(option => {
-        const opt = document.createElement("option");
-        opt.value = option.value;
-        opt.textContent = option.label;
-        if (selectedValue && selectedValue === option.value) {
-          opt.selected = true;
-        }
-        selectEl.appendChild(opt);
-      });
-    }
-
-    function updateContextualFields() {
-      const mode = damageLocation.value === "ceiling" ? "ceiling" : "wall";
-      const currentWallScope = wallScope.value;
-      const currentPaintBlend = paintBlend.value;
-
-      if (mode === "wall") {
-        wallScopeLabel.textContent = "Size of the affected wall or area";
-        paintBlendLabel.textContent = "What area should be painted?";
-        ceilingHeightLabel.textContent = "Height of the work area";
-      } else {
-        wallScopeLabel.textContent = "Size of the affected ceiling area";
-        paintBlendLabel.textContent = "What ceiling area should be painted?";
-        ceilingHeightLabel.textContent = "Height of the ceiling area";
-      }
-
-      populateSelect(wallScope, wallScopeOptions[mode], currentWallScope);
-      populateSelect(paintBlend, paintBlendOptions[mode], currentPaintBlend);
-    }
-
     function validateStep(step) {
       if (step === 1) {
         clearValidation(validationStep1);
@@ -1367,13 +1256,8 @@
         }
       }
 
-      if (step === 3) {
-        clearValidation(validationStep3);
-      }
-
-      if (step === 4) {
-        clearValidation(validationStep4);
-      }
+      if (step === 3) clearValidation(validationStep3);
+      if (step === 4) clearValidation(validationStep4);
 
       return true;
     }
@@ -1382,11 +1266,8 @@
       stepPills.forEach((pill, index) => {
         const pillStep = index + 1;
         pill.classList.remove("active", "done");
-        if (pillStep < step) {
-          pill.classList.add("done");
-        } else if (pillStep === step) {
-          pill.classList.add("active");
-        }
+        if (pillStep < step) pill.classList.add("done");
+        else if (pillStep === step) pill.classList.add("active");
       });
     }
 
@@ -1395,9 +1276,7 @@
 
       stepPanels.forEach(panel => {
         panel.classList.remove("active");
-        if (Number(panel.dataset.step) === step) {
-          panel.classList.add("active");
-        }
+        if (Number(panel.dataset.step) === step) panel.classList.add("active");
       });
 
       if (step === 5) {
@@ -1415,11 +1294,8 @@
     }
 
     function togglePaintBlendField() {
-      if (paintRequired.value === "yes") {
-        paintBlendField.classList.remove("hidden");
-      } else {
-        paintBlendField.classList.add("hidden");
-      }
+      if (paintRequired.value === "yes") paintBlendField.classList.remove("hidden");
+      else paintBlendField.classList.add("hidden");
     }
 
     function setSelectedProject(projectKey, displayName) {
@@ -1452,6 +1328,8 @@
     }
 
     function calculateEstimate(formData) {
+      const ctx = drywallContextConfig[formData.damageLocation === "ceiling" ? "ceiling" : "wall"];
+
       let preset = materialPresets[formData.damageSize];
       let minMaterials = preset.baseMin;
       let maxMaterials = preset.baseMax;
@@ -1513,26 +1391,18 @@
           adjustments.push("Includes painting the patch area only");
         }
 
-        if (formData.paintBlend === "full-wall") {
+        if (formData.paintBlend === "full-surface") {
           hours += 2.5;
           minMaterials += 35;
           maxMaterials += 85;
-          adjustments.push(
-            formData.damageLocation === "ceiling"
-              ? "Includes painting the full ceiling area"
-              : "Includes painting the full wall"
-          );
+          adjustments.push(ctx.summaryMap.fullSurfacePaint);
         }
 
-        if (formData.paintBlend === "connected-walls") {
+        if (formData.paintBlend === "connected-surfaces") {
           hours += 4.5;
           minMaterials += 65;
           maxMaterials += 160;
-          adjustments.push(
-            formData.damageLocation === "ceiling"
-              ? "Includes painting connected ceiling areas"
-              : "Includes painting connected walls"
-          );
+          adjustments.push(ctx.summaryMap.connectedSurfacePaint);
         }
 
         if (formData.paintBlend === "not-sure") {
@@ -1553,44 +1423,31 @@
         }
       }
 
-      if (formData.wallScope === "standard-wall") {
+      if (formData.scopeContext === "standard-surface") {
         hours += 0.5;
         minMaterials += 10;
         maxMaterials += 20;
-        adjustments.push(
-          formData.damageLocation === "ceiling"
-            ? "Adjustment for standard ceiling section"
-            : "Adjustment for standard wall"
-        );
+        adjustments.push(ctx.summaryMap.standardSurface);
       }
 
-      if (formData.wallScope === "large-wall") {
+      if (formData.scopeContext === "large-surface") {
         hours += 1.0;
         minMaterials += 20;
         maxMaterials += 45;
-        adjustments.push(
-          formData.damageLocation === "ceiling"
-            ? "Adjustment for large ceiling area"
-            : "Adjustment for large wall"
-        );
+        adjustments.push(ctx.summaryMap.largeSurface);
       }
 
-      if (formData.wallScope === "connected-walls") {
+      if (formData.scopeContext === "connected-surfaces") {
         hours += 1.5;
         minMaterials += 30;
         maxMaterials += 70;
-        adjustments.push(
-          formData.damageLocation === "ceiling"
-            ? "Adjustment for multiple connected ceiling areas"
-            : "Adjustment for multiple connected walls"
-        );
+        adjustments.push(ctx.summaryMap.connectedSurfaces);
       }
 
       hours = Math.round(hours * 10) / 10;
 
       const laborMin = hours * CREW_HOURLY_RATE;
       const laborMax = laborMin * 1.15;
-
       const totalMin = minMaterials + laborMin;
       const totalMax = maxMaterials + laborMax;
 
@@ -1620,9 +1477,9 @@
         timeline: document.getElementById("timeline").value,
         damageLocation: damageLocation.value,
         damageSize: document.getElementById("damageSize").value,
-        wallScope: wallScope.value,
+        scopeContext: scopeContext.value,
         texture: document.getElementById("texture").value,
-        paintRequired: document.getElementById("paintRequired").value,
+        paintRequired: paintRequired.value,
         paintBlend: paintBlend.value,
         paintAvailable: document.getElementById("paintAvailable").value,
         insulation: document.getElementById("insulation").value,
@@ -1650,7 +1507,7 @@
 
       payload.append("damage_location", formData.damageLocation);
       payload.append("damage_size", formData.damageSize);
-      payload.append("wall_scope", formData.wallScope);
+      payload.append("scope_context", formData.scopeContext);
       payload.append("texture", formData.texture);
       payload.append("paint_required", formData.paintRequired);
       payload.append("paint_area", formData.paintBlend);
@@ -1667,11 +1524,7 @@
       payload.append("materials_considered", estimateData.materialsList.join(", "));
       payload.append("calculation_summary", estimateData.adjustments.join(" | "));
 
-      if (leadType === "HOT") {
-        payload.append("_subject", `HOT LEAD – ${formData.projectDisplayName}`);
-      } else {
-        payload.append("_subject", `COLD LEAD – ${formData.projectDisplayName}`);
-      }
+      payload.append("_subject", `${leadType} LEAD – ${formData.projectDisplayName}`);
 
       const files = projectFiles.files;
       if (files && files.length > 0) {
@@ -1683,15 +1536,10 @@
       const response = await fetch(FORMSPREE_ENDPOINT, {
         method: "POST",
         body: payload,
-        headers: {
-          Accept: "application/json"
-        }
+        headers: { Accept: "application/json" }
       });
 
-      if (!response.ok) {
-        throw new Error("Submission failed.");
-      }
-
+      if (!response.ok) throw new Error("Submission failed.");
       return response;
     }
 
@@ -1717,7 +1565,7 @@
       resultsProjectName.textContent = "Project Type: Drywall Patch / Wall Repair";
 
       setSelectedProject("drywall_patch_wall_repair", "Drywall Patch / Wall Repair");
-      updateContextualFields();
+      updateDrywallContextUI();
       togglePaintBlendField();
       hideAllEndStates();
       stepper.classList.remove("hidden");
@@ -1725,12 +1573,10 @@
     }
 
     projectSelectorTrigger.addEventListener("click", toggleProjectSelector);
-
     drywallProjectOption.addEventListener("click", function() {
       setSelectedProject("drywall_patch_wall_repair", "Drywall Patch / Wall Repair");
     });
-
-    damageLocation.addEventListener("change", updateContextualFields);
+    damageLocation.addEventListener("change", updateDrywallContextUI);
 
     setupAccordions();
 
@@ -1763,25 +1609,17 @@
 
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
-
       if (!validateStep(4)) return;
 
       const formData = getFormData();
       latestEstimate = calculateEstimate(formData);
 
-      materialsCost.textContent =
-        `${currency(latestEstimate.minMaterials)} – ${currency(latestEstimate.maxMaterials)}`;
-
-      laborCost.textContent =
-        `${currency(latestEstimate.laborMin)} – ${currency(latestEstimate.laborMax)}`;
-
-      totalCost.textContent =
-        `${currency(latestEstimate.totalMin)} – ${currency(latestEstimate.totalMax)}`;
-
+      materialsCost.textContent = `${currency(latestEstimate.minMaterials)} – ${currency(latestEstimate.maxMaterials)}`;
+      laborCost.textContent = `${currency(latestEstimate.laborMin)} – ${currency(latestEstimate.laborMax)}`;
+      totalCost.textContent = `${currency(latestEstimate.totalMin)} – ${currency(latestEstimate.totalMax)}`;
       resultsProjectName.textContent = `Project Type: ${formData.projectDisplayName}`;
 
       breakdownList.innerHTML = "";
-
       const summaryItems = [
         `Estimated crew time: ${latestEstimate.hours} hours`,
         `Materials considered: ${latestEstimate.materialsList.join(", ")}`
@@ -1838,7 +1676,7 @@
     startNewFromDone.addEventListener("click", resetExperience);
 
     setSelectedProject("drywall_patch_wall_repair", "Drywall Patch / Wall Repair");
-    updateContextualFields();
+    updateDrywallContextUI();
     hideAllEndStates();
     showStep(1);
   </script>
