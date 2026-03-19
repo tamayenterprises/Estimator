@@ -82,6 +82,22 @@
       max-width: 760px;
     }
 
+    .hero .subline {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1rem;
+      line-height: 1.5;
+      max-width: 760px;
+    }
+
+    .hero .powered-by {
+      display: inline;
+      font-size: 0.84em;
+      opacity: 0.88;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
     .hero .microcopy {
       margin-top: 10px;
       color: rgba(255,255,255,0.86);
@@ -664,7 +680,10 @@
         <div class="hero">
           <div class="eyebrow">Project Cost Estimator</div>
           <h1>Want to know how much your project will cost?</h1>
-          <p>Real-World Contractor Pricing — Powered by Tamay Enterprises Inc</p>
+          <p class="subline">
+            Real-World Contractor Pricing
+            <span class="powered-by">— Powered by Tamay Enterprises Inc.</span>
+          </p>
           <div class="microcopy">No obligation. No generic ranges. Based on real contractor experience.</div>
         </div>
 
@@ -1458,11 +1477,12 @@
       let maxMaterials = preset.materialMax;
       let hours = preset.hours;
       let adjustments = [];
+      let internalAdjustments = [];
 
       adjustments.push(`Selected base: ${preset.label}`);
-      adjustments.push(`Service zone: ${leadMeta.serviceZone}`);
-      adjustments.push(`Distance band: ${leadMeta.distanceBand}`);
-      adjustments.push(`Lead priority: ${leadMeta.leadPriority}`);
+      internalAdjustments.push(`Service zone: ${leadMeta.serviceZone}`);
+      internalAdjustments.push(`Distance band: ${leadMeta.distanceBand}`);
+      internalAdjustments.push(`Lead priority: ${leadMeta.leadPriority}`);
 
       if (formData.damageLocation === "ceiling") {
         const a = PRICING.adjustments.damageLocation.ceiling;
@@ -1605,7 +1625,7 @@
       totalMin *= zoneMultiplier;
       totalMax *= zoneMultiplier;
 
-      adjustments.push(`Market adjustment applied: x${zoneMultiplier.toFixed(2)}`);
+      internalAdjustments.push(`Market adjustment applied: x${zoneMultiplier.toFixed(2)}`);
 
       return {
         hours,
@@ -1617,6 +1637,7 @@
         totalMax,
         materialsList: preset.materials,
         adjustments,
+        internalAdjustments,
         leadMeta
       };
     }
@@ -1687,7 +1708,7 @@
       payload.append("estimated_total_range", `${currency(estimateData.totalMin)} – ${currency(estimateData.totalMax)}`);
       payload.append("estimated_hours", `${estimateData.hours} hours`);
       payload.append("materials_considered", estimateData.materialsList.join(", "));
-      payload.append("calculation_summary", estimateData.adjustments.join(" | "));
+      payload.append("calculation_summary", [...estimateData.adjustments, ...estimateData.internalAdjustments].join(" | "));
 
       payload.append("_subject", `${leadType} LEAD – ${formData.projectDisplayName} – ${leadMeta.serviceZone.toUpperCase()} – ${leadMeta.leadPriority.toUpperCase()}`);
 
