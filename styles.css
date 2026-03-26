@@ -1,36 +1,134 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial;
-  background: #f4f7fb;
   margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef2f7 100%);
+  color: #0f172a;
+}
+
+/* LAYOUT */
+.page {
+  padding: 20px;
 }
 
 .container {
-  max-width: 600px;
-  margin: 60px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-h1 {
+.card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+/* HEADER */
+.hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: white;
+  padding: 30px;
   text-align: center;
 }
 
+.hero h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.hero p {
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* FORM */
+form {
+  padding: 25px;
+}
+
+/* STEPS */
+.step {
+  display: none;
+}
+
+.step.active {
+  display: block;
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+/* INPUTS */
 label {
+  font-weight: bold;
   display: block;
   margin-top: 15px;
+}
+
+select, input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 6px;
+  border-radius: 12px;
+  border: 1px solid #cbd5e1;
+  font-size: 16px;
+}
+
+/* BUTTONS */
+button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button[type="submit"],
+#toStep2,
+#toStep3 {
+  background: #0f172a;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+#backTo1,
+#backTo2 {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* RESULTS */
+#results {
+  padding: 25px;
+  text-align: center;
+}
+
+#results h2 {
+  margin-bottom: 20px;
+}
+
+#results p {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+#total {
+  font-size: 22px;
   font-weight: bold;
 }
 
-select, button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-}
-
-button {
-  background: black;
-  color: white;
-  margin-top: 20px;
-  cursor: pointer;
+/* UTIL */
+.hidden {
+  display: none;
 }
