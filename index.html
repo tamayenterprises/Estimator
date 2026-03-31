@@ -13,8 +13,12 @@
       <div class="card">
 
         <div class="hero">
-          <h1>Want to know how much your project will cost?</h1>
-          <p>Real contractor pricing. No guesswork. Built from real job experience.</p>
+          <h1>Project Cost Estimator — Built from Real Experience</h1>
+          <p>
+            Real contractor pricing that guides you through what your project truly involves — materials, labor, and real conditions.
+          </p>
+          <div class="hero-micro">Designed to help you make smarter project decisions.</div>
+          <div class="hero-powered">Powered by Tamay Enterprises Inc.</div>
         </div>
 
         <div class="content">
@@ -105,7 +109,10 @@
 
               <div class="validation" id="validationStep1"></div>
 
-             <button type="button" id="nextToStep2" class="btn btn-primary">Next</button>
+              <div class="actions">
+                <button type="button" id="nextToStep2" class="btn btn-primary">Next</button>
+              </div>
+            </div>
 
             <!-- STEP 2 -->
             <div class="step step-panel" data-step="2">
@@ -144,8 +151,10 @@
 
               <div class="validation" id="validationStep2"></div>
 
-              <button type="button" id="backToStep1">Back</button>
-              <button type="button" id="nextToStep3">Next</button>
+              <div class="actions actions-split">
+                <button type="button" id="backToStep1" class="btn btn-muted">Back</button>
+                <button type="button" id="nextToStep3" class="btn btn-primary">Next</button>
+              </div>
             </div>
 
             <!-- STEP 3 -->
@@ -271,8 +280,10 @@
 
               <div class="validation" id="validationStep3"></div>
 
-              <button type="button" id="backToStep2">Back</button>
-              <button type="button" id="nextToStep4">Next</button>
+              <div class="actions actions-split">
+                <button type="button" id="backToStep2" class="btn btn-muted">Back</button>
+                <button type="button" id="nextToStep4" class="btn btn-primary">Next</button>
+              </div>
             </div>
 
             <!-- STEP 4 -->
@@ -513,13 +524,15 @@
 
               <div class="validation" id="validationStep4"></div>
 
-              <button type="button" id="backToStep3">Back</button>
-              <button type="submit">Calculate Estimate</button>
+              <div class="actions actions-split">
+                <button type="button" id="backToStep3" class="btn btn-muted">Back</button>
+                <button type="submit" class="btn btn-primary">Calculate Estimate</button>
+              </div>
             </div>
           </form>
 
           <!-- RESULTS -->
-          <div id="results" class="hidden">
+          <div id="results" class="results hidden">
             <h2>Preliminary Estimate</h2>
             <p id="resultsProjectName">Project Type: Drywall Patch / Wall Repair</p>
             <p class="results-intro">Based on the information provided, here is a preliminary estimate for your selected project.</p>
@@ -531,8 +544,10 @@
             <div class="cta-panel">
               <h3>Ready for a more accurate quote?</h3>
               <p>A Tamay team member will review your project, confirm details, and provide a final accurate quote.</p>
-            <button class="btn btn-gold">Get My Exact Quote</button>
-              <button class="btn btn-muted">Done</button>
+              <div class="actions actions-split">
+                <button type="button" id="hotLeadBtn" class="btn btn-gold">Get My Exact Quote</button>
+                <button type="button" id="doneBtn" class="btn btn-muted">Done</button>
+              </div>
             </div>
 
             <div class="breakdown">
@@ -551,7 +566,7 @@
             <h2>Thank you.</h2>
             <p>A Tamay team member will contact you shortly to review your project and provide a final accurate quote.</p>
             <div class="completion-actions">
-              <button type="button" id="startNewFromHot">Start New Estimate</button>
+              <button type="button" id="startNewFromHot" class="btn btn-primary">Start New Estimate</button>
             </div>
           </div>
 
@@ -560,7 +575,7 @@
             <h2>Thank you for using our estimator.</h2>
             <p>We're here whenever you're ready.</p>
             <div class="completion-actions">
-              <button type="button" id="startNewFromDone">Start New Estimate</button>
+              <button type="button" id="startNewFromDone" class="btn btn-primary">Start New Estimate</button>
             </div>
           </div>
 
