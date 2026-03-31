@@ -341,7 +341,6 @@ const selectedProjectSubLabel = document.getElementById("selectedProjectSubLabel
 const selectedProjectMessageText = document.getElementById("selectedProjectMessageText");
 const projectSelectorShell = document.getElementById("projectSelectorShell");
 const projectSelectorTrigger = document.getElementById("projectSelectorTrigger");
-const projectSelectorPanel = document.getElementById("projectSelectorPanel");
 
 const drywallProjectOption = document.getElementById("drywallProjectOption");
 const lightingProjectOption = document.getElementById("lightingProjectOption");
@@ -444,20 +443,24 @@ function setOptions(selectEl, options, preferredValue = null) {
 }
 
 function clearValidation(box) {
+  if (!box) return;
   box.textContent = "";
   box.classList.remove("active");
 }
 
 function showValidation(box, message) {
+  if (!box) return;
   box.textContent = message;
   box.classList.add("active");
 }
 
 function hideAllEndStates() {
-  results.classList.add("hidden");
-  results.classList.remove("active");
-  hotCompletionScreen.classList.remove("active");
-  doneCompletionScreen.classList.remove("active");
+  if (results) {
+    results.classList.add("hidden");
+    results.classList.remove("active");
+  }
+  if (hotCompletionScreen) hotCompletionScreen.classList.remove("active");
+  if (doneCompletionScreen) doneCompletionScreen.classList.remove("active");
 }
 
 function updateStepper(step) {
@@ -465,11 +468,8 @@ function updateStepper(step) {
     const pillStep = index + 1;
     pill.classList.remove("active", "done");
 
-    if (pillStep < step) {
-      pill.classList.add("done");
-    } else if (pillStep === step) {
-      pill.classList.add("active");
-    }
+    if (pillStep < step) pill.classList.add("done");
+    else if (pillStep === step) pill.classList.add("active");
   });
 }
 
@@ -478,9 +478,7 @@ function showStep(step) {
 
   stepPanels.forEach((panel) => {
     panel.classList.remove("active");
-    if (Number(panel.dataset.step) === step) {
-      panel.classList.add("active");
-    }
+    if (Number(panel.dataset.step) === step) panel.classList.add("active");
   });
 
   if (step === 5) {
@@ -525,6 +523,8 @@ function setupAccordions() {
   const groups = document.querySelectorAll(".accordion-group");
   groups.forEach((group) => {
     const button = group.querySelector(".accordion-button");
+    if (!button) return;
+
     button.addEventListener("click", () => {
       const isOpen = group.classList.contains("open");
       groups.forEach((g) => g.classList.remove("open"));
@@ -1097,6 +1097,7 @@ function calculatePaintEstimate(formData) {
   internalAdjustments.push(`Lead priority: ${leadMeta.leadPriority}`);
 
   const scopes = formData.paintScopes.length ? formData.paintScopes : ["walls"];
+
   scopes.forEach((scope) => {
     const a = PRICING.paint.scopeAdds[scope];
     if (a) {
@@ -1447,9 +1448,15 @@ function resetExperience() {
   coldLeadSubmitted = false;
   hotLeadSubmitted = false;
 
-  hotLeadBtn.disabled = false;
-  hotLeadBtn.textContent = "Get My Exact Quote";
-  doneBtn.disabled = false;
+  if (hotLeadBtn) {
+    hotLeadBtn.disabled = false;
+    hotLeadBtn.textContent = "Get My Exact Quote";
+  }
+
+  if (doneBtn) {
+    doneBtn.disabled = false;
+  }
+
   breakdownList.innerHTML = "";
 
   setSelectedProject("drywall_patch_wall_repair", "Drywall Patch / Wall Repair");
