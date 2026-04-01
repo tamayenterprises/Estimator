@@ -232,6 +232,33 @@ const PRICING = {
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
+const PROPERTY_TYPE_CONFIG = {
+  house: {
+    multiplier: 1.0,
+    message: ""
+  },
+  multifamily: {
+    multiplier: 1.05,
+    message: "Multi-unit properties may involve coordination between units, tighter access, and additional protection requirements."
+  },
+  condo: {
+    multiplier: 1.08,
+    message: "Condo and co-op projects may require building coordination, insurance documentation, elevator access planning, and restricted work rules."
+  },
+  hoa: {
+    multiplier: 1.12,
+    message: "HOA or managed buildings often require approvals, scheduling coordination, certificates of insurance, and restricted work hours."
+  },
+  commercial: {
+    multiplier: 1.15,
+    message: "Commercial projects may require additional compliance, coordination, safety procedures, and licensed trade documentation."
+  },
+  notSure: {
+    multiplier: 1.08,
+    message: "Property-specific requirements will be confirmed during project review."
+  }
+};
+
 const drywallContextConfig = {
   wall: {
     scopeLabel: "Size of the affected wall or area",
@@ -354,7 +381,7 @@ const validationStep4 = document.getElementById("validationStep4");
 const basicsSubtitle = document.getElementById("basicsSubtitle");
 const detailsSubtitle = document.getElementById("detailsSubtitle");
 
-const propertyType = document.getElementById("propertyType");
+const propertyTypeGlobal = document.getElementById("propertyType");
 const propertyTypeMessage = document.getElementById("propertyTypeMessage");
 
 const drywallBasicsSection = document.getElementById("drywallBasicsSection");
@@ -536,6 +563,19 @@ function setupAccordions() {
   });
 }
 
+function updatePropertyTypeMessage() {
+  const config = PROPERTY_TYPE_CONFIG[propertyTypeGlobal.value] || PROPERTY_TYPE_CONFIG.house;
+
+  if (!config.message) {
+    propertyTypeMessage.textContent = "";
+    propertyTypeMessage.classList.add("hidden");
+    return;
+  }
+
+  propertyTypeMessage.textContent = config.message;
+  propertyTypeMessage.classList.remove("hidden");
+}
+
 function setSelectedProject(projectKey, displayName) {
   projectType.value = projectKey;
   projectDisplayName.value = displayName;
@@ -635,43 +675,6 @@ function updatePaintConditionalFields() {
   const showLead = ["before1980", "before1960", "notSure"].includes(paintYearBuilt.value);
   paintLeadPrepField.classList.toggle("hidden", !showLead);
   if (!showLead) paintLeadPrepMode.value = "standard";
-}
-
-function updatePropertyTypeMessage() {
-  if (!propertyType || !propertyTypeMessage) return;
-
-  const value = propertyType.value;
-
-  if (value === "house") {
-    propertyTypeMessage.textContent =
-      "Projects in single-family homes are typically more straightforward, with fewer restrictions and easier access for work.";
-    propertyTypeMessage.classList.remove("hidden");
-    return;
-  }
-
-  if (["condo", "hoa", "commercial"].includes(value)) {
-    propertyTypeMessage.textContent =
-      "Projects in managed properties often require licensed trades, insurance documentation, coordination with management, and building-specific approvals. This can affect logistics, scheduling, and cost.";
-    propertyTypeMessage.classList.remove("hidden");
-    return;
-  }
-
-  if (value === "multifamily") {
-    propertyTypeMessage.textContent =
-      "Projects in multi-family properties may involve additional coordination, access considerations, and property-specific requirements depending on the building setup.";
-    propertyTypeMessage.classList.remove("hidden");
-    return;
-  }
-
-  if (value === "notSure") {
-    propertyTypeMessage.textContent =
-      "Property type can affect access, coordination, paperwork, and pricing. If you are not sure, we will help confirm it during project review.";
-    propertyTypeMessage.classList.remove("hidden");
-    return;
-  }
-
-  propertyTypeMessage.textContent = "";
-  propertyTypeMessage.classList.add("hidden");
 }
 
 function updateProjectSpecificUI() {
@@ -787,6 +790,7 @@ function classifyLead(formData) {
 function calculateDrywallEstimate(formData) {
   const ctx = drywallContextConfig[formData.damageLocation === "ceiling" ? "ceiling" : "wall"];
   const leadMeta = classifyLead(formData);
+  const propertyConfig = PROPERTY_TYPE_CONFIG[formData.propertyType] || PROPERTY_TYPE_CONFIG.house;
   const crewHourlyRate = PRICING.labor.general.ratePerPerson * PRICING.labor.general.crewSize;
   const preset = PRICING.drywall[formData.damageSize];
 
@@ -930,14 +934,18 @@ function calculateDrywallEstimate(formData) {
   let totalMax = maxMaterials + laborMax;
 
   const zoneMultiplier = leadMeta.multiplier;
-  minMaterials *= zoneMultiplier;
-  maxMaterials *= zoneMultiplier;
-  laborMin *= zoneMultiplier;
-  laborMax *= zoneMultiplier;
-  totalMin *= zoneMultiplier;
-  totalMax *= zoneMultiplier;
+  const propertyMultiplier = propertyConfig.multiplier;
+  const finalMultiplier = zoneMultiplier * propertyMultiplier;
+
+  minMaterials *= finalMultiplier;
+  maxMaterials *= finalMultiplier;
+  laborMin *= finalMultiplier;
+  laborMax *= finalMultiplier;
+  totalMin *= finalMultiplier;
+  totalMax *= finalMultiplier;
 
   internalAdjustments.push(`Market adjustment applied: x${zoneMultiplier.toFixed(2)}`);
+  internalAdjustments.push(`Property type adjustment: x${propertyMultiplier.toFixed(2)}`);
 
   return {
     hours,
@@ -965,6 +973,7 @@ function getFixtureCountMultiplier(count) {
 
 function calculateLightingEstimate(formData) {
   const leadMeta = classifyLead(formData);
+  const propertyConfig = PROPERTY_TYPE_CONFIG[formData.propertyType] || PROPERTY_TYPE_CONFIG.house;
   const crewHourlyRate = PRICING.labor.electrical.ratePerPerson * PRICING.labor.electrical.crewSize;
   const preset = formData.lightingType === "replace" ? PRICING.lighting.replace : PRICING.lighting.add;
 
@@ -1098,14 +1107,18 @@ function calculateLightingEstimate(formData) {
   let totalMax = maxMaterials + laborMax;
 
   const zoneMultiplier = leadMeta.multiplier;
-  minMaterials *= zoneMultiplier;
-  maxMaterials *= zoneMultiplier;
-  laborMin *= zoneMultiplier;
-  laborMax *= zoneMultiplier;
-  totalMin *= zoneMultiplier;
-  totalMax *= zoneMultiplier;
+  const propertyMultiplier = propertyConfig.multiplier;
+  const finalMultiplier = zoneMultiplier * propertyMultiplier;
+
+  minMaterials *= finalMultiplier;
+  maxMaterials *= finalMultiplier;
+  laborMin *= finalMultiplier;
+  laborMax *= finalMultiplier;
+  totalMin *= finalMultiplier;
+  totalMax *= finalMultiplier;
 
   internalAdjustments.push(`Market adjustment applied: x${zoneMultiplier.toFixed(2)}`);
+  internalAdjustments.push(`Property type adjustment: x${propertyMultiplier.toFixed(2)}`);
 
   return {
     hours,
@@ -1124,6 +1137,7 @@ function calculateLightingEstimate(formData) {
 
 function calculatePaintEstimate(formData) {
   const leadMeta = classifyLead(formData);
+  const propertyConfig = PROPERTY_TYPE_CONFIG[formData.propertyType] || PROPERTY_TYPE_CONFIG.house;
   const crewHourlyRate = PRICING.labor.general.ratePerPerson * PRICING.labor.general.crewSize;
 
   let minMaterials = 0;
@@ -1237,14 +1251,18 @@ function calculatePaintEstimate(formData) {
   let totalMax = maxMaterials + laborMax;
 
   const zoneMultiplier = leadMeta.multiplier;
-  minMaterials *= zoneMultiplier;
-  maxMaterials *= zoneMultiplier;
-  laborMin *= zoneMultiplier;
-  laborMax *= zoneMultiplier;
-  totalMin *= zoneMultiplier;
-  totalMax *= zoneMultiplier;
+  const propertyMultiplier = propertyConfig.multiplier;
+  const finalMultiplier = zoneMultiplier * propertyMultiplier;
+
+  minMaterials *= finalMultiplier;
+  maxMaterials *= finalMultiplier;
+  laborMin *= finalMultiplier;
+  laborMax *= finalMultiplier;
+  totalMin *= finalMultiplier;
+  totalMax *= finalMultiplier;
 
   internalAdjustments.push(`Market adjustment applied: x${zoneMultiplier.toFixed(2)}`);
+  internalAdjustments.push(`Property type adjustment: x${propertyMultiplier.toFixed(2)}`);
 
   return {
     hours,
@@ -1271,6 +1289,7 @@ function getFormData() {
   return {
     projectType: projectType.value,
     projectDisplayName: projectDisplayName.value,
+    propertyType: propertyTypeGlobal.value,
 
     fullName: document.getElementById("fullName").value.trim(),
     phone: document.getElementById("phone").value.trim(),
@@ -1279,7 +1298,6 @@ function getFormData() {
     city: document.getElementById("city").value.trim(),
     ownerStatus: document.getElementById("ownerStatus").value,
     timeline: document.getElementById("timeline").value,
-    propertyType: propertyType ? propertyType.value : "house",
 
     damageLocation: damageLocation.value,
     damageSize: damageSize.value,
@@ -1334,6 +1352,7 @@ async function submitLead(leadType, estimateData) {
   payload.append("lead_type", leadType);
   payload.append("project_template", formData.projectDisplayName);
   payload.append("project_type_key", formData.projectType);
+  payload.append("property_type_global", formData.propertyType);
   payload.append("page_name", "Project Cost Estimator");
   payload.append("full_name", formData.fullName);
   payload.append("phone", formData.phone);
@@ -1342,7 +1361,6 @@ async function submitLead(leadType, estimateData) {
   payload.append("city", formData.city);
   payload.append("relationship_to_property", formData.ownerStatus);
   payload.append("timeline", formData.timeline);
-  payload.append("property_type_global", formData.propertyType);
 
   payload.append("distance_band", leadMeta.distanceBand);
   payload.append("service_zone", leadMeta.serviceZone);
@@ -1536,6 +1554,8 @@ paintProjectOption.addEventListener("click", () => {
   setSelectedProject("paint_one_room", "Paint One Room");
 });
 
+propertyTypeGlobal.addEventListener("change", updatePropertyTypeMessage);
+
 damageLocation.addEventListener("change", updateDrywallContextUI);
 paintRequired.addEventListener("change", togglePaintBlendField);
 
@@ -1549,10 +1569,6 @@ paintAfterRepair.addEventListener("change", updateLightingConditionalFields);
 
 paintScopeCheckboxes.forEach((cb) => cb.addEventListener("change", updatePaintConditionalFields));
 paintYearBuilt.addEventListener("change", updatePaintConditionalFields);
-
-if (propertyType) {
-  propertyType.addEventListener("change", updatePropertyTypeMessage);
-}
 
 setupAccordions();
 
