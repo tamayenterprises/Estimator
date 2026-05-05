@@ -557,6 +557,20 @@
       margin-bottom: 20px;
     }
 
+    .hidden-billing-fields {
+      display: none;
+    }
+
+    .stripe-payment-card {
+      margin-top: 18px;
+      padding: 24px;
+    }
+
+    .stripe-element-box {
+      padding: 18px 16px !important;
+      min-height: 56px !important;
+    }
+
     @media (max-width: 640px){
       .shell{padding:12px}
       .card{padding:16px}
@@ -593,86 +607,45 @@
           <div>
             <div class="card summary-box" id="serviceSummaryCard"></div>
 
-            <!-- BILLING DETAILS SECTION -->
-            <div class="card" style="margin-top:18px;">
-              <h2>Billing Details</h2>
-              <p class="sub">Enter your information to complete your booking.</p>
-              
-              <div class="row-2">
-                <div class="field">
-                  <label for="billingFullName">Full Name</label>
-                  <input type="text" id="billingFullName" placeholder="John Doe" />
-                </div>
-                <div class="field">
-                  <label for="billingEmail">Email</label>
-                  <input type="email" id="billingEmail" placeholder="john@example.com" />
-                </div>
-              </div>
-
-              <div class="row-2">
-                <div class="field">
-                  <label for="billingPhone">Phone Number</label>
-                  <input type="tel" id="billingPhone" placeholder="(123) 456-7890" />
-                </div>
-                <div class="field">
-                  <label for="billingCountry">Country</label>
-                  <select id="billingCountry">
-                    <option value="">Select a country</option>
-                    <option value="US">United States</option>
-                    <option value="CA">Canada</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="AU">Australia</option>
-                    <option value="MX">Mexico</option>
-                    <option value="OTHER">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="billingAddress">Street Address</label>
-                <input type="text" id="billingAddress" placeholder="123 Main Street" />
-              </div>
-
-              <div class="field">
-                <label for="billingApartment">Apartment, suite, etc. (optional)</label>
-                <input type="text" id="billingApartment" placeholder="Apt 4B" />
-              </div>
-
-              <div class="row-2">
-                <div class="field">
-                  <label for="billingCity">City</label>
-                  <input type="text" id="billingCity" placeholder="New York" />
-                </div>
-                <div class="field">
-                  <label for="billingState">State / Province</label>
-                  <input type="text" id="billingState" placeholder="NY" />
-                </div>
-              </div>
-
-              <div class="field">
-                <label for="billingZip">ZIP / Postal Code</label>
-                <input type="text" id="billingZip" placeholder="10001" />
-              </div>
+            <!-- Hidden billing fields retained for payment payload compatibility -->
+            <div class="hidden-billing-fields" aria-hidden="true">
+              <input type="text" id="billingFullName" />
+              <input type="email" id="billingEmail" />
+              <input type="tel" id="billingPhone" />
+              <select id="billingCountry">
+                <option value="">Select a country</option>
+                <option value="US">United States</option>
+                <option value="CA">Canada</option>
+                <option value="GB">United Kingdom</option>
+                <option value="AU">Australia</option>
+                <option value="MX">Mexico</option>
+                <option value="OTHER">Other</option>
+              </select>
+              <input type="text" id="billingAddress" />
+              <input type="text" id="billingApartment" />
+              <input type="text" id="billingCity" />
+              <input type="text" id="billingState" />
+              <input type="text" id="billingZip" />
             </div>
 
             <!-- PAYMENT INFORMATION SECTION -->
-            <div class="card" style="margin-top:18px;">
+            <div class="card stripe-payment-card">
               <h2>Payment Method</h2>
               <p class="sub">Enter your card details to secure your booking.</p>
               
               <div class="field">
                 <label for="card-number-element">Card Number</label>
-                <div id="card-number-element" style="padding: 15px 14px; border: 1px solid #cfd8e3; background: #fff; border-radius: 14px; min-height: 48px;"></div>
+                <div id="card-number-element" class="stripe-element-box" style="border: 1px solid #cfd8e3; background: #fff; border-radius: 14px;"></div>
               </div>
 
               <div class="row-2">
                 <div class="field">
                   <label for="card-expiry-element">Expiry Date</label>
-                  <div id="card-expiry-element" style="padding: 15px 14px; border: 1px solid #cfd8e3; background: #fff; border-radius: 14px; min-height: 48px;"></div>
+                  <div id="card-expiry-element" class="stripe-element-box" style="border: 1px solid #cfd8e3; background: #fff; border-radius: 14px;"></div>
                 </div>
                 <div class="field">
                   <label for="card-cvc-element">CVC</label>
-                  <div id="card-cvc-element" style="padding: 15px 14px; border: 1px solid #cfd8e3; background: #fff; border-radius: 14px; min-height: 48px;"></div>
+                  <div id="card-cvc-element" class="stripe-element-box" style="border: 1px solid #cfd8e3; background: #fff; border-radius: 14px;"></div>
                 </div>
               </div>
 
@@ -866,6 +839,14 @@
       if (state.estimoData.customerPhone) billingPhone.value = state.estimoData.customerPhone;
       if (state.estimoData.customerAddress) billingAddress.value = state.estimoData.customerAddress;
       if (state.estimoData.customerZip) billingZip.value = state.estimoData.customerZip;
+      if (!billingCountry.value) billingCountry.value = "US";
+      if (!billingCity.value) billingCity.value = "N/A";
+      if (!billingState.value) billingState.value = "N/A";
+      if (!billingAddress.value) billingAddress.value = "N/A";
+      if (!billingFullName.value) billingFullName.value = "Customer";
+      if (!billingEmail.value) billingEmail.value = "no-email@example.com";
+      if (!billingPhone.value) billingPhone.value = "N/A";
+      if (!billingZip.value) billingZip.value = "N/A";
     }
 
     function renderAppointmentTypes() {
