@@ -728,7 +728,7 @@
           <div class="center-box">
             <div class="success-badge">✓</div>
             <h2 class="section-title">Appointment Confirmed!</h2>
-            <p class="sub" style="font-size:18px;">Your appointment has been scheduled. Check your email for confirmation details.</p>
+            <p class="sub" style="font-size:18px;">Your payment was successfully completed and your appointment has been scheduled. Check your email for confirmation details.</p>
             <div class="booking-id" id="bookingIdText">Booking ID: SCH-00000</div>
 
             <div class="card" style="text-align:left;">
@@ -1220,23 +1220,25 @@
           payment_amount: paymentAmount,
         };
 
-        // Submit booking to email using form submission (avoids CORS)
-        const hiddenForm = document.createElement("form");
-        hiddenForm.method = "POST";
-        hiddenForm.action = "https://formspree.io/f/xqeyglen";
-        hiddenForm.style.display = "none";
-        
-        for (const [key, value] of Object.entries(payload)) {
-          const input = document.createElement("input");
-          input.type = "hidden";
-          input.name = key;
-          input.value = String(value);
-          hiddenForm.appendChild(input);
+        // Submit booking to Formspree in background to avoid redirecting users away.
+        try {
+          const formData = new URLSearchParams();
+          for (const [key, value] of Object.entries(payload)) {
+            formData.append(key, String(value));
+          }
+
+          await fetch("https://formspree.io/f/xqeyglen", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+              "Accept": "application/json"
+            },
+            body: formData.toString()
+          });
+        } catch (formError) {
+          // Keep UX successful even if email notification endpoint is temporarily unavailable.
+          console.warn("Formspree submission failed:", formError);
         }
-        
-        document.body.appendChild(hiddenForm);
-        hiddenForm.submit();
-        document.body.removeChild(hiddenForm);
 
         // Booking confirmed
         sessionStorage.setItem("bookingId", state.bookingId);
