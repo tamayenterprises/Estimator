@@ -26,6 +26,28 @@ let cardExpiryElement;
 let cardCvcElement;
 let clientSecret = null;
 
+/** Split card fields: all must be complete (and error-free) before continuing to Review. */
+window.schedulerCardFieldsComplete = { number: false, expiry: false, cvc: false };
+
+function schedulerCardFieldsReady() {
+  const c = window.schedulerCardFieldsComplete;
+  return !!(c?.number && c?.expiry && c?.cvc);
+}
+
+window.schedulerCardFieldsReady = schedulerCardFieldsReady;
+
+function notifySchedulerCardFieldsChanged() {
+  if (typeof window.onSchedulerCardFieldsChange === "function") {
+    window.onSchedulerCardFieldsChange();
+  }
+}
+
+function updateSchedulerCardFieldComplete(field, event) {
+  window.schedulerCardFieldsComplete[field] = !!(event.complete && !event.error);
+  handleCardElementChange(event);
+  notifySchedulerCardFieldsChanged();
+}
+
 // Initialize Stripe on page load
 async function initializeStripe() {
   if (!STRIPE_PUBLIC_KEY) {
@@ -112,10 +134,11 @@ function createElements() {
   window.cardExpiryElement = cardExpiryElement;
   window.cardCvcElement = cardCvcElement;
 
-  // Add error listeners
-  [cardNumberElement, cardExpiryElement, cardCvcElement].forEach(element => {
-    element.addEventListener('change', handleCardElementChange);
-  });
+  window.schedulerCardFieldsComplete = { number: false, expiry: false, cvc: false };
+
+  cardNumberElement.addEventListener("change", (e) => updateSchedulerCardFieldComplete("number", e));
+  cardExpiryElement.addEventListener("change", (e) => updateSchedulerCardFieldComplete("expiry", e));
+  cardCvcElement.addEventListener("change", (e) => updateSchedulerCardFieldComplete("cvc", e));
 }
 
 // Mount individual card elements to the DOM

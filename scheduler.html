@@ -796,6 +796,8 @@
       renderServiceSummary();
       renderCalendar();
       bindEvents();
+      window.onSchedulerCardFieldsChange = validateScheduleStep;
+      validateScheduleStep();
     }
 
     function loadEstimateData() {
@@ -1041,6 +1043,10 @@
     }
 
     function validateScheduleStep() {
+      const stripeReady =
+        typeof window.schedulerCardFieldsReady === "function" &&
+        window.schedulerCardFieldsReady();
+
       const valid =
         state.selectedDate &&
         state.selectedTime &&
@@ -1051,7 +1057,8 @@
         billingCity.value.trim() &&
         billingState.value.trim() &&
         billingZip.value.trim() &&
-        billingCountry.value;
+        billingCountry.value &&
+        stripeReady;
 
       continueBtn.disabled = !valid;
       continueBtn.style.cursor = valid ? "pointer" : "not-allowed";
@@ -1059,8 +1066,20 @@
 
     function goToReview() {
       try {
+        if (typeof window.schedulerCardFieldsReady !== "function" || !window.schedulerCardFieldsReady()) {
+          const cardErrors = $("card-errors");
+          if (cardErrors) {
+            cardErrors.textContent =
+              "Please complete your card number, expiry date, and security code (CVC) before continuing.";
+            cardErrors.style.display = "block";
+          }
+          return;
+        }
+
         const projectName = state.estimoData.projectDisplayName || "Service Project";
         const workingPrice = state.estimoData.workingPrice || "$0";
+        const cardReady =
+          typeof window.schedulerCardFieldsReady === "function" && window.schedulerCardFieldsReady();
         
         $("reviewService").innerHTML = `
           ${info("Service", projectName)}
@@ -1085,8 +1104,8 @@
 
         $("reviewPayment").innerHTML = `
           ${info("Card Type", "Visa / Mastercard / Amex")}
-          ${info("Card Status", "Entered")}
-          ${info("Payment Status", "Ready for Payment")}
+          ${info("Card Status", cardReady ? "Complete" : "Incomplete")}
+          ${info("Payment Status", cardReady ? "Ready for payment" : "Complete card on Schedule step")}
           ${info("Method", "Credit Card")}
         `;
 
