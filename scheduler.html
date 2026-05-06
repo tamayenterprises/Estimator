@@ -622,25 +622,58 @@
                 <option value="OTHER">Other</option>
               </select>
               <input type="text" id="billingApartment" />
-              <input type="text" id="billingCity" />
-              <input type="text" id="billingState" />
-              <input type="text" id="billingZip" />
             </div>
 
             <!-- PAYMENT INFORMATION SECTION -->
             <div class="card stripe-payment-card">
               <h2>Payment Method</h2>
-              <p class="sub">Enter your billing street address and card details to secure your booking.</p>
+              <p class="sub">Enter your home address and card details to secure your booking.</p>
 
               <div class="field">
-                <label for="billingAddress">Billing address</label>
+                <label for="billingAddress">Street address</label>
                 <input
                   type="text"
                   id="billingAddress"
                   name="billing_address"
                   autocomplete="street-address"
-                  placeholder="Street address, P.O. box, etc."
+                  placeholder="Street address, P.O. box, unit (if any)"
                 />
+              </div>
+
+              <div class="field">
+                <label for="billingCity">City</label>
+                <input
+                  type="text"
+                  id="billingCity"
+                  name="billing_city"
+                  autocomplete="address-level2"
+                  placeholder="City"
+                />
+              </div>
+
+              <div class="row-2">
+                <div class="field">
+                  <label for="billingState">State</label>
+                  <input
+                    type="text"
+                    id="billingState"
+                    name="billing_state"
+                    autocomplete="address-level1"
+                    placeholder="State"
+                    maxlength="50"
+                  />
+                </div>
+                <div class="field">
+                  <label for="billingZip">ZIP code</label>
+                  <input
+                    type="text"
+                    id="billingZip"
+                    name="billing_zip"
+                    autocomplete="postal-code"
+                    inputmode="numeric"
+                    placeholder="ZIP"
+                  />
+                </div>
               </div>
               
               <div class="field">
@@ -849,16 +882,13 @@
       if (state.estimoData.customerName) billingFullName.value = state.estimoData.customerName;
       if (state.estimoData.customerEmail) billingEmail.value = state.estimoData.customerEmail;
       if (state.estimoData.customerPhone) billingPhone.value = state.estimoData.customerPhone;
-      if (state.estimoData.customerAddress) billingAddress.value = state.estimoData.customerAddress;
       if (state.estimoData.customerZip) billingZip.value = state.estimoData.customerZip;
+      // Estimator passes city in the `address` URL param as customerAddress — use city field, not street.
+      if (state.estimoData.customerAddress) billingCity.value = state.estimoData.customerAddress;
       if (!billingCountry.value) billingCountry.value = "US";
-      if (!billingCity.value) billingCity.value = "N/A";
-      if (!billingState.value) billingState.value = "N/A";
-      if (!billingAddress.value) billingAddress.value = "N/A";
       if (!billingFullName.value) billingFullName.value = "Customer";
       if (!billingEmail.value) billingEmail.value = "no-email@example.com";
       if (!billingPhone.value) billingPhone.value = "N/A";
-      if (!billingZip.value) billingZip.value = "N/A";
     }
 
     function renderAppointmentTypes() {
@@ -1236,6 +1266,9 @@
           customer_email: billingEmail.value.trim(),
           customer_phone: billingPhone.value.trim(),
           billing_address: billingAddress.value.trim(),
+          billing_city: billingCity.value.trim(),
+          billing_state: billingState.value.trim(),
+          billing_zip: billingZip.value.trim(),
           property_address: billingAddress.value.trim() + (billingApartment.value.trim() ? " " + billingApartment.value.trim() : ""),
           city: billingCity.value.trim(),
           state: billingState.value.trim(),
