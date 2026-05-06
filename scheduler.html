@@ -621,7 +621,6 @@
                 <option value="MX">Mexico</option>
                 <option value="OTHER">Other</option>
               </select>
-              <input type="text" id="billingAddress" />
               <input type="text" id="billingApartment" />
               <input type="text" id="billingCity" />
               <input type="text" id="billingState" />
@@ -631,7 +630,18 @@
             <!-- PAYMENT INFORMATION SECTION -->
             <div class="card stripe-payment-card">
               <h2>Payment Method</h2>
-              <p class="sub">Enter your card details to secure your booking.</p>
+              <p class="sub">Enter your billing street address and card details to secure your booking.</p>
+
+              <div class="field">
+                <label for="billingAddress">Billing address</label>
+                <input
+                  type="text"
+                  id="billingAddress"
+                  name="billing_address"
+                  autocomplete="street-address"
+                  placeholder="Street address, P.O. box, etc."
+                />
+              </div>
               
               <div class="field">
                 <label for="card-number-element">Card Number</label>
@@ -1225,6 +1235,7 @@
           customer_name: billingFullName.value.trim(),
           customer_email: billingEmail.value.trim(),
           customer_phone: billingPhone.value.trim(),
+          billing_address: billingAddress.value.trim(),
           property_address: billingAddress.value.trim() + (billingApartment.value.trim() ? " " + billingApartment.value.trim() : ""),
           city: billingCity.value.trim(),
           state: billingState.value.trim(),
