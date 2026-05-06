@@ -82,31 +82,35 @@ body {
   letter-spacing: -0.03em;
 }
 
-/* Hero title: mobile uses simple <br> + normal wrapping (unchanged pattern). Desktop: own rules at 960px+. */
-.hero-title-mobile-only {
-  display: block;
+/*
+ * One heading in the DOM (no duplicate mobile/desktop copies).
+ * Below 960px: normal wrapping, original-scale type (no nowrap).
+ * ≥ 960px: two controlled lines + nowrap + desktop sizing.
+ */
+.hero h1.hero-title {
   font-size: 2rem;
   line-height: 1.1;
 }
 
-.hero-title-desktop-only {
-  display: none;
+@media (min-width: 640px) and (max-width: 959px) {
+  .hero h1.hero-title {
+    font-size: 2.2rem;
+  }
 }
 
 .hero-title-line {
   display: block;
-  white-space: nowrap;
   line-height: 1.12;
+}
+
+@media (max-width: 959px) {
+  .hero-title-line {
+    white-space: normal;
+  }
 }
 
 .hero-title-line + .hero-title-line {
   margin-top: 0.06em;
-}
-
-@media (min-width: 640px) and (max-width: 959px) {
-  .hero-title-mobile-only {
-    font-size: 2.2rem;
-  }
 }
 
 .hero p {
@@ -912,11 +916,7 @@ textarea:focus {
     padding: 40px 34px;
   }
 
-  .hero-title-mobile-only {
-    display: none;
-  }
-
-  .hero-title-desktop-only {
+  .hero h1.hero-title {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -924,7 +924,11 @@ textarea:focus {
     font-size: clamp(1.55rem, 1.25vw + 1.35rem, 2.4rem);
   }
 
-  .hero-title-desktop-only .hero-title-line + .hero-title-line {
+  .hero-title-line {
+    white-space: nowrap;
+  }
+
+  .hero-title-line + .hero-title-line {
     margin-top: 0;
   }
 
