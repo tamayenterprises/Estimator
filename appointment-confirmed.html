@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Appointment Confirmed — Preview</title>
+  <style>
+    :root {
+      --line: #dbe3ef;
+      --primary: #0f1b46;
+      --primary-2: #1e2d6b;
+      --text: #0f172a;
+      --muted: #64748b;
+      --success-bg: #edfdf5;
+      --success-border: #bbf7d0;
+      --success-text: #166534;
+      --shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #fbfdff 0%, #f6f8fc 100%);
+      color: var(--text);
+    }
+    .center-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 16px;
+    }
+    .center-box {
+      max-width: 720px;
+      width: 100%;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+    .success-badge {
+      width: 74px;
+      height: 74px;
+      border-radius: 999px;
+      margin: 0 auto 16px;
+      background: var(--success-bg);
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      font-weight: 900;
+    }
+    .section-title {
+      margin: 2px 0 10px;
+      font-size: 26px;
+      letter-spacing: -0.03em;
+    }
+    .sub {
+      color: var(--muted);
+      margin: 0 0 14px;
+      line-height: 1.5;
+      font-size: 18px;
+    }
+    .booking-id {
+      display: inline-block;
+      margin: 8px 0 18px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid #bfdbfe;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      text-align: left;
+      margin-bottom: 8px;
+    }
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+    .info-list {
+      display: grid;
+      gap: 10px;
+    }
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      border-bottom: 1px dashed #e5ebf3;
+      padding-bottom: 10px;
+      font-size: 15px;
+    }
+    .info-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 16px 22px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-2);
+    }
+    .preview-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="center-screen">
+    <div class="center-box">
+      <div class="success-badge">✓</div>
+      <h2 class="section-title">Appointment Confirmed!</h2>
+      <p class="sub">
+        Your payment was successfully completed and your appointment has been scheduled. Check your email for confirmation details.
+      </p>
+      <div class="booking-id">Booking ID: SCH-12345</div>
+
+      <div class="card">
+        <h3>Appointment Summary</h3>
+        <div class="info-list">
+          <div class="info-item"><span>Service</span><strong>Drywall Patch / Wall Repair</strong></div>
+          <div class="info-item"><span>Booking Price</span><strong>$140</strong></div>
+          <div class="info-item"><span>Date</span><strong>Monday, May 18, 2026</strong></div>
+          <div class="info-item"><span>Time</span><strong>2:00 PM</strong></div>
+          <div class="info-item"><span>Name</span><strong>Example Customer</strong></div>
+          <div class="info-item"><span>Email</span><strong>you@example.com</strong></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn-primary" onclick="location.href='index.html'">
+          Start a New Estimate
+        </button>
+      </div>
+
+      <p class="preview-note">
+        This file is a static preview of the screen shown after <strong>Complete Payment &amp; Confirm</strong> succeeds.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
