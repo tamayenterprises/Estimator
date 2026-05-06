@@ -841,6 +841,57 @@
       bindEvents();
       window.onSchedulerCardFieldsChange = validateScheduleStep;
       validateScheduleStep();
+      if (applyLocalConfirmedPreview()) return;
+    }
+
+    /** Local-only: open confirmation screen without payment (localhost + ?preview=confirmed). */
+    function applyLocalConfirmedPreview() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("preview") !== "confirmed") return false;
+
+      const host = window.location.hostname;
+      const allowedLocal =
+        host === "localhost" || host === "127.0.0.1" || host === "";
+      if (!allowedLocal) {
+        console.warn("scheduler: preview=confirmed only works on localhost.");
+        return false;
+      }
+
+      if (!state.estimoData || !state.estimoData.projectDisplayName) {
+        state.estimoData = {
+          customerName: "Preview Customer",
+          customerEmail: "preview@example.com",
+          customerPhone: "555-0100",
+          customerZip: "11111",
+          customerAddress: "Preview City",
+          projectType: "drywall_patch_wall_repair",
+          projectDisplayName: "Drywall Patch / Wall Repair",
+          workingPrice: "$140",
+        };
+      }
+
+      state.bookingId = "SCH-PREVIEW";
+      state.selectedDate = new Date(Date.now() + 86400000);
+      state.selectedTime = "10:00 AM";
+
+      billingFullName.value = state.estimoData.customerName || "Preview Customer";
+      billingEmail.value = state.estimoData.customerEmail || "preview@example.com";
+      billingPhone.value = state.estimoData.customerPhone || "555-0100";
+      billingZip.value = state.estimoData.customerZip || "11111";
+      billingCity.value = state.estimoData.customerAddress || "Preview City";
+      billingState.value = "NY";
+      billingAddress.value = "123 Preview Street";
+      if (!billingCountry.value) billingCountry.value = "US";
+
+      renderServiceSummary();
+
+      const u = new URL(window.location.href);
+      u.searchParams.delete("preview");
+      history.replaceState({}, "", u.pathname + u.search + u.hash);
+
+      showScreen("confirmed");
+      populateConfirmedDetails();
+      return true;
     }
 
     function loadEstimateData() {
@@ -1344,7 +1395,12 @@
     function populateConfirmedDetails() {
       const projectName = state.estimoData.projectDisplayName || "Service Project";
       const workingPrice = state.estimoData.workingPrice || "$0";
-      
+
+      const bookingIdEl = $("bookingIdText");
+      if (bookingIdEl && state.bookingId) {
+        bookingIdEl.textContent = "Booking ID: " + state.bookingId;
+      }
+
       $("confirmedDetails").innerHTML = `
         ${info("Service", projectName)}
         ${info("Booking Price", workingPrice)}
