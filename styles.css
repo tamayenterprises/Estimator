@@ -900,6 +900,11 @@ textarea:focus {
     padding: 40px 34px;
   }
 
+  /* Desktop only: two-line hero title sizing (mobile uses base .hero h1.hero-title clamp). */
+  .hero h1.hero-title {
+    font-size: clamp(1.65rem, 1.35vw + 1.45rem, 2.45rem);
+  }
+
   .content {
     padding: 30px 28px 32px;
   }
