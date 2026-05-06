@@ -780,7 +780,7 @@
             </div>
 
             <div class="actions" style="justify-content:center;">
-              <button class="btn btn-outline" id="startOverBtn" type="button" onclick="window.location.href='index.html'">Back to Home</button>
+              <button class="btn btn-primary" id="startNewEstimateBtn" type="button">Start a New Estimate</button>
             </div>
           </div>
         </div>
@@ -926,6 +926,17 @@
       $("continueBtn").addEventListener("click", goToReview);
       $("backToScheduleBtn").addEventListener("click", () => showScreen("schedule"));
       $("confirmBtn").addEventListener("click", handleConfirm);
+
+      $("startNewEstimateBtn").addEventListener("click", () => {
+        try {
+          sessionStorage.removeItem("bookingId");
+          sessionStorage.removeItem("bookingData");
+          sessionStorage.removeItem("estimateData");
+        } catch (err) {
+          /* ignore */
+        }
+        window.location.href = new URL("index.html", window.location.href).href;
+      });
 
       // Add listeners to billing fields
       [billingFullName, billingEmail, billingPhone, billingCountry, billingAddress, billingApartment, billingCity, billingState, billingZip].forEach(el => {
