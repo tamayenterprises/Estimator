@@ -82,9 +82,15 @@ body {
   letter-spacing: -0.03em;
 }
 
-/* Two-line title (markup): line 1 "Would You Like To Know" / line 2 "How Much…?" */
-.hero h1.hero-title {
-  font-size: clamp(0.62rem, 2.85vw + 0.32rem, 2.45rem);
+/* Hero title: mobile uses simple <br> + normal wrapping (unchanged pattern). Desktop: own rules at 960px+. */
+.hero-title-mobile-only {
+  display: block;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.hero-title-desktop-only {
+  display: none;
 }
 
 .hero-title-line {
@@ -95,6 +101,12 @@ body {
 
 .hero-title-line + .hero-title-line {
   margin-top: 0.06em;
+}
+
+@media (min-width: 640px) and (max-width: 959px) {
+  .hero-title-mobile-only {
+    font-size: 2.2rem;
+  }
 }
 
 .hero p {
@@ -900,11 +912,11 @@ textarea:focus {
     padding: 40px 34px;
   }
 
-  /*
-   * Desktop: exactly two lines —
-   * "Would You Like To Know" / "How Much Your Project Will Cost?"
-   */
-  .hero h1.hero-title {
+  .hero-title-mobile-only {
+    display: none;
+  }
+
+  .hero-title-desktop-only {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -912,7 +924,7 @@ textarea:focus {
     font-size: clamp(1.55rem, 1.25vw + 1.35rem, 2.4rem);
   }
 
-  .hero h1.hero-title .hero-title-line + .hero-title-line {
+  .hero-title-desktop-only .hero-title-line + .hero-title-line {
     margin-top: 0;
   }
 
