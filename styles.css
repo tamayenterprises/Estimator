@@ -98,18 +98,34 @@ body {
 }
 
 @media (max-width: 959px) {
+  /* Avoid clipping long nowrap lines against .card { overflow: hidden } */
+  .page .container .card {
+    overflow-x: visible;
+    overflow-y: hidden;
+  }
+
   .hero h1.hero-title {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.06em;
-    /* Shrink type so each line stays one row on small phones (longest line sets the limit). */
-    font-size: clamp(0.82rem, 4.2vw + 0.42rem, 1.72rem);
-    line-height: 1.1;
+    gap: 0.12em;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    font-size: clamp(0.95rem, 3.5vw + 0.55rem, 1.75rem);
+    line-height: 1.15;
   }
 
-  .hero-title-line {
+  /* First phrase stays one line; second can wrap so nothing is cut off */
+  .hero-title-line:first-child {
     white-space: nowrap;
+  }
+
+  .hero-title-line:last-child {
+    white-space: normal;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
   }
 
   .hero-title-line + .hero-title-line {
