@@ -83,19 +83,13 @@ body {
 }
 
 /*
- * One heading in the DOM (no duplicate mobile/desktop copies).
- * Below 960px: normal wrapping, original-scale type (no nowrap).
- * ≥ 960px: two controlled lines + nowrap + desktop sizing.
+ * One heading in the DOM.
+ * Below 960px: two balanced lines (same phrase breaks as desktop), nowrap + fluid size to fit narrow screens.
+ * ≥ 960px: unchanged desktop block further down (do not alter those rules).
  */
 .hero h1.hero-title {
   font-size: 2rem;
   line-height: 1.1;
-}
-
-@media (min-width: 640px) and (max-width: 959px) {
-  .hero h1.hero-title {
-    font-size: 2.2rem;
-  }
 }
 
 .hero-title-line {
@@ -104,13 +98,23 @@ body {
 }
 
 @media (max-width: 959px) {
-  .hero-title-line {
-    white-space: normal;
+  .hero h1.hero-title {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.06em;
+    /* Shrink type so each line stays one row on small phones (longest line sets the limit). */
+    font-size: clamp(0.82rem, 4.2vw + 0.42rem, 1.72rem);
+    line-height: 1.1;
   }
-}
 
-.hero-title-line + .hero-title-line {
-  margin-top: 0.06em;
+  .hero-title-line {
+    white-space: nowrap;
+  }
+
+  .hero-title-line + .hero-title-line {
+    margin-top: 0;
+  }
 }
 
 .hero p {
