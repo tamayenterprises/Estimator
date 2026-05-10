@@ -790,6 +790,9 @@
   </div>
 
   <script>
+    /** Same origin as Stripe PaymentIntent calls — calendar APIs live on this host */
+    const SCHEDULER_API_BASE = "https://estimator-sqzv.onrender.com";
+
     const CONFIG = {
       businessName: "Tamay Enterprises",
       appointmentTypes: [
@@ -810,7 +813,8 @@
       selectedTime: null,
       bookingId: null,
       isSubmitting: false,
-      estimoData: {}
+      estimoData: {},
+      calendarSyncNote: null
     };
 
     const $ = (id) => document.getElementById(id);
@@ -1086,7 +1090,7 @@
       }
     }
 
-    function renderTimesForDate(dateObj, container, introEl, isReschedule) {
+    async function renderTimesForDate(dateObj, container, introEl, isReschedule) {
       container.innerHTML = "";
 
       if (!dateObj) {
@@ -1094,9 +1098,33 @@
         return;
       }
 
-      introEl.textContent = `Showing availability for ${formatLongDate(dateObj)}.`;
+      introEl.textContent = `Loading availability for ${formatLongDate(dateObj)}…`;
 
-      const slots = getDemoSlots(dateObj);
+      const y = dateObj.getFullYear();
+      const mo = String(dateObj.getMonth() + 1).padStart(2, "0");
+      const d = String(dateObj.getDate()).padStart(2, "0");
+      const dateStr = `${y}-${mo}-${d}`;
+
+      let slots;
+      try {
+        const resp = await fetch(
+          `${SCHEDULER_API_BASE}/api/calendar/availability?date=${encodeURIComponent(dateStr)}`
+        );
+        if (resp.ok) {
+          const data = await resp.json();
+          slots = data.slots;
+          introEl.textContent = `Showing availability for ${formatLongDate(dateObj)}.`;
+        } else if (resp.status === 503) {
+          slots = getDemoSlots(dateObj);
+          introEl.textContent = `Showing availability for ${formatLongDate(dateObj)} (demo — connect Google Calendar on the server for live availability).`;
+        } else {
+          throw new Error(`availability HTTP ${resp.status}`);
+        }
+      } catch (err) {
+        console.warn("Calendar availability fallback:", err);
+        slots = getDemoSlots(dateObj);
+        introEl.textContent = `Showing availability for ${formatLongDate(dateObj)} (demo schedule — calendar API unreachable).`;
+      }
 
       slots.forEach(slot => {
         const btn = document.createElement("button");
@@ -1319,6 +1347,45 @@
           throw new Error(`Payment failed with status: ${paymentIntent.status}`);
         }
 
+        state.calendarSyncNote = null;
+
+        const selY = state.selectedDate.getFullYear();
+        const selM = String(state.selectedDate.getMonth() + 1).padStart(2, "0");
+        const selD = String(state.selectedDate.getDate()).padStart(2, "0");
+        const appointmentDateStr = `${selY}-${selM}-${selD}`;
+
+        try {
+          const calRes = await fetch(`${SCHEDULER_API_BASE}/api/calendar/bookings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              date: appointmentDateStr,
+              time: state.selectedTime,
+              customerName: billingFullName.value.trim(),
+              customerEmail: billingEmail.value.trim(),
+              customerPhone: billingPhone.value.trim(),
+              serviceSummary: state.estimoData.projectDisplayName || "Service",
+              paymentIntentId: paymentIntent.id,
+              bookingId: state.bookingId
+            })
+          });
+
+          if (calRes.status === 503) {
+            state.calendarSyncNote =
+              "Calendar automation is not connected yet; your payment is confirmed and we will finalize scheduling manually if needed.";
+          } else if (calRes.status === 409) {
+            state.calendarSyncNote =
+              "Your payment went through, but that time slot was just taken. Please contact us so we can reschedule.";
+          } else if (!calRes.ok) {
+            state.calendarSyncNote =
+              "Your payment was successful. We could not sync this appointment to the calendar automatically; our team will follow up.";
+          }
+        } catch (calErr) {
+          console.warn("Calendar booking request failed:", calErr);
+          state.calendarSyncNote =
+            "Your payment was successful. Calendar sync failed temporarily; we will confirm your appointment separately.";
+        }
+
         // Payment successful - now save booking
         const payload = {
           form_type: "appointment_scheduled",
@@ -1403,6 +1470,7 @@
       }
 
       $("confirmedDetails").innerHTML = `
+        ${state.calendarSyncNote ? `<div class="alert error show" style="margin-bottom:14px;line-height:1.45;">${state.calendarSyncNote}</div>` : ""}
         ${info("Service", projectName)}
         ${info("Booking Price", workingPrice)}
         ${info("Date", formatLongDate(state.selectedDate))}

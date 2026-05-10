@@ -125,6 +125,144 @@ app.post("/webhook", express.raw({ type: "application/json" }), (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// --- Google Calendar (optional; does not affect Stripe routes above) ---
+const calendarLib = require("./lib/googleCalendar");
+
+app.get("/api/calendar/status", (req, res) => {
+  res.json({
+    enabled: calendarLib.calendarFullyConfigured(),
+    timeZone: calendarLib.getTimeZone(),
+    slotDurationMinutes: calendarLib.getSlotDurationMinutes(),
+  });
+});
+
+app.get("/api/calendar/availability", async (req, res) => {
+  const date = req.query.date;
+  if (!date || typeof date !== "string") {
+    return res.status(400).json({ error: "Missing date query (YYYY-MM-DD)" });
+  }
+  if (!calendarLib.calendarFullyConfigured()) {
+    return res.status(503).json({
+      error: "Google Calendar is not connected yet",
+      code: "calendar_disabled",
+    });
+  }
+  try {
+    const slots = await calendarLib.getAvailabilitySlots(date);
+    res.json({
+      date,
+      slots,
+      timeZone: calendarLib.getTimeZone(),
+    });
+  } catch (err) {
+    console.error("calendar availability error:", err.message);
+    res.status(500).json({ error: "Failed to load availability" });
+  }
+});
+
+app.post("/api/calendar/bookings", async (req, res) => {
+  if (!calendarLib.calendarFullyConfigured()) {
+    return res.status(503).json({
+      error: "Google Calendar is not connected yet",
+      code: "calendar_disabled",
+    });
+  }
+
+  const body = req.body || {};
+  const dateStr = body.date;
+  const timeStr = body.time;
+  if (!dateStr || !timeStr) {
+    return res.status(400).json({ error: "date and time are required" });
+  }
+
+  const summaryBase = body.serviceSummary || body.service || "Scheduled appointment";
+  const customerName = body.customerName || "";
+  const customerEmail = body.customerEmail || "";
+  const customerPhone = body.customerPhone || "";
+  const paymentIntentId = body.paymentIntentId || "";
+  const bookingId = body.bookingId || "";
+
+  const description = [
+    bookingId && `Booking ID: ${bookingId}`,
+    customerName && `Customer: ${customerName}`,
+    customerEmail && `Email: ${customerEmail}`,
+    customerPhone && `Phone: ${customerPhone}`,
+    paymentIntentId && `Stripe payment: ${paymentIntentId}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const summary = customerName
+    ? `${summaryBase} — ${customerName}`
+    : summaryBase;
+
+  try {
+    const result = await calendarLib.insertBookingEvent({
+      dateStr,
+      time12h: timeStr,
+      summary,
+      description,
+      attendeeEmail: customerEmail,
+    });
+    res.json({
+      ok: true,
+      eventId: result.eventId,
+      htmlLink: result.htmlLink,
+    });
+  } catch (err) {
+    if (err.code === "SLOT_TAKEN") {
+      return res.status(409).json({ error: err.message, code: "slot_taken" });
+    }
+    if (err.code === "BAD_SLOT") {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error("calendar booking error:", err.message);
+    res.status(500).json({ error: "Failed to create calendar event" });
+  }
+});
+
+app.get("/oauth/google/start", (req, res) => {
+  const url = calendarLib.generateAuthUrl();
+  if (!url) {
+    return res
+      .status(503)
+      .send(
+        "Google OAuth is not configured. Set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REDIRECT_URI."
+      );
+  }
+  res.redirect(302, url);
+});
+
+app.get("/oauth/google/callback", async (req, res) => {
+  const code = req.query.code;
+  const errQ = req.query.error;
+  if (errQ) {
+    return res.status(400).send(`Google OAuth error: ${errQ}`);
+  }
+  if (!code) {
+    return res.status(400).send("Missing authorization code");
+  }
+  try {
+    const tokens = await calendarLib.getTokensFromCode(code);
+    const refresh = tokens.refresh_token;
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Google Calendar connected</title></head><body style="font-family:sans-serif;max-width:640px;margin:40px auto;padding:20px;">
+<h1>Google Calendar OAuth complete</h1>
+<p>Add this value to your host as <strong>GOOGLE_REFRESH_TOKEN</strong>, then restart or redeploy.</p>
+${
+  refresh
+    ? `<pre style="background:#f4f4f4;padding:12px;word-break:break-all;">${refresh}</pre>`
+    : "<p><strong>No refresh token returned.</strong> Revoke this app under Google Account &gt; Security and run the flow again.</p>"
+}
+<p style="color:#666;font-size:14px;">Optional: set <code>GOOGLE_CALENDAR_ID</code> (default <code>primary</code>) and <code>BOOKING_TIMEZONE</code>, <code>BOOKING_SLOT_DURATION_MINUTES</code>.</p>
+</body></html>`;
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.send(html);
+  } catch (e) {
+    console.error("OAuth callback error:", e.message);
+    res.status(500).send("Failed to exchange OAuth code");
+  }
+});
+
 // Serve static files (for development)
 app.use(express.static(__dirname));
 
