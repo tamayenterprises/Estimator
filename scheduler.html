@@ -790,8 +790,25 @@
   </div>
 
   <script>
-    /** Same origin as Stripe PaymentIntent calls — calendar APIs live on this host */
-    const SCHEDULER_API_BASE = "https://estimator-sqzv.onrender.com";
+    /**
+     * Calendar API base: same origin when the scheduler is served from Render (avoids hardcoded URL drift).
+     * GitHub Pages / custom domain still points at the Render API explicitly.
+     */
+    const SCHEDULER_API_BASE = (() => {
+      try {
+        const h = window.location.hostname;
+        if (
+          h === "estimator-sqzv.onrender.com" ||
+          h === "localhost" ||
+          h === "127.0.0.1"
+        ) {
+          return window.location.origin;
+        }
+      } catch (e) {
+        /* ignore */
+      }
+      return "https://estimator-sqzv.onrender.com";
+    })();
 
     const CONFIG = {
       businessName: "Tamay Enterprises",

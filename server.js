@@ -129,10 +129,21 @@ app.use(express.urlencoded({ extended: true }));
 const calendarLib = require("./lib/googleCalendar");
 
 app.get("/api/calendar/status", (req, res) => {
+  const detail = calendarLib.getIntegrationStatus();
   res.json({
-    enabled: calendarLib.calendarFullyConfigured(),
-    timeZone: calendarLib.getTimeZone(),
-    slotDurationMinutes: calendarLib.getSlotDurationMinutes(),
+    enabled: detail.enabled,
+    oauthClientConfigured: detail.oauthClientConfigured,
+    hasRefreshToken: detail.hasRefreshToken,
+    usingExplicitCalendarId: detail.usingExplicitCalendarId,
+    timeZone: detail.timeZone,
+    slotDurationMinutes: detail.slotDurationMinutes,
+    nextStep: detail.enabled
+      ? "calendar_live"
+      : !detail.oauthClientConfigured
+        ? "set_GOOGLE_CLIENT_ID_SECRET_REDIRECT_URI"
+        : !detail.hasRefreshToken
+          ? "visit_/oauth/google/start_then_set_GOOGLE_REFRESH_TOKEN"
+          : "unknown",
   });
 });
 
@@ -236,30 +247,40 @@ app.get("/oauth/google/start", (req, res) => {
 app.get("/oauth/google/callback", async (req, res) => {
   const code = req.query.code;
   const errQ = req.query.error;
+  const errDesc = req.query.error_description;
   if (errQ) {
-    return res.status(400).send(`Google OAuth error: ${errQ}`);
+    const msg = errDesc ? `${errQ}: ${String(errDesc)}` : String(errQ);
+    return res.status(400).send(
+      `Google OAuth error: ${msg}. Check test users (Testing mode), redirect URI in Google Cloud, and env GOOGLE_CLIENT_ID / SECRET / REDIRECT_URI.`
+    );
   }
   if (!code) {
-    return res.status(400).send("Missing authorization code");
+    return res.status(400).send(
+      "Missing authorization code. Open /oauth/google/start first (do not bookmark only the callback URL)."
+    );
   }
   try {
     const tokens = await calendarLib.getTokensFromCode(code);
     const refresh = tokens.refresh_token;
     const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><title>Google Calendar connected</title></head><body style="font-family:sans-serif;max-width:640px;margin:40px auto;padding:20px;">
 <h1>Google Calendar OAuth complete</h1>
-<p>Add this value to your host as <strong>GOOGLE_REFRESH_TOKEN</strong>, then restart or redeploy.</p>
+<p>Copy the refresh token below into your host as <strong>GOOGLE_REFRESH_TOKEN</strong>, save, then redeploy.</p>
 ${
   refresh
     ? `<pre style="background:#f4f4f4;padding:12px;word-break:break-all;">${refresh}</pre>`
-    : "<p><strong>No refresh token returned.</strong> Revoke this app under Google Account &gt; Security and run the flow again.</p>"
+    : "<p><strong>No refresh token returned.</strong> In Google Account → Security → Third-party access, remove this app, then visit <code>/oauth/google/start</code> again.</p>"
 }
-<p style="color:#666;font-size:14px;">Optional: set <code>GOOGLE_CALENDAR_ID</code> (default <code>primary</code>) and <code>BOOKING_TIMEZONE</code>, <code>BOOKING_SLOT_DURATION_MINUTES</code>.</p>
+<p style="color:#666;font-size:14px;">OAuth consent (Testing): add your Google account under Test users. Optional env: <code>GOOGLE_CALENDAR_ID</code>, <code>BOOKING_TIMEZONE</code>, <code>BOOKING_SLOT_DURATION_MINUTES</code>.</p>
+<p style="color:#666;font-size:14px;">Verify with <code>GET /api/calendar/status</code> → <code>enabled: true</code>.</p>
 </body></html>`;
     res.setHeader("Content-Type", "text/html; charset=utf-8");
     res.send(html);
   } catch (e) {
     console.error("OAuth callback error:", e.message);
-    res.status(500).send("Failed to exchange OAuth code");
+    const hint = e.message || "Token exchange failed";
+    res.status(500).send(
+      `Failed to exchange OAuth code: ${hint}. Confirm GOOGLE_CLIENT_SECRET matches this OAuth client and REDIRECT_URI matches Google Cloud exactly.`
+    );
   }
 });
 
@@ -462,6 +483,23 @@ app.listen(PORT, async () => {
       code: err?.code,
       requestId: err?.requestId,
     });
+  }
+
+  try {
+    const st = calendarLib.getIntegrationStatus();
+    if (st.enabled) {
+      console.log("✅ Google Calendar API: connected (refresh token present).");
+    } else if (st.oauthClientConfigured && !st.hasRefreshToken) {
+      console.log(
+        "📅 Google Calendar: OAuth client env OK — add GOOGLE_REFRESH_TOKEN (visit /oauth/google/start once)."
+      );
+    } else if (!st.oauthClientConfigured) {
+      console.log(
+        "📅 Google Calendar: optional — set GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI to enable."
+      );
+    }
+  } catch (calErr) {
+    console.warn("Calendar status log skipped:", calErr?.message);
   }
 });
 
