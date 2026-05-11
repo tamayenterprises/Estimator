@@ -137,6 +137,7 @@ app.get("/api/calendar/status", (req, res) => {
     usingExplicitCalendarId: detail.usingExplicitCalendarId,
     timeZone: detail.timeZone,
     slotDurationMinutes: detail.slotDurationMinutes,
+    slotStepMinutes: detail.slotStepMinutes,
     nextStep: detail.enabled
       ? "calendar_live"
       : !detail.oauthClientConfigured
@@ -229,6 +230,73 @@ app.post("/api/calendar/bookings", async (req, res) => {
     }
     console.error("calendar booking error:", err.message);
     res.status(500).json({ error: "Failed to create calendar event" });
+  }
+});
+
+app.patch("/api/calendar/bookings", async (req, res) => {
+  if (!calendarLib.calendarFullyConfigured()) {
+    return res.status(503).json({
+      error: "Google Calendar is not connected yet",
+      code: "calendar_disabled",
+    });
+  }
+
+  const body = req.body || {};
+  const eventId = body.eventId;
+  const dateStr = body.date;
+  const timeStr = body.time;
+  if (!eventId || !dateStr || !timeStr) {
+    return res
+      .status(400)
+      .json({ error: "eventId, date, and time are required" });
+  }
+
+  const summaryBase = body.serviceSummary || body.service || "Scheduled appointment";
+  const customerName = body.customerName || "";
+  const customerEmail = body.customerEmail || "";
+  const customerPhone = body.customerPhone || "";
+  const bookingId = body.bookingId || "";
+
+  const description = [
+    bookingId && `Booking ID: ${bookingId}`,
+    customerName && `Customer: ${customerName}`,
+    customerEmail && `Email: ${customerEmail}`,
+    customerPhone && `Phone: ${customerPhone}`,
+    `(Rescheduled ${new Date().toISOString()})`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  const summary = customerName
+    ? `${summaryBase} — ${customerName}`
+    : summaryBase;
+
+  try {
+    const result = await calendarLib.rescheduleBookingEvent({
+      eventId,
+      dateStr,
+      time12h: timeStr,
+      summary,
+      description,
+      attendeeEmail: customerEmail,
+    });
+    res.json({
+      ok: true,
+      eventId: result.eventId,
+      htmlLink: result.htmlLink,
+    });
+  } catch (err) {
+    if (err.code === "SLOT_TAKEN") {
+      return res.status(409).json({ error: err.message, code: "slot_taken" });
+    }
+    if (err.code === "BAD_SLOT") {
+      return res.status(400).json({ error: err.message });
+    }
+    if (err.code === "EVENT_NOT_FOUND") {
+      return res.status(404).json({ error: err.message });
+    }
+    console.error("calendar reschedule error:", err.message);
+    res.status(500).json({ error: "Failed to reschedule calendar event" });
   }
 });
 

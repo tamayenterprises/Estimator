@@ -720,7 +720,7 @@
               <h3 style="font-size:30px; margin-bottom:6px;">Available Times</h3>
               <p class="sub" id="timesIntro">Select a date to view available time slots.</p>
               <div class="times-grid" id="timesGrid"></div>
-              <p class="helper" style="margin:14px 0 0;">Green = Available | Gray = Occupied | Orange = Not Offered</p>
+              <p class="helper" style="margin:14px 0 0;">Times shown are open slots based on the calendar (demo uses sample busy blocks when Calendar is offline).</p>
             </div>
 
             <div class="actions">
@@ -780,7 +780,8 @@
               <div class="info-list" id="confirmedDetails"></div>
             </div>
 
-            <div class="actions" style="justify-content:center;">
+            <div class="actions" style="justify-content:center;flex-wrap:wrap;gap:12px;">
+              <button class="btn btn-outline" id="rescheduleBtn" type="button">Reschedule appointment</button>
               <button class="btn btn-primary" id="startNewEstimateBtn" type="button">Start a New Estimate</button>
             </div>
           </div>
@@ -819,8 +820,7 @@
         { value: "painting", label: "Painting" },
         { value: "plumbing", label: "Plumbing" },
         { value: "other", label: "Other Service" }
-      ],
-      baseTimes: ["9:00 AM","10:30 AM","12:00 PM","2:00 PM","4:00 PM","5:30 PM"]
+      ]
     };
 
     const state = {
@@ -829,6 +829,8 @@
       selectedDate: null,
       selectedTime: null,
       bookingId: null,
+      calendarEventId: null,
+      rescheduleMode: false,
       isSubmitting: false,
       estimoData: {},
       calendarSyncNote: null
@@ -855,6 +857,11 @@
     const billingZip = $("billingZip");
 
     function init() {
+      try {
+        state.calendarEventId = sessionStorage.getItem("calendarEventId") || null;
+      } catch (e) {
+        state.calendarEventId = null;
+      }
       loadEstimateData();
       renderAppointmentTypes();
       autoFillCustomerData();
@@ -863,6 +870,7 @@
       bindEvents();
       window.onSchedulerCardFieldsChange = validateScheduleStep;
       validateScheduleStep();
+      updateRescheduleButtonState();
       if (applyLocalConfirmedPreview()) return;
     }
 
@@ -1000,11 +1008,14 @@
       $("backToScheduleBtn").addEventListener("click", () => showScreen("schedule"));
       $("confirmBtn").addEventListener("click", handleConfirm);
 
+      $("rescheduleBtn").addEventListener("click", beginReschedule);
+
       $("startNewEstimateBtn").addEventListener("click", () => {
         try {
           sessionStorage.removeItem("bookingId");
           sessionStorage.removeItem("bookingData");
           sessionStorage.removeItem("estimateData");
+          sessionStorage.removeItem("calendarEventId");
         } catch (err) {
           /* ignore */
         }
@@ -1016,6 +1027,42 @@
         if (el) el.addEventListener("input", validateScheduleStep);
         if (el) el.addEventListener("change", validateScheduleStep);
       });
+    }
+
+    function beginReschedule() {
+      const ev = sessionStorage.getItem("calendarEventId");
+      if (!ev) {
+        alert(
+          "Your appointment is not linked to the calendar yet. Please contact us to reschedule."
+        );
+        return;
+      }
+      state.calendarEventId = ev;
+      try {
+        const bid = sessionStorage.getItem("bookingId");
+        if (bid) state.bookingId = bid;
+      } catch (e) {
+        /* ignore */
+      }
+      state.rescheduleMode = true;
+      state.selectedDate = null;
+      state.selectedTime = null;
+      state.calendarSyncNote = null;
+      timesGrid.innerHTML = "";
+      timesIntro.textContent = "Select a new date for your appointment.";
+      renderCalendar();
+      showScreen("schedule");
+      validateScheduleStep();
+    }
+
+    function updateRescheduleButtonState() {
+      const btn = $("rescheduleBtn");
+      if (!btn) return;
+      const hasEvent = !!sessionStorage.getItem("calendarEventId");
+      btn.disabled = !hasEvent;
+      btn.title = hasEvent
+        ? "Pick a new date and time"
+        : "Available after your booking is synced to Google Calendar";
     }
 
     function showScreen(name) {
@@ -1143,6 +1190,11 @@
         introEl.textContent = `Showing availability for ${formatLongDate(dateObj)} (demo schedule — calendar API unreachable).`;
       }
 
+      if (!slots || slots.length === 0) {
+        introEl.textContent = `No open appointments on ${formatLongDate(dateObj)}. Try another date.`;
+        return;
+      }
+
       slots.forEach(slot => {
         const btn = document.createElement("button");
         btn.type = "button";
@@ -1171,29 +1223,81 @@
       });
     }
 
+    function formatLocal12hFromDate(d) {
+      let h = d.getHours();
+      const mm = d.getMinutes();
+      const ap = h >= 12 ? "PM" : "AM";
+      h = h % 12;
+      if (h === 0) h = 12;
+      return `${h}:${String(mm).padStart(2, "0")} ${ap}`;
+    }
+
+    /** Mirrors server dynamic slots: work hours minus sample busy blocks (offline demo only). */
     function getDemoSlots(dateObj) {
       const weekday = dateObj.getDay();
-      const dayNum = dateObj.getDate();
+      if (weekday === 0) return [];
 
-      return CONFIG.baseTimes.map((time, index) => {
-        let status = "available";
+      const y = dateObj.getFullYear();
+      const mo = dateObj.getMonth();
+      const d = dateObj.getDate();
+      const slotDurationMin = 90;
+      const stepMin = 30;
 
-        if (weekday === 6 && index >= 4) status = "off";
-        if ((dayNum + index) % 4 === 0) status = "busy";
-        if ((dayNum + weekday + index) % 9 === 0) status = "off";
+      const workStartMs = new Date(y, mo, d, 9, 0, 0, 0).getTime();
+      const workEndMs = (
+        weekday === 6
+          ? new Date(y, mo, d, 13, 0, 0, 0)
+          : new Date(y, mo, d, 17, 0, 0, 0)
+      ).getTime();
 
-        return {
-          time,
-          status,
-          label: status === "available" ? "Available" : status === "busy" ? "Occupied" : "Not Offered"
-        };
-      });
+      const busy = [
+        {
+          start: new Date(y, mo, d, 10, 0, 0, 0).getTime(),
+          end: new Date(y, mo, d, 11, 30, 0, 0).getTime(),
+        },
+        {
+          start: new Date(y, mo, d, 14, 0, 0, 0).getTime(),
+          end: new Date(y, mo, d, 15, 30, 0, 0).getTime(),
+        },
+      ];
+
+      const slotMs = slotDurationMin * 60 * 1000;
+      const stepMs = stepMin * 60 * 1000;
+      const slots = [];
+      let cursor = workStartMs;
+
+      for (const b of busy) {
+        let t = cursor;
+        const gapEnd = Math.min(b.start, workEndMs);
+        while (t + slotMs <= gapEnd) {
+          slots.push({
+            time: formatLocal12hFromDate(new Date(t)),
+            status: "available",
+            label: "Available",
+          });
+          t += stepMs;
+        }
+        cursor = Math.max(cursor, b.end);
+      }
+
+      let t = cursor;
+      while (t + slotMs <= workEndMs) {
+        slots.push({
+          time: formatLocal12hFromDate(new Date(t)),
+          status: "available",
+          label: "Available",
+        });
+        t += stepMs;
+      }
+
+      return slots;
     }
 
     function validateScheduleStep() {
       const stripeReady =
-        typeof window.schedulerCardFieldsReady === "function" &&
-        window.schedulerCardFieldsReady();
+        state.rescheduleMode ||
+        (typeof window.schedulerCardFieldsReady === "function" &&
+          window.schedulerCardFieldsReady());
 
       const valid =
         state.selectedDate &&
@@ -1214,7 +1318,11 @@
 
     function goToReview() {
       try {
-        if (typeof window.schedulerCardFieldsReady !== "function" || !window.schedulerCardFieldsReady()) {
+        if (
+          !state.rescheduleMode &&
+          (typeof window.schedulerCardFieldsReady !== "function" ||
+            !window.schedulerCardFieldsReady())
+        ) {
           const cardErrors = $("card-errors");
           if (cardErrors) {
             cardErrors.textContent =
@@ -1250,12 +1358,24 @@
           ${info("Country", billingCountry.options[billingCountry.selectedIndex]?.text || "N/A")}
         `;
 
-        $("reviewPayment").innerHTML = `
+        $("reviewPayment").innerHTML = state.rescheduleMode
+          ? `
+          ${info("Payment", "Already completed")}
+          ${info("Reschedule", "No additional charge")}
+        `
+          : `
           ${info("Card Type", "Visa / Mastercard / Amex")}
           ${info("Card Status", cardReady ? "Complete" : "Incomplete")}
           ${info("Payment Status", cardReady ? "Ready for payment" : "Complete card on Schedule step")}
           ${info("Method", "Credit Card")}
         `;
+
+        const confirmBtn = $("confirmBtn");
+        if (confirmBtn) {
+          confirmBtn.textContent = state.rescheduleMode
+            ? "Confirm new time"
+            : "Complete Payment & Confirm";
+        }
 
         clearError("reviewError");
         showScreen("review");
@@ -1270,6 +1390,108 @@
 
       const confirmBtn = $("confirmBtn");
       const reviewError = $("reviewError");
+
+      if (state.rescheduleMode && state.calendarEventId) {
+        try {
+          state.isSubmitting = true;
+          clearError("reviewError");
+          confirmBtn.classList.add("loading");
+          confirmBtn.textContent = "Updating appointment…";
+
+          const selY = state.selectedDate.getFullYear();
+          const selM = String(state.selectedDate.getMonth() + 1).padStart(2, "0");
+          const selD = String(state.selectedDate.getDate()).padStart(2, "0");
+          const appointmentDateStr = `${selY}-${selM}-${selD}`;
+
+          const calRes = await fetch(`${SCHEDULER_API_BASE}/api/calendar/bookings`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              eventId: state.calendarEventId,
+              date: appointmentDateStr,
+              time: state.selectedTime,
+              customerName: billingFullName.value.trim(),
+              customerEmail: billingEmail.value.trim(),
+              customerPhone: billingPhone.value.trim(),
+              serviceSummary: state.estimoData.projectDisplayName || "Service",
+              bookingId: state.bookingId,
+            }),
+          });
+
+          let calData = {};
+          try {
+            calData = await calRes.json();
+          } catch (je) {
+            calData = {};
+          }
+
+          if (calRes.status === 503) {
+            throw new Error(
+              "Calendar is not connected. Try again later or contact us."
+            );
+          }
+          if (calRes.status === 409) {
+            throw new Error("That time was just taken. Pick another slot.");
+          }
+          if (!calRes.ok) {
+            throw new Error(calData.error || "Could not reschedule.");
+          }
+
+          if (calData.eventId) {
+            sessionStorage.setItem("calendarEventId", calData.eventId);
+            state.calendarEventId = calData.eventId;
+          }
+
+          let prev = {};
+          try {
+            prev = JSON.parse(sessionStorage.getItem("bookingData") || "{}");
+          } catch (e) {
+            prev = {};
+          }
+
+          const payload = {
+            ...prev,
+            form_type: "appointment_rescheduled",
+            booking_id: state.bookingId,
+            appointment_date: formatLongDate(state.selectedDate),
+            appointment_time: state.selectedTime,
+            submitted_at: new Date().toISOString(),
+          };
+
+          sessionStorage.setItem("bookingData", JSON.stringify(payload));
+
+          try {
+            const formData = new URLSearchParams();
+            for (const [key, value] of Object.entries(payload)) {
+              formData.append(key, String(value));
+            }
+            await fetch("https://formspree.io/f/xqeyglen", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                Accept: "application/json",
+              },
+              body: formData.toString(),
+            });
+          } catch (formError) {
+            console.warn("Formspree submission failed:", formError);
+          }
+
+          state.rescheduleMode = false;
+          state.calendarSyncNote = null;
+          confirmBtn.classList.remove("loading");
+          confirmBtn.textContent = "Complete Payment & Confirm";
+          showScreen("confirmed");
+          populateConfirmedDetails();
+        } catch (error) {
+          showError("reviewError", error.message || String(error));
+          confirmBtn.classList.remove("loading");
+          confirmBtn.textContent = "Confirm new time";
+        } finally {
+          state.isSubmitting = false;
+        }
+        return;
+      }
 
       try {
         state.isSubmitting = true;
@@ -1387,6 +1609,18 @@
             })
           });
 
+          let calJson = {};
+          try {
+            calJson = await calRes.json();
+          } catch (je) {
+            calJson = {};
+          }
+
+          if (calRes.ok && calJson.eventId) {
+            sessionStorage.setItem("calendarEventId", calJson.eventId);
+            state.calendarEventId = calJson.eventId;
+          }
+
           if (calRes.status === 503) {
             state.calendarSyncNote =
               "Calendar automation is not connected yet; your payment is confirmed and we will finalize scheduling manually if needed.";
@@ -1456,6 +1690,7 @@
         
         confirmBtn.classList.remove("loading");
         confirmBtn.textContent = "Complete Payment & Confirm";
+        state.isSubmitting = false;
         showScreen("confirmed");
         populateConfirmedDetails();
         
@@ -1500,6 +1735,8 @@
         ${info("Country", billingCountry.options[billingCountry.selectedIndex]?.text || "N/A")}
         ${info("Booking ID", state.bookingId)}
       `;
+
+      updateRescheduleButtonState();
     }
 
     function sameDate(a, b) {
