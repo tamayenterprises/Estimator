@@ -833,7 +833,8 @@
       rescheduleMode: false,
       isSubmitting: false,
       estimoData: {},
-      calendarSyncNote: null
+      calendarSyncNote: null,
+      emailSyncNote: null
     };
 
     const $ = (id) => document.getElementById(id);
@@ -1053,6 +1054,75 @@
       renderCalendar();
       showScreen("schedule");
       validateScheduleStep();
+    }
+
+    async function sendCustomerConfirmationEmail(payload) {
+      try {
+        const resp = await fetch(
+          `${SCHEDULER_API_BASE}/api/booking/confirmation-email`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }
+        );
+        if (resp.ok) {
+          state.emailSyncNote = null;
+          return true;
+        }
+        if (resp.status === 503) {
+          state.emailSyncNote =
+            "We could not send a confirmation email automatically. Check your inbox for a calendar invite, or contact us if you need a copy.";
+          return false;
+        }
+        const errBody = await resp.json().catch(() => ({}));
+        state.emailSyncNote =
+          errBody.error ||
+          "Confirmation email could not be sent. Your booking is still confirmed.";
+        return false;
+      } catch (err) {
+        console.warn("Confirmation email request failed:", err);
+        state.emailSyncNote =
+          "Confirmation email could not be sent. Your booking is still confirmed.";
+        return false;
+      }
+    }
+
+    function buildBookingPayload(extra = {}) {
+      const countryLabel =
+        billingCountry.options[billingCountry.selectedIndex]?.text || "United States";
+      return {
+        form_type: extra.form_type || "appointment_scheduled",
+        business_name: CONFIG.businessName,
+        booking_id: state.bookingId,
+        service_type: state.estimoData.projectDisplayName || "Service",
+        customer_name: billingFullName.value.trim(),
+        customer_email: billingEmail.value.trim(),
+        customer_phone: billingPhone.value.trim(),
+        billing_address: billingAddress.value.trim(),
+        billing_city: billingCity.value.trim(),
+        billing_state: billingState.value.trim(),
+        billing_zip: billingZip.value.trim(),
+        property_address:
+          billingAddress.value.trim() +
+          (billingApartment.value.trim() ? " " + billingApartment.value.trim() : ""),
+        addressLine: billingAddress.value.trim(),
+        city: billingCity.value.trim(),
+        state: billingState.value.trim(),
+        zip_code: billingZip.value.trim(),
+        cityStateZip:
+          billingCity.value.trim() +
+          ", " +
+          billingState.value.trim() +
+          " " +
+          billingZip.value.trim(),
+        country: countryLabel,
+        appointment_date: formatLongDate(state.selectedDate),
+        appointment_time: state.selectedTime,
+        booking_price: state.estimoData.workingPrice || "To be determined",
+        submitted_at: new Date().toISOString(),
+        ...extra,
+      };
     }
 
     function updateRescheduleButtonState() {
@@ -1449,22 +1519,23 @@
             prev = {};
           }
 
-          const payload = {
-            ...prev,
+          const payload = buildBookingPayload({
             form_type: "appointment_rescheduled",
-            booking_id: state.bookingId,
-            appointment_date: formatLongDate(state.selectedDate),
-            appointment_time: state.selectedTime,
-            submitted_at: new Date().toISOString(),
-          };
+            payment_status: prev.payment_status || "completed",
+            payment_id: prev.payment_id,
+            payment_amount: prev.payment_amount,
+          });
 
           sessionStorage.setItem("bookingData", JSON.stringify(payload));
+
+          await sendCustomerConfirmationEmail(payload);
 
           try {
             const formData = new URLSearchParams();
             for (const [key, value] of Object.entries(payload)) {
               formData.append(key, String(value));
             }
+            formData.append("_subject", `Appointment rescheduled — ${state.bookingId}`);
             await fetch("https://formspree.io/f/xqeyglen", {
               method: "POST",
               headers: {
@@ -1587,6 +1658,7 @@
         }
 
         state.calendarSyncNote = null;
+        state.emailSyncNote = null;
 
         const selY = state.selectedDate.getFullYear();
         const selM = String(state.selectedDate.getMonth() + 1).padStart(2, "0");
@@ -1600,6 +1672,16 @@
             body: JSON.stringify({
               date: appointmentDateStr,
               time: state.selectedTime,
+              appointment_date: formatLongDate(state.selectedDate),
+              appointment_time: state.selectedTime,
+              booking_price: state.estimoData.workingPrice || "",
+              property_address: billingAddress.value.trim(),
+              city: billingCity.value.trim(),
+              state: billingState.value.trim(),
+              zip_code: billingZip.value.trim(),
+              country:
+                billingCountry.options[billingCountry.selectedIndex]?.text ||
+                "United States",
               customerName: billingFullName.value.trim(),
               customerEmail: billingEmail.value.trim(),
               customerPhone: billingPhone.value.trim(),
@@ -1638,31 +1720,13 @@
         }
 
         // Payment successful - now save booking
-        const payload = {
-          form_type: "appointment_scheduled",
-          business_name: CONFIG.businessName,
-          booking_id: state.bookingId,
-          service_type: state.estimoData.projectDisplayName || "Service",
-          customer_name: billingFullName.value.trim(),
-          customer_email: billingEmail.value.trim(),
-          customer_phone: billingPhone.value.trim(),
-          billing_address: billingAddress.value.trim(),
-          billing_city: billingCity.value.trim(),
-          billing_state: billingState.value.trim(),
-          billing_zip: billingZip.value.trim(),
-          property_address: billingAddress.value.trim() + (billingApartment.value.trim() ? " " + billingApartment.value.trim() : ""),
-          city: billingCity.value.trim(),
-          state: billingState.value.trim(),
-          zip_code: billingZip.value.trim(),
-          country: billingCountry.value,
-          appointment_date: formatLongDate(state.selectedDate),
-          appointment_time: state.selectedTime,
-          booking_price: state.estimoData.workingPrice || "To be determined",
-          submitted_at: new Date().toISOString(),
+        const payload = buildBookingPayload({
           payment_status: "completed",
           payment_id: paymentIntent.id,
           payment_amount: paymentAmount,
-        };
+        });
+
+        await sendCustomerConfirmationEmail(payload);
 
         // Submit booking to Formspree in background to avoid redirecting users away.
         try {
@@ -1670,6 +1734,10 @@
           for (const [key, value] of Object.entries(payload)) {
             formData.append(key, String(value));
           }
+          formData.append(
+            "_subject",
+            `New appointment — ${state.bookingId} — ${payload.customer_name}`
+          );
 
           await fetch("https://formspree.io/f/xqeyglen", {
             method: "POST",
@@ -1721,20 +1789,49 @@
         bookingIdEl.textContent = "Booking ID: " + state.bookingId;
       }
 
-      $("confirmedDetails").innerHTML = `
-        ${state.calendarSyncNote ? `<div class="alert error show" style="margin-bottom:14px;line-height:1.45;">${state.calendarSyncNote}</div>` : ""}
-        ${info("Service", projectName)}
-        ${info("Booking Price", workingPrice)}
-        ${info("Date", formatLongDate(state.selectedDate))}
-        ${info("Time", state.selectedTime)}
-        ${info("Name", billingFullName.value.trim())}
-        ${info("Email", billingEmail.value.trim())}
-        ${info("Phone", billingPhone.value.trim())}
-        ${info("Address", billingAddress.value.trim() + (billingApartment.value.trim() ? " " + billingApartment.value.trim() : ""))}
-        ${info("City, State, ZIP", billingCity.value.trim() + ", " + billingState.value.trim() + " " + billingZip.value.trim())}
-        ${info("Country", billingCountry.options[billingCountry.selectedIndex]?.text || "N/A")}
-        ${info("Booking ID", state.bookingId)}
-      `;
+      let html = "";
+      if (state.emailSyncNote) {
+        html +=
+          '<div class="alert error show" style="margin-bottom:14px;line-height:1.45;">' +
+          state.emailSyncNote +
+          "</div>";
+      }
+      if (state.calendarSyncNote) {
+        html +=
+          '<div class="alert error show" style="margin-bottom:14px;line-height:1.45;">' +
+          state.calendarSyncNote +
+          "</div>";
+      }
+      html += info("Service", projectName);
+      html += info("Booking Price", workingPrice);
+      html += info("Date", formatLongDate(state.selectedDate));
+      html += info("Time", state.selectedTime);
+      html += info("Name", billingFullName.value.trim());
+      html += info("Email", billingEmail.value.trim());
+      html += info("Phone", billingPhone.value.trim());
+      html +=
+        info(
+          "Address",
+          billingAddress.value.trim() +
+            (billingApartment.value.trim() ? " " + billingApartment.value.trim() : "")
+        );
+      html +=
+        info(
+          "City, State, ZIP",
+          billingCity.value.trim() +
+            ", " +
+            billingState.value.trim() +
+            " " +
+            billingZip.value.trim()
+        );
+      html +=
+        info(
+          "Country",
+          billingCountry.options[billingCountry.selectedIndex]?.text || "N/A"
+        );
+      html += info("Booking ID", state.bookingId);
+
+      $("confirmedDetails").innerHTML = html;
 
       updateRescheduleButtonState();
     }

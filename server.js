@@ -127,6 +127,15 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- Google Calendar (optional; does not affect Stripe routes above) ---
 const calendarLib = require("./lib/googleCalendar");
+const bookingEmail = require("./lib/bookingConfirmationEmail");
+
+function buildCalendarEventDescription(body) {
+  const d = bookingEmail.normalizeBookingPayload(body);
+  return bookingEmail.buildPlainTextSummary({
+    ...d,
+    businessName: undefined,
+  });
+}
 
 app.get("/api/calendar/status", (req, res) => {
   const detail = calendarLib.getIntegrationStatus();
@@ -194,15 +203,15 @@ app.post("/api/calendar/bookings", async (req, res) => {
   const paymentIntentId = body.paymentIntentId || "";
   const bookingId = body.bookingId || "";
 
-  const description = [
-    bookingId && `Booking ID: ${bookingId}`,
-    customerName && `Customer: ${customerName}`,
-    customerEmail && `Email: ${customerEmail}`,
-    customerPhone && `Phone: ${customerPhone}`,
-    paymentIntentId && `Stripe payment: ${paymentIntentId}`,
-  ]
-    .filter(Boolean)
-    .join("\n");
+  const description = buildCalendarEventDescription({
+    ...body,
+    service_type: summaryBase,
+    booking_id: bookingId,
+    customer_name: customerName,
+    customer_email: customerEmail,
+    customer_phone: customerPhone,
+    paymentIntentId,
+  });
 
   const summary = customerName
     ? `${summaryBase} — ${customerName}`
@@ -258,14 +267,18 @@ app.patch("/api/calendar/bookings", async (req, res) => {
   const bookingId = body.bookingId || "";
 
   const description = [
-    bookingId && `Booking ID: ${bookingId}`,
-    customerName && `Customer: ${customerName}`,
-    customerEmail && `Email: ${customerEmail}`,
-    customerPhone && `Phone: ${customerPhone}`,
+    buildCalendarEventDescription({
+      ...body,
+      service_type: summaryBase,
+      booking_id: bookingId,
+      customer_name: customerName,
+      customer_email: customerEmail,
+      customer_phone: customerPhone,
+    }),
     `(Rescheduled ${new Date().toISOString()})`,
   ]
     .filter(Boolean)
-    .join("\n");
+    .join("\n\n");
 
   const summary = customerName
     ? `${summaryBase} — ${customerName}`
@@ -297,6 +310,38 @@ app.patch("/api/calendar/bookings", async (req, res) => {
     }
     console.error("calendar reschedule error:", err.message);
     res.status(500).json({ error: "Failed to reschedule calendar event" });
+  }
+});
+
+app.get("/api/booking/email-status", (req, res) => {
+  res.json({
+    enabled: bookingEmail.isEmailConfigured(),
+    provider: "resend",
+    nextStep: bookingEmail.isEmailConfigured()
+      ? "email_live"
+      : "set_RESEND_API_KEY_and_BOOKING_EMAIL_FROM_on_Render",
+  });
+});
+
+app.post("/api/booking/confirmation-email", async (req, res) => {
+  try {
+    const result = await bookingEmail.sendBookingConfirmationEmail(req.body || {});
+    res.json({ ok: true, ...result });
+  } catch (err) {
+    if (err.code === "EMAIL_DISABLED") {
+      return res.status(503).json({
+        error: err.message,
+        code: "email_disabled",
+      });
+    }
+    if (err.code === "BAD_EMAIL") {
+      return res.status(400).json({ error: err.message });
+    }
+    console.error("confirmation email error:", err.message);
+    res.status(500).json({
+      error: err.message || "Failed to send confirmation email",
+      code: err.code || "send_failed",
+    });
   }
 });
 
@@ -568,6 +613,14 @@ app.listen(PORT, async () => {
     }
   } catch (calErr) {
     console.warn("Calendar status log skipped:", calErr?.message);
+  }
+
+  if (bookingEmail.isEmailConfigured()) {
+    console.log("✅ Customer confirmation email: Resend configured.");
+  } else {
+    console.log(
+      "📧 Customer confirmation email: set RESEND_API_KEY and BOOKING_EMAIL_FROM on Render."
+    );
   }
 });
 
