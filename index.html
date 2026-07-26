@@ -106,6 +106,12 @@
                         <p>Assemble TV stands and media consoles, including optional fireplace insert assembly and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="deskAssemblyProjectOption" data-value="furniture_desk_assembly" data-display="Desk Assembly">
+                        <h4>Desk Assembly</h4>
+                        <p>Assemble writing, office, L-shaped, standing, gaming, and hutch desks with optional packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -482,6 +488,50 @@
 
                 <label for="tvStandOldFurniture">Does an existing TV stand need to be moved or removed?</label>
                 <select id="tvStandOldFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- DESK ASSEMBLY BASICS -->
+              <div id="deskBasicsSection" class="hidden">
+                <label for="deskType">What type of desk are we assembling?</label>
+                <select id="deskType">
+                  <option value="smallWritingDesk">Small writing desk or compact student desk</option>
+                  <option value="standardDesk">Standard computer or home-office desk</option>
+                  <option value="largeDesk">Large desk with multiple drawers or components</option>
+                  <option value="lShapedDesk">L-shaped or corner desk</option>
+                  <option value="executiveDesk">Large executive-style desk</option>
+                  <option value="standingDeskManual">Manual adjustable standing desk</option>
+                  <option value="standingDeskElectric">Electric motorized standing desk</option>
+                  <option value="gamingDesk">Gaming desk with included accessories or cable-management components</option>
+                  <option value="deskWithHutch">Desk with upper shelving or hutch</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="deskBrand">What brand or store is it from?</label>
+                <select id="deskBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="staples">Staples</option>
+                  <option value="officeDepot">Office Depot</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="deskAlreadyInRoom">Is the desk already in the room where it will be assembled?</label>
+                <select id="deskAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="deskOldFurniture">Does an existing desk need to be moved or removed?</label>
+                <select id="deskOldFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1128,6 +1178,68 @@
 
                 <label for="notesTvStand">Anything else we should know?</label>
                 <textarea id="notesTvStand" placeholder="Share access notes, stairs, outlet location, or other details."></textarea>
+              </div>
+
+              <!-- DESK ASSEMBLY DETAILS -->
+              <div id="deskDetailsSection" class="hidden">
+                <label for="deskHasDrawers">Does the desk include drawers or a filing cabinet?</label>
+                <select id="deskHasDrawers">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="deskHasHutch">Does it include upper shelves or a hutch?</label>
+                <select id="deskHasHutch">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="deskHasPowerComponents">Does it include built-in lighting, USB ports, or a power strip?</label>
+                <select id="deskHasPowerComponents">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  This covers installing and connecting components included with the desk only — not new outlets, wiring changes, or electrical repairs.
+                </div>
+
+                <label for="deskFinalPositioning">Would you like the desk placed in its final position after assembly?</label>
+                <select id="deskFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="deskPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="deskPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="deskHasProductLink">Do you have a link to the desk?</label>
+                <select id="deskHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="deskProductLinkField" class="hidden">
+                  <label for="deskProductLink">Paste the product link</label>
+                  <input type="url" id="deskProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Staples, Office Depot, the manufacturer, or another retailer.</div>
+                </div>
+
+                <div class="small-note" id="deskElectricNote">
+                  Electric standing desks include an automatic adder for motor, controls, power supply, cable routing, calibration, and testing. New household outlets or wiring changes require a separate personalized electrical estimate.
+                </div>
+
+                <label for="projectFilesDesk">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesDesk" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, assembly manuals, or motor/control manuals help us prepare for the job.</div>
+
+                <label for="notesDesk">Anything else we should know?</label>
+                <textarea id="notesDesk" placeholder="Share access notes, stairs, outlet location, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

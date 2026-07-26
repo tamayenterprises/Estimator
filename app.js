@@ -594,6 +594,41 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureDesk: {
+    base: {
+      smallWritingDesk: { totalMin: 80, totalMax: 140, hours: 1.5, label: "Small writing desk assembly" },
+      standardDesk: { totalMin: 100, totalMax: 180, hours: 1.75, label: "Standard desk assembly" },
+      largeDesk: { totalMin: 150, totalMax: 240, hours: 2.25, label: "Large desk assembly" },
+      lShapedDesk: { totalMin: 180, totalMax: 290, hours: 2.75, label: "L-shaped desk assembly" },
+      executiveDesk: { totalMin: 200, totalMax: 320, hours: 3.0, label: "Executive desk assembly" },
+      standingDeskManual: { totalMin: 130, totalMax: 220, hours: 2.25, label: "Manual standing desk assembly" },
+      standingDeskElectric: { totalMin: 160, totalMax: 260, hours: 2.5, label: "Electric standing desk assembly" },
+      gamingDesk: { totalMin: 130, totalMax: 220, hours: 2.25, label: "Gaming desk assembly" },
+      deskWithHutch: { totalMin: 180, totalMax: 300, hours: 2.75, label: "Desk with hutch assembly" },
+      otherNotSure: { totalMin: 130, totalMax: 240, hours: 2.25, label: "Desk type to be confirmed", manualReview: true }
+    },
+    electricStandingDesk: {
+      totalMin: 40,
+      totalMax: 75,
+      label: "Electric standing desk motor, controls, and testing"
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing desk removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing desk handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional assembly",
+      "Included drawer and shelf installation",
+      "Included hutch assembly",
+      "Included cable-management components",
+      "Final positioning and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -831,6 +866,7 @@ const aiDesignProjectOption = document.getElementById("aiDesignProjectOption");
 const dresserAssemblyProjectOption = document.getElementById("dresserAssemblyProjectOption");
 const bedFrameAssemblyProjectOption = document.getElementById("bedFrameAssemblyProjectOption");
 const tvStandAssemblyProjectOption = document.getElementById("tvStandAssemblyProjectOption");
+const deskAssemblyProjectOption = document.getElementById("deskAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -859,6 +895,7 @@ const aiDesignBasicsSection = document.getElementById("aiDesignBasicsSection");
 const dresserBasicsSection = document.getElementById("dresserBasicsSection");
 const bedFrameBasicsSection = document.getElementById("bedFrameBasicsSection");
 const tvStandBasicsSection = document.getElementById("tvStandBasicsSection");
+const deskBasicsSection = document.getElementById("deskBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -869,6 +906,7 @@ const aiDesignDetailsSection = document.getElementById("aiDesignDetailsSection")
 const dresserDetailsSection = document.getElementById("dresserDetailsSection");
 const bedFrameDetailsSection = document.getElementById("bedFrameDetailsSection");
 const tvStandDetailsSection = document.getElementById("tvStandDetailsSection");
+const deskDetailsSection = document.getElementById("deskDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -918,6 +956,22 @@ const tvStandProductLink = document.getElementById("tvStandProductLink");
 const tvStandProductLinkField = document.getElementById("tvStandProductLinkField");
 const notesTvStand = document.getElementById("notesTvStand");
 const projectFilesTvStand = document.getElementById("projectFilesTvStand");
+
+const deskType = document.getElementById("deskType");
+const deskBrand = document.getElementById("deskBrand");
+const deskAlreadyInRoom = document.getElementById("deskAlreadyInRoom");
+const deskOldFurniture = document.getElementById("deskOldFurniture");
+const deskHasDrawers = document.getElementById("deskHasDrawers");
+const deskHasHutch = document.getElementById("deskHasHutch");
+const deskHasPowerComponents = document.getElementById("deskHasPowerComponents");
+const deskFinalPositioning = document.getElementById("deskFinalPositioning");
+const deskPackagingCleanup = document.getElementById("deskPackagingCleanup");
+const deskHasProductLink = document.getElementById("deskHasProductLink");
+const deskProductLink = document.getElementById("deskProductLink");
+const deskProductLinkField = document.getElementById("deskProductLinkField");
+const deskElectricNote = document.getElementById("deskElectricNote");
+const notesDesk = document.getElementById("notesDesk");
+const projectFilesDesk = document.getElementById("projectFilesDesk");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1252,6 +1306,7 @@ function allProjectOptions() {
     dresserAssemblyProjectOption,
     bedFrameAssemblyProjectOption,
     tvStandAssemblyProjectOption,
+    deskAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1285,6 +1340,10 @@ function isBedFrameAssemblyProject(type) {
 
 function isTvStandAssemblyProject(type) {
   return type === "furniture_tv_stand_assembly";
+}
+
+function isDeskAssemblyProject(type) {
+  return type === "furniture_desk_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1481,6 +1540,7 @@ function updateProjectSpecificUI() {
   if (dresserBasicsSection) dresserBasicsSection.classList.add("hidden");
   if (bedFrameBasicsSection) bedFrameBasicsSection.classList.add("hidden");
   if (tvStandBasicsSection) tvStandBasicsSection.classList.add("hidden");
+  if (deskBasicsSection) deskBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1491,6 +1551,7 @@ function updateProjectSpecificUI() {
   if (dresserDetailsSection) dresserDetailsSection.classList.add("hidden");
   if (bedFrameDetailsSection) bedFrameDetailsSection.classList.add("hidden");
   if (tvStandDetailsSection) tvStandDetailsSection.classList.add("hidden");
+  if (deskDetailsSection) deskDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1563,6 +1624,15 @@ function updateProjectSpecificUI() {
     return;
   }
 
+  if (isDeskAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the desk so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for drawers, hutches, power components, and packaging cleanup.";
+    if (deskBasicsSection) deskBasicsSection.classList.remove("hidden");
+    if (deskDetailsSection) deskDetailsSection.classList.remove("hidden");
+    updateDeskConditionalFields();
+    return;
+  }
+
   if (isPlumbingProject(type)) {
     basicsSubtitle.textContent = "Tell us about the plumbing project so we can build a more accurate estimate.";
     detailsSubtitle.textContent = "A few final details help us refine the plumbing estimate more accurately.";
@@ -1631,6 +1701,21 @@ function updateTvStandConditionalFields() {
     if (!showProductLink && tvStandProductLink) {
       tvStandProductLink.value = "";
     }
+  }
+}
+
+function updateDeskConditionalFields() {
+  const showProductLink = deskHasProductLink?.value === "yes";
+  if (deskProductLinkField) {
+    deskProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && deskProductLink) {
+      deskProductLink.value = "";
+    }
+  }
+
+  const isElectric = deskType?.value === "standingDeskElectric";
+  if (deskElectricNote) {
+    deskElectricNote.classList.toggle("hidden", !isElectric);
   }
 }
 
@@ -1926,6 +2011,103 @@ function calculateTvStandAssemblyEstimate(formData) {
   };
 }
 
+function calculateDeskAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureDesk;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Desk competitive pricing: base includes normal assembly complexity; only electric standing desk and removeDispose may add cost"
+  ];
+
+  const base = cfg.base[formData.deskType] || cfg.base.otherNotSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price includes drawers/shelves/hutch when included, cable-management components, included lighting/USB/power-strip connections, final placement when requested, in-home movement, and basic packaging cleanup"
+  );
+
+  if (formData.deskBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.deskBrand}`);
+  }
+  if (formData.deskAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.deskAlreadyInRoom}`);
+  }
+  if (formData.deskHasDrawers) {
+    internalAdjustments.push(`Drawers/filing cabinet (prep only, $0): ${formData.deskHasDrawers}`);
+  }
+  if (formData.deskHasHutch) {
+    internalAdjustments.push(`Upper shelves/hutch (prep only, $0): ${formData.deskHasHutch}`);
+  }
+  if (formData.deskHasPowerComponents) {
+    internalAdjustments.push(`Lighting/USB/power strip (prep only, $0): ${formData.deskHasPowerComponents}`);
+  }
+  if (formData.deskFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.deskFinalPositioning}`);
+  }
+  if (formData.deskPackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.deskPackagingCleanup}`);
+  }
+  if (formData.deskHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.deskProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  const electricAdderApplied = formData.deskType === "standingDeskElectric";
+  if (electricAdderApplied) {
+    laborMin += cfg.electricStandingDesk.totalMin;
+    laborMax += cfg.electricStandingDesk.totalMax;
+    adjustments.push(cfg.electricStandingDesk.label);
+    adjustments.push(
+      "Electric standing desk adder covers included motor/controls/power supply, cable routing, calibration, and testing — not new outlets, wiring changes, hardwiring, or electrical repairs"
+    );
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.deskOldFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing desk answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.deskOldFurniture === "moveOnly") {
+    internalAdjustments.push("Existing desk moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your desk assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+  if (electricAdderApplied) {
+    adjustments.push("• Included motor, controller, and height-operation testing");
+  }
+
+  const manualReviewRequired =
+    formData.deskType === "otherNotSure" || formData.deskOldFurniture === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    deskElectricAdderApplied: electricAdderApplied,
+    deskRemovalDisposalRequested: formData.deskOldFurniture === "removeDispose",
+    deskManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -2132,6 +2314,17 @@ function classifyJobSize(formData) {
 
   if (formData.projectType === "furniture_tv_stand_assembly") {
     if (formData.tvStandSize === "xlarge" || formData.tvStandSize === "large") return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_desk_assembly") {
+    if (
+      ["lShapedDesk", "executiveDesk", "deskWithHutch", "standingDeskElectric", "largeDesk"].includes(
+        formData.deskType
+      )
+    ) {
+      return "medium";
+    }
     return "small";
   }
 
@@ -3108,6 +3301,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_tv_stand_assembly") {
     return projectFilesTvStand ? projectFilesTvStand.files : null;
   }
+  if (projectType.value === "furniture_desk_assembly") {
+    return projectFilesDesk ? projectFilesDesk.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -3240,6 +3436,20 @@ function getFormData() {
     tvStandProductLink:
       tvStandHasProductLink?.value === "yes" ? normalizeProductUrl(tvStandProductLink?.value || "") : "",
     notesTvStand: notesTvStand?.value.trim() || "",
+
+    deskType: deskType?.value || "",
+    deskBrand: deskBrand?.value || "",
+    deskAlreadyInRoom: deskAlreadyInRoom?.value || "",
+    deskOldFurniture: deskOldFurniture?.value || "",
+    deskHasDrawers: deskHasDrawers?.value || "",
+    deskHasHutch: deskHasHutch?.value || "",
+    deskHasPowerComponents: deskHasPowerComponents?.value || "",
+    deskFinalPositioning: deskFinalPositioning?.value || "",
+    deskPackagingCleanup: deskPackagingCleanup?.value || "",
+    deskHasProductLink: deskHasProductLink?.value || "no",
+    deskProductLink:
+      deskHasProductLink?.value === "yes" ? normalizeProductUrl(deskProductLink?.value || "") : "",
+    notesDesk: notesDesk?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -3437,6 +3647,36 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     );
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesTvStand);
+  } else if (formData.projectType === "furniture_desk_assembly") {
+    const suggestedPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("desk_type", formData.deskType);
+    payload.append("desk_brand", formData.deskBrand);
+    payload.append("desk_already_in_room", formData.deskAlreadyInRoom);
+    payload.append("desk_old_furniture", formData.deskOldFurniture);
+    payload.append("desk_has_drawers", formData.deskHasDrawers);
+    payload.append("desk_has_hutch", formData.deskHasHutch);
+    payload.append("desk_has_power_components", formData.deskHasPowerComponents);
+    payload.append("desk_final_positioning", formData.deskFinalPositioning);
+    payload.append("desk_packaging_cleanup", formData.deskPackagingCleanup);
+    payload.append("desk_has_product_link", formData.deskHasProductLink || "no");
+    payload.append("desk_product_link", formData.deskProductLink || "");
+    payload.append("desk_notes", formData.notesDesk);
+    payload.append(
+      "desk_electric_adder_applied",
+      estimateData.deskElectricAdderApplied || formData.deskType === "standingDeskElectric"
+        ? "true"
+        : "false"
+    );
+    payload.append(
+      "desk_removal_disposal_requested",
+      formData.deskOldFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "desk_manual_review_required",
+      estimateData.deskManualReviewRequired ? "true" : "false"
+    );
+    payload.append("suggested_price", currency(suggestedPrice));
+    payload.append("notes", formData.notesDesk);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -3634,6 +3874,18 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_desk_assembly") {
+      if (
+        !deskType?.value ||
+        !deskBrand?.value ||
+        !deskAlreadyInRoom?.value ||
+        !deskOldFurniture?.value
+      ) {
+        showValidation(validationStep3, "Please complete the desk basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -3670,6 +3922,17 @@ function validateStep(step) {
         tvStandHasProductLink?.value === "yes" &&
         tvStandProductLink?.value.trim() &&
         !isSoftValidProductUrl(tvStandProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_desk_assembly") {
+      if (
+        deskHasProductLink?.value === "yes" &&
+        deskProductLink?.value.trim() &&
+        !isSoftValidProductUrl(deskProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -3884,6 +4147,7 @@ function resetExperience() {
   updateDresserConditionalFields();
   updateBedFrameConditionalFields();
   updateTvStandConditionalFields();
+  updateDeskConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -3936,6 +4200,12 @@ if (bedFrameAssemblyProjectOption) {
 if (tvStandAssemblyProjectOption) {
   tvStandAssemblyProjectOption.addEventListener("click", () => {
     setSelectedProject("furniture_tv_stand_assembly", "TV Stand Assembly");
+  });
+}
+
+if (deskAssemblyProjectOption) {
+  deskAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_desk_assembly", "Desk Assembly");
   });
 }
 
@@ -3995,11 +4265,14 @@ if (dresserHasProductLink) dresserHasProductLink.addEventListener("change", upda
 if (bedHasProductLink) bedHasProductLink.addEventListener("change", updateBedFrameConditionalFields);
 if (bedType) bedType.addEventListener("change", updateBedFrameConditionalFields);
 if (tvStandHasProductLink) tvStandHasProductLink.addEventListener("change", updateTvStandConditionalFields);
+if (deskHasProductLink) deskHasProductLink.addEventListener("change", updateDeskConditionalFields);
+if (deskType) deskType.addEventListener("change", updateDeskConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
 updateBedFrameConditionalFields();
 updateTvStandConditionalFields();
+updateDeskConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -4046,6 +4319,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateBedFrameAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_tv_stand_assembly") {
     latestEstimate = calculateTvStandAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_desk_assembly") {
+    latestEstimate = calculateDeskAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
