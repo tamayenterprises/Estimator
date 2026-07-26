@@ -565,6 +565,35 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureTvStand: {
+    base: {
+      small: { totalMin: 90, totalMax: 160, hours: 1.75, label: "Small TV stand assembly" },
+      medium: { totalMin: 140, totalMax: 220, hours: 2.25, label: "Medium TV stand assembly" },
+      large: { totalMin: 190, totalMax: 290, hours: 2.75, label: "Large TV stand assembly" },
+      xlarge: { totalMin: 250, totalMax: 390, hours: 3.25, label: "Extra-large TV stand assembly" },
+      notSure: { totalMin: 150, totalMax: 260, hours: 2.5, label: "TV stand size to be confirmed" }
+    },
+    fireplace: {
+      yes: { totalMin: 40, totalMax: 75, label: "Electric fireplace insert assembly and installation" },
+      no: { totalMin: 0, totalMax: 0 },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Fireplace insert details require review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing TV stand removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing TV stand handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional assembly",
+      "Doors, drawers, and shelf installation",
+      "Included lighting-component assembly",
+      "Final placement and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -801,6 +830,7 @@ const paintProjectOption = document.getElementById("paintProjectOption");
 const aiDesignProjectOption = document.getElementById("aiDesignProjectOption");
 const dresserAssemblyProjectOption = document.getElementById("dresserAssemblyProjectOption");
 const bedFrameAssemblyProjectOption = document.getElementById("bedFrameAssemblyProjectOption");
+const tvStandAssemblyProjectOption = document.getElementById("tvStandAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -828,6 +858,7 @@ const paintBasicsSection = document.getElementById("paintBasicsSection");
 const aiDesignBasicsSection = document.getElementById("aiDesignBasicsSection");
 const dresserBasicsSection = document.getElementById("dresserBasicsSection");
 const bedFrameBasicsSection = document.getElementById("bedFrameBasicsSection");
+const tvStandBasicsSection = document.getElementById("tvStandBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -837,6 +868,7 @@ const paintDetailsSection = document.getElementById("paintDetailsSection");
 const aiDesignDetailsSection = document.getElementById("aiDesignDetailsSection");
 const dresserDetailsSection = document.getElementById("dresserDetailsSection");
 const bedFrameDetailsSection = document.getElementById("bedFrameDetailsSection");
+const tvStandDetailsSection = document.getElementById("tvStandDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -871,6 +903,21 @@ const bedProductLinkField = document.getElementById("bedProductLinkField");
 const bedMurphyHelpNote = document.getElementById("bedMurphyHelpNote");
 const notesBedFrame = document.getElementById("notesBedFrame");
 const projectFilesBedFrame = document.getElementById("projectFilesBedFrame");
+
+const tvStandSize = document.getElementById("tvStandSize");
+const tvStandBrand = document.getElementById("tvStandBrand");
+const tvStandAlreadyInRoom = document.getElementById("tvStandAlreadyInRoom");
+const tvStandOldFurniture = document.getElementById("tvStandOldFurniture");
+const tvStandHasFireplace = document.getElementById("tvStandHasFireplace");
+const tvStandHasLighting = document.getElementById("tvStandHasLighting");
+const tvStandHasGlass = document.getElementById("tvStandHasGlass");
+const tvStandFinalPositioning = document.getElementById("tvStandFinalPositioning");
+const tvStandPackagingCleanup = document.getElementById("tvStandPackagingCleanup");
+const tvStandHasProductLink = document.getElementById("tvStandHasProductLink");
+const tvStandProductLink = document.getElementById("tvStandProductLink");
+const tvStandProductLinkField = document.getElementById("tvStandProductLinkField");
+const notesTvStand = document.getElementById("notesTvStand");
+const projectFilesTvStand = document.getElementById("projectFilesTvStand");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1204,6 +1251,7 @@ function allProjectOptions() {
     aiDesignProjectOption,
     dresserAssemblyProjectOption,
     bedFrameAssemblyProjectOption,
+    tvStandAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1233,6 +1281,10 @@ function isDresserAssemblyProject(type) {
 
 function isBedFrameAssemblyProject(type) {
   return type === "furniture_bed_frame_assembly";
+}
+
+function isTvStandAssemblyProject(type) {
+  return type === "furniture_tv_stand_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1428,6 +1480,7 @@ function updateProjectSpecificUI() {
   if (aiDesignBasicsSection) aiDesignBasicsSection.classList.add("hidden");
   if (dresserBasicsSection) dresserBasicsSection.classList.add("hidden");
   if (bedFrameBasicsSection) bedFrameBasicsSection.classList.add("hidden");
+  if (tvStandBasicsSection) tvStandBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1437,6 +1490,7 @@ function updateProjectSpecificUI() {
   if (aiDesignDetailsSection) aiDesignDetailsSection.classList.add("hidden");
   if (dresserDetailsSection) dresserDetailsSection.classList.add("hidden");
   if (bedFrameDetailsSection) bedFrameDetailsSection.classList.add("hidden");
+  if (tvStandDetailsSection) tvStandDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1500,6 +1554,15 @@ function updateProjectSpecificUI() {
     return;
   }
 
+  if (isTvStandAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the TV stand so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for fireplace inserts, glass components, and packaging cleanup.";
+    if (tvStandBasicsSection) tvStandBasicsSection.classList.remove("hidden");
+    if (tvStandDetailsSection) tvStandDetailsSection.classList.remove("hidden");
+    updateTvStandConditionalFields();
+    return;
+  }
+
   if (isPlumbingProject(type)) {
     basicsSubtitle.textContent = "Tell us about the plumbing project so we can build a more accurate estimate.";
     detailsSubtitle.textContent = "A few final details help us refine the plumbing estimate more accurately.";
@@ -1558,6 +1621,16 @@ function updateBedFrameConditionalFields() {
   const isMurphy = bedType?.value === "murphyBed";
   if (bedMurphyHelpNote) {
     bedMurphyHelpNote.classList.toggle("hidden", !isMurphy);
+  }
+}
+
+function updateTvStandConditionalFields() {
+  const showProductLink = tvStandHasProductLink?.value === "yes";
+  if (tvStandProductLinkField) {
+    tvStandProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && tvStandProductLink) {
+      tvStandProductLink.value = "";
+    }
   }
 }
 
@@ -1750,6 +1823,106 @@ function calculateBedFrameAssemblyEstimate(formData) {
     bedManualReviewRequired: false,
     bedRemovalDisposalRequested: formData.bedOldFurniture === "removeDispose",
     bedOldFurnitureManualReview: !!oldFurniture.manualReview
+  };
+}
+
+function calculateTvStandAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureTvStand;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "TV stand competitive pricing: base includes normal assembly complexity; only fireplace yes and removeDispose may add cost"
+  ];
+
+  const base = cfg.base[formData.tvStandSize] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price includes doors/drawers/shelves, included lighting-component assembly, final placement when requested, in-home movement, and basic packaging cleanup"
+  );
+
+  if (formData.tvStandBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.tvStandBrand}`);
+  }
+  if (formData.tvStandAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.tvStandAlreadyInRoom}`);
+  }
+  if (formData.tvStandHasLighting) {
+    internalAdjustments.push(`Built-in lighting (prep only, $0): ${formData.tvStandHasLighting}`);
+  }
+  if (formData.tvStandHasGlass) {
+    internalAdjustments.push(`Glass doors/shelves (prep only, $0): ${formData.tvStandHasGlass}`);
+  }
+  if (formData.tvStandFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.tvStandFinalPositioning}`);
+  }
+  if (formData.tvStandPackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.tvStandPackagingCleanup}`);
+  }
+  if (formData.tvStandHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.tvStandProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  const fireplace = cfg.fireplace[formData.tvStandHasFireplace] || cfg.fireplace.no;
+  const fireplaceAdderApplied = formData.tvStandHasFireplace === "yes";
+  laborMin += fireplace.totalMin || 0;
+  laborMax += fireplace.totalMax || 0;
+  if (fireplace.label) adjustments.push(fireplace.label);
+  if (fireplace.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: fireplace answer is notSure — no automatic fireplace adder applied");
+  }
+  if (fireplaceAdderApplied) {
+    adjustments.push(
+      "Fireplace adder covers included insert assembly/testing and plugging into an existing accessible outlet — not new outlets, wiring changes, hardwiring, or electrical repairs"
+    );
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.tvStandOldFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing TV stand answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.tvStandOldFurniture === "moveOnly") {
+    internalAdjustments.push("Existing TV stand moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your TV stand assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+  if (fireplaceAdderApplied) {
+    adjustments.push("• Included electric fireplace insert assembly and testing");
+  }
+
+  const manualReviewRequired =
+    formData.tvStandHasFireplace === "notSure" ||
+    formData.tvStandOldFurniture === "notSure" ||
+    formData.tvStandSize === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    tvStandFireplaceAdderApplied: fireplaceAdderApplied,
+    tvStandRemovalDisposalRequested: formData.tvStandOldFurniture === "removeDispose",
+    tvStandManualReviewRequired: manualReviewRequired
   };
 }
 
@@ -1954,6 +2127,11 @@ function classifyJobSize(formData) {
       return "large";
     }
     if (["queen", "full", "daybed"].includes(formData.bedType)) return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_tv_stand_assembly") {
+    if (formData.tvStandSize === "xlarge" || formData.tvStandSize === "large") return "medium";
     return "small";
   }
 
@@ -2927,6 +3105,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_bed_frame_assembly") {
     return projectFilesBedFrame ? projectFilesBedFrame.files : null;
   }
+  if (projectType.value === "furniture_tv_stand_assembly") {
+    return projectFilesTvStand ? projectFilesTvStand.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -3045,6 +3226,20 @@ function getFormData() {
     bedHasProductLink: bedHasProductLink?.value || "no",
     bedProductLink: bedHasProductLink?.value === "yes" ? normalizeProductUrl(bedProductLink?.value || "") : "",
     notesBedFrame: notesBedFrame?.value.trim() || "",
+
+    tvStandSize: tvStandSize?.value || "",
+    tvStandBrand: tvStandBrand?.value || "",
+    tvStandAlreadyInRoom: tvStandAlreadyInRoom?.value || "",
+    tvStandOldFurniture: tvStandOldFurniture?.value || "",
+    tvStandHasFireplace: tvStandHasFireplace?.value || "",
+    tvStandHasLighting: tvStandHasLighting?.value || "",
+    tvStandHasGlass: tvStandHasGlass?.value || "",
+    tvStandFinalPositioning: tvStandFinalPositioning?.value || "",
+    tvStandPackagingCleanup: tvStandPackagingCleanup?.value || "",
+    tvStandHasProductLink: tvStandHasProductLink?.value || "no",
+    tvStandProductLink:
+      tvStandHasProductLink?.value === "yes" ? normalizeProductUrl(tvStandProductLink?.value || "") : "",
+    notesTvStand: notesTvStand?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -3212,6 +3407,36 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
       payload.append("suggested_price", "manual_review");
     }
     payload.append("notes", formData.notesBedFrame);
+  } else if (formData.projectType === "furniture_tv_stand_assembly") {
+    const suggestedPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("tv_stand_size", formData.tvStandSize);
+    payload.append("tv_stand_brand", formData.tvStandBrand);
+    payload.append("tv_stand_already_in_room", formData.tvStandAlreadyInRoom);
+    payload.append("tv_stand_old_furniture", formData.tvStandOldFurniture);
+    payload.append("tv_stand_has_fireplace", formData.tvStandHasFireplace);
+    payload.append("tv_stand_has_lighting", formData.tvStandHasLighting);
+    payload.append("tv_stand_has_glass", formData.tvStandHasGlass);
+    payload.append("tv_stand_final_positioning", formData.tvStandFinalPositioning);
+    payload.append("tv_stand_packaging_cleanup", formData.tvStandPackagingCleanup);
+    payload.append("tv_stand_has_product_link", formData.tvStandHasProductLink || "no");
+    payload.append("tv_stand_product_link", formData.tvStandProductLink || "");
+    payload.append("tv_stand_notes", formData.notesTvStand);
+    payload.append(
+      "tv_stand_fireplace_adder_applied",
+      estimateData.tvStandFireplaceAdderApplied || formData.tvStandHasFireplace === "yes"
+        ? "true"
+        : "false"
+    );
+    payload.append(
+      "tv_stand_removal_disposal_requested",
+      formData.tvStandOldFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "tv_stand_manual_review_required",
+      estimateData.tvStandManualReviewRequired ? "true" : "false"
+    );
+    payload.append("suggested_price", currency(suggestedPrice));
+    payload.append("notes", formData.notesTvStand);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -3397,6 +3622,18 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_tv_stand_assembly") {
+      if (
+        !tvStandSize?.value ||
+        !tvStandBrand?.value ||
+        !tvStandAlreadyInRoom?.value ||
+        !tvStandOldFurniture?.value
+      ) {
+        showValidation(validationStep3, "Please complete the TV stand basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -3418,6 +3655,21 @@ function validateStep(step) {
         bedHasProductLink?.value === "yes" &&
         bedProductLink?.value.trim() &&
         !isSoftValidProductUrl(bedProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_tv_stand_assembly") {
+      if (!tvStandHasFireplace?.value) {
+        showValidation(validationStep4, "Please tell us whether the TV stand includes a fireplace insert.");
+        return false;
+      }
+      if (
+        tvStandHasProductLink?.value === "yes" &&
+        tvStandProductLink?.value.trim() &&
+        !isSoftValidProductUrl(tvStandProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -3631,6 +3883,7 @@ function resetExperience() {
   updatePaintConditionalFields();
   updateDresserConditionalFields();
   updateBedFrameConditionalFields();
+  updateTvStandConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -3677,6 +3930,12 @@ if (dresserAssemblyProjectOption) {
 if (bedFrameAssemblyProjectOption) {
   bedFrameAssemblyProjectOption.addEventListener("click", () => {
     setSelectedProject("furniture_bed_frame_assembly", "Bed Frame Assembly");
+  });
+}
+
+if (tvStandAssemblyProjectOption) {
+  tvStandAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_tv_stand_assembly", "TV Stand Assembly");
   });
 }
 
@@ -3735,10 +3994,12 @@ if (dresserWallAnchoring) dresserWallAnchoring.addEventListener("change", update
 if (dresserHasProductLink) dresserHasProductLink.addEventListener("change", updateDresserConditionalFields);
 if (bedHasProductLink) bedHasProductLink.addEventListener("change", updateBedFrameConditionalFields);
 if (bedType) bedType.addEventListener("change", updateBedFrameConditionalFields);
+if (tvStandHasProductLink) tvStandHasProductLink.addEventListener("change", updateTvStandConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
 updateBedFrameConditionalFields();
+updateTvStandConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -3783,6 +4044,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateDresserAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_bed_frame_assembly") {
     latestEstimate = calculateBedFrameAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_tv_stand_assembly") {
+    latestEstimate = calculateTvStandAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {

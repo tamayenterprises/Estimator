@@ -100,6 +100,12 @@
                         <p>Assemble twin through king, bunk, loft, daybed, and Murphy bed frames with optional mattress placement and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="tvStandAssemblyProjectOption" data-value="furniture_tv_stand_assembly" data-display="TV Stand Assembly">
+                        <h4>TV Stand Assembly</h4>
+                        <p>Assemble TV stands and media consoles, including optional fireplace insert assembly and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -438,6 +444,44 @@
 
                 <label for="bedOldFurniture">Does an existing bed need to be moved or removed?</label>
                 <select id="bedOldFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- TV STAND ASSEMBLY BASICS -->
+              <div id="tvStandBasicsSection" class="hidden">
+                <label for="tvStandSize">What size TV stand are we assembling?</label>
+                <select id="tvStandSize">
+                  <option value="small">Small (up to 48&quot; wide)</option>
+                  <option value="medium">Medium (49&quot; to 60&quot; wide)</option>
+                  <option value="large">Large (61&quot; to 75&quot; wide)</option>
+                  <option value="xlarge">Extra large (76&quot; or wider)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="tvStandBrand">What brand or store is it from?</label>
+                <select id="tvStandBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="tvStandAlreadyInRoom">Is the TV stand already in the room where it will be assembled?</label>
+                <select id="tvStandAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="tvStandOldFurniture">Does an existing TV stand need to be moved or removed?</label>
+                <select id="tvStandOldFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1026,6 +1070,64 @@
 
                 <label for="notesBedFrame">Anything else we should know?</label>
                 <textarea id="notesBedFrame" placeholder="Share access notes, stairs, room constraints, or other details."></textarea>
+              </div>
+
+              <!-- TV STAND ASSEMBLY DETAILS -->
+              <div id="tvStandDetailsSection" class="hidden">
+                <label for="tvStandHasFireplace">Does the TV stand include an electric fireplace insert?</label>
+                <select id="tvStandHasFireplace">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note" id="tvStandFireplaceNote">
+                  Fireplace pricing covers assembling the included insert, installing included hardware, testing, and plugging into an existing accessible outlet. New outlets, wiring changes, or hardwiring require a separate personalized electrical estimate.
+                </div>
+
+                <label for="tvStandHasLighting">Does it include built-in lighting?</label>
+                <select id="tvStandHasLighting">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="tvStandHasGlass">Does it include glass doors or glass shelves?</label>
+                <select id="tvStandHasGlass">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="tvStandFinalPositioning">Would you like us to place the TV stand in its final position after assembly?</label>
+                <select id="tvStandFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="tvStandPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="tvStandPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="tvStandHasProductLink">Do you have a link to the TV stand?</label>
+                <select id="tvStandHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="tvStandProductLinkField" class="hidden">
+                  <label for="tvStandProductLink">Paste the product link</label>
+                  <input type="url" id="tvStandProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Ashley, Home Depot, Lowe’s, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesTvStand">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesTvStand" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, assembly manuals, or fireplace insert manuals help us prepare for the job.</div>
+
+                <label for="notesTvStand">Anything else we should know?</label>
+                <textarea id="notesTvStand" placeholder="Share access notes, stairs, outlet location, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->
