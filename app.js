@@ -508,6 +508,49 @@ const PRICING = {
     }
   },
 
+  furnitureDresser: {
+    base: {
+      small: { totalMin: 85, totalMax: 130, hours: 1.5, label: "Small dresser assembly" },
+      medium: { totalMin: 130, totalMax: 190, hours: 2, label: "Medium dresser assembly" },
+      large: { totalMin: 190, totalMax: 280, hours: 2.75, label: "Large dresser assembly" },
+      xlarge: { totalMin: 280, totalMax: 420, hours: 3.5, label: "Extra-large dresser assembly" },
+      notSure: { totalMin: 150, totalMax: 260, hours: 2.25, label: "Dresser size to be confirmed" }
+    },
+    brand: {
+      ikea: { totalMin: 20, totalMax: 60, label: "IKEA complexity adjustment" },
+      wayfair: { totalMin: 0, totalMax: 20, label: "Wayfair brand adjustment" },
+      amazon: { totalMin: 0, totalMax: 20, label: "Amazon brand adjustment" },
+      ashley: { totalMin: 0, totalMax: 20, label: "Ashley brand adjustment" },
+      otherNotSure: { totalMin: 10, totalMax: 30, label: "Brand/instructions to be confirmed" }
+    },
+    heavyCarry: {
+      large: { totalMin: 40, totalMax: 80, label: "Heavy carry upstairs/downstairs (large)" },
+      xlarge: { totalMin: 80, totalMax: 140, label: "Heavy carry upstairs/downstairs (extra large)" }
+    },
+    anchoring: {
+      drywall: { matMin: 35, matMax: 60, label: "Wall anchoring on drywall" },
+      plaster: { matMin: 50, matMax: 80, label: "Wall anchoring on plaster" },
+      brickConcrete: { matMin: 70, matMax: 120, label: "Wall anchoring on brick/concrete" },
+      notSure: { matMin: 45, matMax: 90, label: "Wall anchoring (wall type to confirm)" }
+    },
+    mirror: {
+      yes: { totalMin: 35, totalMax: 75, label: "Mirror attachment included" },
+      notSure: { totalMin: 20, totalMax: 50, label: "Mirror attachment to be confirmed" },
+      no: { totalMin: 0, totalMax: 0 }
+    },
+    packaging: {
+      yes: { totalMin: 20, totalMax: 40, label: "Box and packaging removal" },
+      no: { totalMin: 0, totalMax: 0 }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 40, totalMax: 80, label: "Move old furniture" },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Remove and dispose old furniture" },
+      notSure: { totalMin: 40, totalMax: 100, label: "Old furniture handling to be confirmed" }
+    },
+    materials: ["Assembly hardware", "Anchoring hardware if selected", "Consumables"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -742,6 +785,7 @@ const drywallProjectOption = document.getElementById("drywallProjectOption");
 const lightingProjectOption = document.getElementById("lightingProjectOption");
 const paintProjectOption = document.getElementById("paintProjectOption");
 const aiDesignProjectOption = document.getElementById("aiDesignProjectOption");
+const dresserAssemblyProjectOption = document.getElementById("dresserAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -767,6 +811,7 @@ const lightingBasicsSection = document.getElementById("lightingBasicsSection");
 const tvMountBasicsSection = document.getElementById("tvMountBasicsSection");
 const paintBasicsSection = document.getElementById("paintBasicsSection");
 const aiDesignBasicsSection = document.getElementById("aiDesignBasicsSection");
+const dresserBasicsSection = document.getElementById("dresserBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -774,7 +819,22 @@ const lightingDetailsSection = document.getElementById("lightingDetailsSection")
 const tvMountDetailsSection = document.getElementById("tvMountDetailsSection");
 const paintDetailsSection = document.getElementById("paintDetailsSection");
 const aiDesignDetailsSection = document.getElementById("aiDesignDetailsSection");
+const dresserDetailsSection = document.getElementById("dresserDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
+
+const dresserSize = document.getElementById("dresserSize");
+const dresserBrand = document.getElementById("dresserBrand");
+const dresserAlreadyInRoom = document.getElementById("dresserAlreadyInRoom");
+const dresserCarryStairs = document.getElementById("dresserCarryStairs");
+const dresserCarryStairsField = document.getElementById("dresserCarryStairsField");
+const dresserWallAnchoring = document.getElementById("dresserWallAnchoring");
+const dresserWallType = document.getElementById("dresserWallType");
+const dresserWallTypeField = document.getElementById("dresserWallTypeField");
+const dresserMirror = document.getElementById("dresserMirror");
+const dresserPackagingRemoval = document.getElementById("dresserPackagingRemoval");
+const dresserOldFurniture = document.getElementById("dresserOldFurniture");
+const notesDresser = document.getElementById("notesDresser");
+const projectFilesDresser = document.getElementById("projectFilesDresser");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1099,6 +1159,7 @@ function allProjectOptions() {
     lightingProjectOption,
     paintProjectOption,
     aiDesignProjectOption,
+    dresserAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1116,6 +1177,14 @@ function isPlumbingProject(type) {
 
 function isAiDesignProject(type) {
   return type === "ai_design";
+}
+
+function isFurnitureProject(type) {
+  return type && type.startsWith("furniture_");
+}
+
+function isDresserAssemblyProject(type) {
+  return type === "furniture_dresser_assembly";
 }
 
 function hideAllPlumbingSubsections() {
@@ -1291,6 +1360,7 @@ function updateProjectSpecificUI() {
   tvMountBasicsSection.classList.add("hidden");
   paintBasicsSection.classList.add("hidden");
   if (aiDesignBasicsSection) aiDesignBasicsSection.classList.add("hidden");
+  if (dresserBasicsSection) dresserBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1298,6 +1368,7 @@ function updateProjectSpecificUI() {
   tvMountDetailsSection.classList.add("hidden");
   paintDetailsSection.classList.add("hidden");
   if (aiDesignDetailsSection) aiDesignDetailsSection.classList.add("hidden");
+  if (dresserDetailsSection) dresserDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1343,6 +1414,15 @@ function updateProjectSpecificUI() {
     return;
   }
 
+  if (isDresserAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the dresser so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help refine anchoring, packaging, and furniture handling.";
+    if (dresserBasicsSection) dresserBasicsSection.classList.remove("hidden");
+    if (dresserDetailsSection) dresserDetailsSection.classList.remove("hidden");
+    updateDresserConditionalFields();
+    return;
+  }
+
   if (isPlumbingProject(type)) {
     basicsSubtitle.textContent = "Tell us about the plumbing project so we can build a more accurate estimate.";
     detailsSubtitle.textContent = "A few final details help us refine the plumbing estimate more accurately.";
@@ -1356,6 +1436,119 @@ function updateProjectSpecificUI() {
   detailsSubtitle.textContent = "A few final details help us refine the estimate more accurately.";
   drywallBasicsSection.classList.remove("hidden");
   drywallDetailsSection.classList.remove("hidden");
+}
+
+function updateDresserConditionalFields() {
+  if (!dresserSize || !dresserAlreadyInRoom || !dresserWallAnchoring) return;
+
+  const size = dresserSize.value;
+  const alreadyInRoom = dresserAlreadyInRoom.value;
+  const showCarry =
+    ["large", "xlarge"].includes(size) && ["no", "notSure"].includes(alreadyInRoom);
+
+  if (dresserCarryStairsField) {
+    dresserCarryStairsField.classList.toggle("hidden", !showCarry);
+    if (!showCarry && dresserCarryStairs) {
+      dresserCarryStairs.value = "sameFloor";
+    }
+  }
+
+  const showWallType = ["yes", "notSure"].includes(dresserWallAnchoring.value);
+  if (dresserWallTypeField) {
+    dresserWallTypeField.classList.toggle("hidden", !showWallType);
+    if (!showWallType && dresserWallType) {
+      dresserWallType.value = "drywall";
+    }
+  }
+}
+
+function calculateDresserAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureDresser;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`
+  ];
+
+  let laborMin = 0;
+  let laborMax = 0;
+  let minMaterials = 0;
+  let maxMaterials = 0;
+
+  const base = cfg.base[formData.dresserSize] || cfg.base.notSure;
+  laborMin += base.totalMin;
+  laborMax += base.totalMax;
+  adjustments.push(base.label);
+
+  const brand = cfg.brand[formData.dresserBrand] || cfg.brand.otherNotSure;
+  laborMin += brand.totalMin;
+  laborMax += brand.totalMax;
+  if (brand.label) adjustments.push(brand.label);
+
+  const needsCarryContext =
+    ["large", "xlarge"].includes(formData.dresserSize) &&
+    ["no", "notSure"].includes(formData.dresserAlreadyInRoom) &&
+    ["upstairsDownstairs", "notSure"].includes(formData.dresserCarryStairs);
+
+  if (needsCarryContext) {
+    const carry = cfg.heavyCarry[formData.dresserSize];
+    if (carry) {
+      laborMin += carry.totalMin;
+      laborMax += carry.totalMax;
+      adjustments.push(carry.label);
+    }
+  }
+
+  if (["yes", "notSure"].includes(formData.dresserWallAnchoring)) {
+    const anchor = cfg.anchoring[formData.dresserWallType] || cfg.anchoring.notSure;
+    minMaterials += anchor.matMin;
+    maxMaterials += anchor.matMax;
+    adjustments.push(anchor.label);
+  }
+
+  const mirror = cfg.mirror[formData.dresserMirror] || cfg.mirror.no;
+  laborMin += mirror.totalMin;
+  laborMax += mirror.totalMax;
+  if (mirror.label) adjustments.push(mirror.label);
+
+  const packaging = cfg.packaging[formData.dresserPackagingRemoval] || cfg.packaging.no;
+  laborMin += packaging.totalMin;
+  laborMax += packaging.totalMax;
+  if (packaging.label) adjustments.push(packaging.label);
+
+  const oldFurniture = cfg.oldFurniture[formData.dresserOldFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin;
+  laborMax += oldFurniture.totalMax;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+
+  minMaterials = Math.max(0, minMaterials);
+  maxMaterials = Math.max(minMaterials, maxMaterials);
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  const totalMin = minMaterials + laborMin;
+  const totalMax = maxMaterials + laborMax;
+  const hours = base.hours || 2;
+
+  return applyMarketAndPropertyAdjustments(
+    {
+      hours,
+      minMaterials,
+      maxMaterials,
+      laborMin,
+      laborMax,
+      totalMin,
+      totalMax,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta
+    },
+    formData,
+    leadMeta
+  );
 }
 
 function resolveAiDesignLocationFactor(zipcodeRaw) {
@@ -1546,6 +1739,11 @@ function classifyJobSize(formData) {
   if (formData.projectType === "ai_design") {
     if (formData.aiDesignApproxSize === "large" || formData.aiDesignProjectGoal === "full_remodel") return "large";
     if (formData.aiDesignApproxSize === "medium" || formData.aiDesignProjectGoal === "partial_remodel") return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_dresser_assembly") {
+    if (formData.dresserSize === "xlarge" || formData.dresserSize === "large") return "medium";
     return "small";
   }
 
@@ -2513,6 +2711,13 @@ function getUploadedFiles() {
   if (projectType.value === "lighting_add_replace") return projectFilesLighting.files;
   if (projectType.value === "paint_one_room") return projectFilesPaint.files;
   if (projectType.value === "ai_design") return projectFilesAiDesign ? projectFilesAiDesign.files : null;
+  if (projectType.value === "furniture_dresser_assembly") {
+    return projectFilesDresser ? projectFilesDresser.files : null;
+  }
+  if (projectType.value === "tv_mount_install") {
+    const tvFiles = document.getElementById("projectFilesTvMount");
+    return tvFiles ? tvFiles.files : null;
+  }
   if (isPlumbingProject(projectType.value)) {
     const plumbingFilesInput = getCurrentPlumbingFilesInput();
     return plumbingFilesInput ? plumbingFilesInput.files : null;
@@ -2600,6 +2805,17 @@ function getFormData() {
     aiDesignLayoutChange: aiDesignLayoutChange?.value || "",
     aiDesignPriority: aiDesignPriority?.value || "",
     notesAiDesign: notesAiDesign?.value.trim() || "",
+
+    dresserSize: dresserSize?.value || "",
+    dresserBrand: dresserBrand?.value || "",
+    dresserAlreadyInRoom: dresserAlreadyInRoom?.value || "",
+    dresserCarryStairs: dresserCarryStairs?.value || "",
+    dresserWallAnchoring: dresserWallAnchoring?.value || "",
+    dresserWallType: dresserWallType?.value || "",
+    dresserMirror: dresserMirror?.value || "",
+    dresserPackagingRemoval: dresserPackagingRemoval?.value || "",
+    dresserOldFurniture: dresserOldFurniture?.value || "",
+    notesDresser: notesDresser?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -2709,6 +2925,20 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     payload.append("ai_selected_finish", estimateData.selectedFinishLevel || "");
     payload.append("ai_selected_finish_label", estimateData.selectedFinishLabel || "");
     payload.append("notes", formData.notesAiDesign);
+  } else if (formData.projectType === "furniture_dresser_assembly") {
+    const suggestedPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("dresser_size", formData.dresserSize);
+    payload.append("dresser_brand", formData.dresserBrand);
+    payload.append("dresser_already_in_room", formData.dresserAlreadyInRoom);
+    payload.append("dresser_carry_stairs", formData.dresserCarryStairs);
+    payload.append("dresser_wall_anchoring", formData.dresserWallAnchoring);
+    payload.append("dresser_wall_type", formData.dresserWallType);
+    payload.append("dresser_mirror", formData.dresserMirror);
+    payload.append("dresser_packaging_removal", formData.dresserPackagingRemoval);
+    payload.append("dresser_old_furniture", formData.dresserOldFurniture);
+    payload.append("dresser_notes", formData.notesDresser);
+    payload.append("suggested_price", currency(suggestedPrice));
+    payload.append("notes", formData.notesDresser);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -2850,6 +3080,34 @@ function validateStep(step) {
     if (projectType.value === "tv_mount_install") {
       if (!mountType.value || !wallType.value || !tvSize.value || !mountProvided.value || !existingOutlet.value) {
         showValidation(validationStep3, "Please complete the basic TV mount questions before continuing.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_dresser_assembly") {
+      if (
+        !dresserSize?.value ||
+        !dresserBrand?.value ||
+        !dresserAlreadyInRoom?.value ||
+        !dresserWallAnchoring?.value
+      ) {
+        showValidation(validationStep3, "Please complete the dresser assembly basics before continuing.");
+        return false;
+      }
+
+      const showCarry =
+        ["large", "xlarge"].includes(dresserSize.value) &&
+        ["no", "notSure"].includes(dresserAlreadyInRoom.value);
+      if (showCarry && !dresserCarryStairs?.value) {
+        showValidation(validationStep3, "Please tell us if the dresser needs to be carried upstairs or downstairs.");
+        return false;
+      }
+
+      if (
+        ["yes", "notSure"].includes(dresserWallAnchoring.value) &&
+        !dresserWallType?.value
+      ) {
+        showValidation(validationStep3, "Please select the wall type for anchoring.");
         return false;
       }
     }
@@ -3037,6 +3295,7 @@ function resetExperience() {
   updateLightingConditionalFields();
   updateTvMountConditionalFields();
   updatePaintConditionalFields();
+  updateDresserConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -3071,6 +3330,12 @@ paintProjectOption.addEventListener("click", () => {
 if (aiDesignProjectOption) {
   aiDesignProjectOption.addEventListener("click", () => {
     setSelectedProject("ai_design", "AI Design");
+  });
+}
+
+if (dresserAssemblyProjectOption) {
+  dresserAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_dresser_assembly", "Dresser Assembly");
   });
 }
 
@@ -3123,7 +3388,12 @@ paintYearBuilt.addEventListener("change", updatePaintConditionalFields);
 wireConceal.addEventListener("change", updateTvMountConditionalFields);
 powerWork.addEventListener("change", updateTvMountConditionalFields);
 
+if (dresserSize) dresserSize.addEventListener("change", updateDresserConditionalFields);
+if (dresserAlreadyInRoom) dresserAlreadyInRoom.addEventListener("change", updateDresserConditionalFields);
+if (dresserWallAnchoring) dresserWallAnchoring.addEventListener("change", updateDresserConditionalFields);
+
 setupAccordions();
+updateDresserConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -3164,6 +3434,8 @@ form.addEventListener("submit", async (e) => {
   } else if (formData.projectType === "ai_design") {
     selectedAiFinishLevel = null;
     latestEstimate = calculateAiDesignEstimate(formData);
+  } else if (formData.projectType === "furniture_dresser_assembly") {
+    latestEstimate = calculateDresserAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {

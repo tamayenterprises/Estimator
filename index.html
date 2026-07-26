@@ -80,6 +80,23 @@
                     <div class="badge live">Available</div>
                   </div>
 
+                  <div class="accordion-group" data-accordion="furniture">
+                    <button type="button" class="accordion-button">
+                      <div>
+                        <div>Furniture Assembly</div>
+                        <div class="badge live">Available</div>
+                      </div>
+                      <div class="acc-icon">&#9662;</div>
+                    </button>
+                    <div class="accordion-content">
+                      <div class="project-option selectable" id="dresserAssemblyProjectOption" data-value="furniture_dresser_assembly" data-display="Dresser Assembly">
+                        <h4>Dresser Assembly</h4>
+                        <p>Assemble a dresser, including optional wall anchoring, stair carry help, packaging removal, and old furniture handling.</p>
+                        <div class="badge live">Available</div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="accordion-group open" data-accordion="plumbing">
                     <button type="button" class="accordion-button">
                       <div>
@@ -323,6 +340,60 @@
                   <option value="no">No</option>
                   <option value="notSure">Not sure</option>
                 </select>
+              </div>
+
+              <!-- DRESSER ASSEMBLY BASICS -->
+              <div id="dresserBasicsSection" class="hidden">
+                <label for="dresserSize">What size dresser are we assembling?</label>
+                <select id="dresserSize">
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                  <option value="xlarge">Extra large</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="dresserBrand">What brand/store is it from?</label>
+                <select id="dresserBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="dresserAlreadyInRoom">Is the dresser already in the room where it will be assembled?</label>
+                <select id="dresserAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <div id="dresserCarryStairsField" class="hidden">
+                  <label for="dresserCarryStairs">Will it need to be carried upstairs or downstairs?</label>
+                  <select id="dresserCarryStairs">
+                    <option value="sameFloor">Same floor</option>
+                    <option value="upstairsDownstairs">Upstairs / downstairs</option>
+                    <option value="notSure">Not sure</option>
+                  </select>
+                </div>
+
+                <label for="dresserWallAnchoring">Would you like the dresser secured to the wall for safety?</label>
+                <select id="dresserWallAnchoring">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <div id="dresserWallTypeField" class="hidden">
+                  <label for="dresserWallType">What type of wall is it?</label>
+                  <select id="dresserWallType">
+                    <option value="drywall">Drywall</option>
+                    <option value="plaster">Plaster</option>
+                    <option value="brickConcrete">Brick / concrete</option>
+                    <option value="notSure">Not sure</option>
+                  </select>
+                </div>
               </div>
 
               <!-- AI DESIGN BASICS -->
@@ -804,6 +875,37 @@
 
                 <label for="notesTvMount">Additional Notes</label>
                 <textarea id="notesTvMount" placeholder="Anything else we should know about the installation?"></textarea>
+              </div>
+
+              <!-- DRESSER ASSEMBLY DETAILS -->
+              <div id="dresserDetailsSection" class="hidden">
+                <label for="dresserMirror">Does it include a mirror attachment?</label>
+                <select id="dresserMirror">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="dresserPackagingRemoval">Should we remove boxes and packaging?</label>
+                <select id="dresserPackagingRemoval">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="dresserOldFurniture">Do you need old furniture moved or removed?</label>
+                <select id="dresserOldFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="projectFilesDresser">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesDresser" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos or videos help us confirm dresser size, stairs, and wall type.</div>
+
+                <label for="notesDresser">Additional Notes</label>
+                <textarea id="notesDresser" placeholder="Anything else we should know about the dresser assembly?"></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->
