@@ -94,6 +94,12 @@
                         <p>Assemble a dresser, including optional wall anchoring, stair carry help, packaging removal, and old furniture handling.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="bedFrameAssemblyProjectOption" data-value="furniture_bed_frame_assembly" data-display="Bed Frame Assembly">
+                        <h4>Bed Frame Assembly</h4>
+                        <p>Assemble twin through king, bunk, loft, daybed, and Murphy bed frames with optional mattress placement and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -394,6 +400,49 @@
                     <option value="notSure">Not sure</option>
                   </select>
                 </div>
+              </div>
+
+              <!-- BED FRAME ASSEMBLY BASICS -->
+              <div id="bedFrameBasicsSection" class="hidden">
+                <label for="bedType">What type of bed are we assembling?</label>
+                <select id="bedType">
+                  <option value="twin">Twin</option>
+                  <option value="twinXL">Twin XL</option>
+                  <option value="full">Full</option>
+                  <option value="queen">Queen</option>
+                  <option value="king">King</option>
+                  <option value="californiaKing">California King</option>
+                  <option value="bunkBed">Bunk bed</option>
+                  <option value="loftBed">Loft bed</option>
+                  <option value="daybed">Daybed</option>
+                  <option value="murphyBed">Murphy bed</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="bedBrand">What brand or store is it from?</label>
+                <select id="bedBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="bobs">Bob&apos;s</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="bedAlreadyInRoom">Is the bed already in the room where it will be assembled?</label>
+                <select id="bedAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bedOldFurniture">Does an existing bed need to be moved or removed?</label>
+                <select id="bedOldFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
               </div>
 
               <!-- AI DESIGN BASICS -->
@@ -900,12 +949,83 @@
                   <option value="notSure">Not sure</option>
                 </select>
 
+                <label for="dresserHasProductLink">Do you have a link to the dresser?</label>
+                <select id="dresserHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="dresserProductLinkField" class="hidden">
+                  <label for="dresserProductLink">Paste the product link</label>
+                  <input type="url" id="dresserProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Ashley, Home Depot, Lowe’s, the manufacturer, or another retailer.</div>
+                </div>
+
                 <label for="projectFilesDresser">Upload photos, videos, or PDFs (optional)</label>
                 <input type="file" id="projectFilesDresser" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
                 <div class="small-note">Optional photos or videos help us confirm dresser size, stairs, and wall type.</div>
 
                 <label for="notesDresser">Additional Notes</label>
                 <textarea id="notesDresser" placeholder="Anything else we should know about the dresser assembly?"></textarea>
+              </div>
+
+              <!-- BED FRAME ASSEMBLY DETAILS -->
+              <div id="bedFrameDetailsSection" class="hidden">
+                <label for="bedHasStorage">Does the bed include built-in drawers or storage?</label>
+                <select id="bedHasStorage">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bedHasHeadboard">Does it include a headboard?</label>
+                <select id="bedHasHeadboard">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bedHasFootboard">Does it include a footboard?</label>
+                <select id="bedHasFootboard">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bedMattressPlacement">Would you like us to place the mattress on the bed after assembly?</label>
+                <select id="bedMattressPlacement">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="bedPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="bedPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="bedHasProductLink">Do you have a link to the bed?</label>
+                <select id="bedHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="bedProductLinkField" class="hidden">
+                  <label for="bedProductLink">Paste the product link</label>
+                  <input type="url" id="bedProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Ashley, Bob’s, Home Depot, Lowe’s, the manufacturer, or another retailer.</div>
+                </div>
+
+                <div id="bedMurphyHelpNote" class="small-note hidden">
+                  Murphy bed projects vary widely. A product link, photos, and assembly manual help Tamay confirm the right installation approach.
+                </div>
+
+                <label for="projectFilesBedFrame">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesBedFrame" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, assembly manuals, or product screenshots help us prepare for the job.</div>
+
+                <label for="notesBedFrame">Anything else we should know?</label>
+                <textarea id="notesBedFrame" placeholder="Share access notes, stairs, room constraints, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

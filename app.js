@@ -534,6 +534,37 @@ const PRICING = {
     materials: ["Assembly hardware included in base price", "Anchoring hardware when requested"]
   },
 
+  furnitureBedFrame: {
+    base: {
+      twin: { totalMin: 90, totalMax: 160, hours: 1.75, label: "Twin bed frame assembly" },
+      twinXL: { totalMin: 100, totalMax: 170, hours: 1.85, label: "Twin XL bed frame assembly" },
+      full: { totalMin: 120, totalMax: 190, hours: 2, label: "Full bed frame assembly" },
+      queen: { totalMin: 150, totalMax: 230, hours: 2.25, label: "Queen bed frame assembly" },
+      king: { totalMin: 190, totalMax: 290, hours: 2.75, label: "King bed frame assembly" },
+      californiaKing: { totalMin: 220, totalMax: 320, hours: 3, label: "California King bed frame assembly" },
+      bunkBed: { totalMin: 250, totalMax: 420, hours: 3.5, label: "Bunk bed assembly" },
+      loftBed: { totalMin: 280, totalMax: 450, hours: 3.75, label: "Loft bed assembly" },
+      daybed: { totalMin: 150, totalMax: 260, hours: 2.25, label: "Daybed assembly" },
+      otherNotSure: { totalMin: 150, totalMax: 280, hours: 2.5, label: "Bed type to be confirmed" },
+      murphyBed: { manualReview: true, label: "Murphy bed — personalized review required" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing bed removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing bed handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional assembly",
+      "Included headboard and footboard installation",
+      "Included drawer or storage-component assembly",
+      "Final adjustments",
+      "Mattress placement when requested",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -769,6 +800,7 @@ const lightingProjectOption = document.getElementById("lightingProjectOption");
 const paintProjectOption = document.getElementById("paintProjectOption");
 const aiDesignProjectOption = document.getElementById("aiDesignProjectOption");
 const dresserAssemblyProjectOption = document.getElementById("dresserAssemblyProjectOption");
+const bedFrameAssemblyProjectOption = document.getElementById("bedFrameAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -795,6 +827,7 @@ const tvMountBasicsSection = document.getElementById("tvMountBasicsSection");
 const paintBasicsSection = document.getElementById("paintBasicsSection");
 const aiDesignBasicsSection = document.getElementById("aiDesignBasicsSection");
 const dresserBasicsSection = document.getElementById("dresserBasicsSection");
+const bedFrameBasicsSection = document.getElementById("bedFrameBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -803,6 +836,7 @@ const tvMountDetailsSection = document.getElementById("tvMountDetailsSection");
 const paintDetailsSection = document.getElementById("paintDetailsSection");
 const aiDesignDetailsSection = document.getElementById("aiDesignDetailsSection");
 const dresserDetailsSection = document.getElementById("dresserDetailsSection");
+const bedFrameDetailsSection = document.getElementById("bedFrameDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -816,8 +850,27 @@ const dresserWallTypeField = document.getElementById("dresserWallTypeField");
 const dresserMirror = document.getElementById("dresserMirror");
 const dresserPackagingRemoval = document.getElementById("dresserPackagingRemoval");
 const dresserOldFurniture = document.getElementById("dresserOldFurniture");
+const dresserHasProductLink = document.getElementById("dresserHasProductLink");
+const dresserProductLink = document.getElementById("dresserProductLink");
+const dresserProductLinkField = document.getElementById("dresserProductLinkField");
 const notesDresser = document.getElementById("notesDresser");
 const projectFilesDresser = document.getElementById("projectFilesDresser");
+
+const bedType = document.getElementById("bedType");
+const bedBrand = document.getElementById("bedBrand");
+const bedAlreadyInRoom = document.getElementById("bedAlreadyInRoom");
+const bedOldFurniture = document.getElementById("bedOldFurniture");
+const bedHasStorage = document.getElementById("bedHasStorage");
+const bedHasHeadboard = document.getElementById("bedHasHeadboard");
+const bedHasFootboard = document.getElementById("bedHasFootboard");
+const bedMattressPlacement = document.getElementById("bedMattressPlacement");
+const bedPackagingCleanup = document.getElementById("bedPackagingCleanup");
+const bedHasProductLink = document.getElementById("bedHasProductLink");
+const bedProductLink = document.getElementById("bedProductLink");
+const bedProductLinkField = document.getElementById("bedProductLinkField");
+const bedMurphyHelpNote = document.getElementById("bedMurphyHelpNote");
+const notesBedFrame = document.getElementById("notesBedFrame");
+const projectFilesBedFrame = document.getElementById("projectFilesBedFrame");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1069,6 +1122,13 @@ function showStep(step) {
     // New results step: reset CTAs (e.g. Pay Deposit stays disabled if user used "Get Quote" then "Start New" without reload).
     if (latestEstimate?.isAiDesign) {
       updateAiDesignSelectedPriceDisplay(latestEstimate);
+    } else if (latestEstimate?.isManualReviewRequired) {
+      if (payNowBtn) payNowBtn.disabled = true;
+      if (hotLeadBtn) {
+        hotLeadBtn.disabled = false;
+        hotLeadBtn.textContent = "Get My Exact Quote";
+      }
+      if (doneBtn) doneBtn.disabled = false;
     } else {
       if (payNowBtn) payNowBtn.disabled = false;
       if (hotLeadBtn) {
@@ -1143,6 +1203,7 @@ function allProjectOptions() {
     paintProjectOption,
     aiDesignProjectOption,
     dresserAssemblyProjectOption,
+    bedFrameAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1168,6 +1229,28 @@ function isFurnitureProject(type) {
 
 function isDresserAssemblyProject(type) {
   return type === "furniture_dresser_assembly";
+}
+
+function isBedFrameAssemblyProject(type) {
+  return type === "furniture_bed_frame_assembly";
+}
+
+function isSoftValidProductUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return true;
+  try {
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    const parsed = new URL(withProtocol);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (error) {
+    return false;
+  }
+}
+
+function normalizeProductUrl(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  return /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
 }
 
 function hideAllPlumbingSubsections() {
@@ -1344,6 +1427,7 @@ function updateProjectSpecificUI() {
   paintBasicsSection.classList.add("hidden");
   if (aiDesignBasicsSection) aiDesignBasicsSection.classList.add("hidden");
   if (dresserBasicsSection) dresserBasicsSection.classList.add("hidden");
+  if (bedFrameBasicsSection) bedFrameBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1352,6 +1436,7 @@ function updateProjectSpecificUI() {
   paintDetailsSection.classList.add("hidden");
   if (aiDesignDetailsSection) aiDesignDetailsSection.classList.add("hidden");
   if (dresserDetailsSection) dresserDetailsSection.classList.add("hidden");
+  if (bedFrameDetailsSection) bedFrameDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1406,6 +1491,15 @@ function updateProjectSpecificUI() {
     return;
   }
 
+  if (isBedFrameAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the bed frame so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for storage components, mattress placement, and packaging cleanup.";
+    if (bedFrameBasicsSection) bedFrameBasicsSection.classList.remove("hidden");
+    if (bedFrameDetailsSection) bedFrameDetailsSection.classList.remove("hidden");
+    updateBedFrameConditionalFields();
+    return;
+  }
+
   if (isPlumbingProject(type)) {
     basicsSubtitle.textContent = "Tell us about the plumbing project so we can build a more accurate estimate.";
     detailsSubtitle.textContent = "A few final details help us refine the plumbing estimate more accurately.";
@@ -1441,6 +1535,29 @@ function updateDresserConditionalFields() {
     if (!showWallType && dresserWallType) {
       dresserWallType.value = "drywall";
     }
+  }
+
+  const showProductLink = dresserHasProductLink?.value === "yes";
+  if (dresserProductLinkField) {
+    dresserProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && dresserProductLink) {
+      dresserProductLink.value = "";
+    }
+  }
+}
+
+function updateBedFrameConditionalFields() {
+  const showProductLink = bedHasProductLink?.value === "yes";
+  if (bedProductLinkField) {
+    bedProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && bedProductLink) {
+      bedProductLink.value = "";
+    }
+  }
+
+  const isMurphy = bedType?.value === "murphyBed";
+  if (bedMurphyHelpNote) {
+    bedMurphyHelpNote.classList.toggle("hidden", !isMurphy);
   }
 }
 
@@ -1483,6 +1600,11 @@ function calculateDresserAssemblyEstimate(formData) {
   if (formData.dresserPackagingRemoval) {
     internalAdjustments.push(`Packaging removal (prep only, $0): ${formData.dresserPackagingRemoval}`);
   }
+  if (formData.dresserHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.dresserProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
 
   const oldFurniture = cfg.oldFurniture[formData.dresserOldFurniture] || cfg.oldFurniture.no;
   laborMin += oldFurniture.totalMin || 0;
@@ -1522,6 +1644,112 @@ function calculateDresserAssemblyEstimate(formData) {
     leadMeta,
     dresserRemovalDisposalRequested: formData.dresserOldFurniture === "removeDispose",
     dresserOldFurnitureManualReview: !!oldFurniture.manualReview
+  };
+}
+
+function calculateBedFrameAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureBedFrame;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Bed competitive pricing: base includes normal assembly complexity; only removal/disposal may add cost"
+  ];
+
+  const bedKey = formData.bedType || "otherNotSure";
+  const base = cfg.base[bedKey] || cfg.base.otherNotSure;
+  const isMurphy = bedKey === "murphyBed" || !!base.manualReview;
+
+  if (formData.bedBrand) internalAdjustments.push(`Brand/store (prep only, $0): ${formData.bedBrand}`);
+  if (formData.bedAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.bedAlreadyInRoom}`);
+  }
+  if (formData.bedHasStorage) internalAdjustments.push(`Storage (prep only, $0): ${formData.bedHasStorage}`);
+  if (formData.bedHasHeadboard) {
+    internalAdjustments.push(`Headboard (prep only, $0): ${formData.bedHasHeadboard}`);
+  }
+  if (formData.bedHasFootboard) {
+    internalAdjustments.push(`Footboard (prep only, $0): ${formData.bedHasFootboard}`);
+  }
+  if (formData.bedMattressPlacement) {
+    internalAdjustments.push(`Mattress placement (prep only, $0): ${formData.bedMattressPlacement}`);
+  }
+  if (formData.bedPackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.bedPackagingCleanup}`);
+  }
+  if (formData.bedHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.bedProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  if (isMurphy) {
+    adjustments.push(base.label);
+    adjustments.push(
+      "This project requires a personalized estimate because Murphy bed installation complexity varies by product, wall structure, anchoring requirements, and installation conditions. Submit the product information so Tamay Enterprises can review it and confirm pricing."
+    );
+    adjustments.push("Please use Get My Exact Quote and include a product link, photos, and assembly manual when possible.");
+
+    return {
+      hours: 0,
+      minMaterials: 0,
+      maxMaterials: 0,
+      laborMin: 0,
+      laborMax: 0,
+      totalMin: 0,
+      totalMax: 0,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta,
+      isManualReviewRequired: true,
+      bedManualReviewRequired: true,
+      bedRemovalDisposalRequested: formData.bedOldFurniture === "removeDispose"
+    };
+  }
+
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price includes normal bed assembly complexity, included headboard/footboard/storage components, mattress placement when requested, in-home movement, and basic packaging cleanup"
+  );
+
+  const oldFurniture = cfg.oldFurniture[formData.bedOldFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing bed answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.bedOldFurniture === "moveOnly") {
+    internalAdjustments.push("Existing bed moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your bed assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    isManualReviewRequired: false,
+    bedManualReviewRequired: false,
+    bedRemovalDisposalRequested: formData.bedOldFurniture === "removeDispose",
+    bedOldFurnitureManualReview: !!oldFurniture.manualReview
   };
 }
 
@@ -1718,6 +1946,14 @@ function classifyJobSize(formData) {
 
   if (formData.projectType === "furniture_dresser_assembly") {
     if (formData.dresserSize === "xlarge" || formData.dresserSize === "large") return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_bed_frame_assembly") {
+    if (["bunkBed", "loftBed", "murphyBed", "king", "californiaKing"].includes(formData.bedType)) {
+      return "large";
+    }
+    if (["queen", "full", "daybed"].includes(formData.bedType)) return "medium";
     return "small";
   }
 
@@ -2688,6 +2924,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_dresser_assembly") {
     return projectFilesDresser ? projectFilesDresser.files : null;
   }
+  if (projectType.value === "furniture_bed_frame_assembly") {
+    return projectFilesBedFrame ? projectFilesBedFrame.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -2789,7 +3028,23 @@ function getFormData() {
     dresserMirror: dresserMirror?.value || "",
     dresserPackagingRemoval: dresserPackagingRemoval?.value || "",
     dresserOldFurniture: dresserOldFurniture?.value || "",
+    dresserHasProductLink: dresserHasProductLink?.value || "no",
+    dresserProductLink:
+      dresserHasProductLink?.value === "yes" ? normalizeProductUrl(dresserProductLink?.value || "") : "",
     notesDresser: notesDresser?.value.trim() || "",
+
+    bedType: bedType?.value || "",
+    bedBrand: bedBrand?.value || "",
+    bedAlreadyInRoom: bedAlreadyInRoom?.value || "",
+    bedOldFurniture: bedOldFurniture?.value || "",
+    bedHasStorage: bedHasStorage?.value || "",
+    bedHasHeadboard: bedHasHeadboard?.value || "",
+    bedHasFootboard: bedHasFootboard?.value || "",
+    bedMattressPlacement: bedMattressPlacement?.value || "",
+    bedPackagingCleanup: bedPackagingCleanup?.value || "",
+    bedHasProductLink: bedHasProductLink?.value || "no",
+    bedProductLink: bedHasProductLink?.value === "yes" ? normalizeProductUrl(bedProductLink?.value || "") : "",
+    notesBedFrame: notesBedFrame?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -2910,6 +3165,8 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     payload.append("dresser_mirror", formData.dresserMirror);
     payload.append("dresser_packaging_removal", formData.dresserPackagingRemoval);
     payload.append("dresser_old_furniture", formData.dresserOldFurniture);
+    payload.append("dresser_has_product_link", formData.dresserHasProductLink || "no");
+    payload.append("dresser_product_link", formData.dresserProductLink || "");
     payload.append("dresser_notes", formData.notesDresser);
     payload.append(
       "dresser_removal_disposal_requested",
@@ -2920,6 +3177,41 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     }
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesDresser);
+  } else if (formData.projectType === "furniture_bed_frame_assembly") {
+    const suggestedPrice = estimateData.isManualReviewRequired
+      ? 0
+      : Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("bed_type", formData.bedType);
+    payload.append("bed_brand", formData.bedBrand);
+    payload.append("bed_already_in_room", formData.bedAlreadyInRoom);
+    payload.append("bed_old_furniture", formData.bedOldFurniture);
+    payload.append("bed_has_storage", formData.bedHasStorage);
+    payload.append("bed_has_headboard", formData.bedHasHeadboard);
+    payload.append("bed_has_footboard", formData.bedHasFootboard);
+    payload.append("bed_mattress_placement", formData.bedMattressPlacement);
+    payload.append("bed_packaging_cleanup", formData.bedPackagingCleanup);
+    payload.append("bed_has_product_link", formData.bedHasProductLink || "no");
+    payload.append("bed_product_link", formData.bedProductLink || "");
+    payload.append("bed_notes", formData.notesBedFrame);
+    payload.append(
+      "bed_removal_disposal_requested",
+      formData.bedOldFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "bed_manual_review_required",
+      estimateData.bedManualReviewRequired || formData.bedType === "murphyBed"
+        ? "true"
+        : "false"
+    );
+    if (formData.bedOldFurniture === "notSure") {
+      payload.append("bed_old_furniture_manual_review", "true");
+    }
+    if (!estimateData.isManualReviewRequired) {
+      payload.append("suggested_price", currency(suggestedPrice));
+    } else {
+      payload.append("suggested_price", "manual_review");
+    }
+    payload.append("notes", formData.notesBedFrame);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -2970,10 +3262,18 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
 
   payload.append("estimated_materials", `${currency(estimateData.minMaterials)} - ${currency(estimateData.maxMaterials)}`);
   payload.append("estimated_labor", `${currency(estimateData.laborMin)} - ${currency(estimateData.laborMax)}`);
-  payload.append("estimated_total_range", `${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`);
+  payload.append(
+    "estimated_total_range",
+    estimateData.isManualReviewRequired
+      ? "personalized_review_required"
+      : `${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`
+  );
   payload.append("estimated_hours", `${estimateData.hours} hours`);
-  payload.append("materials_considered", estimateData.materialsList.join(", "));
-  payload.append("calculation_summary", [...estimateData.adjustments, ...estimateData.internalAdjustments].join(" | "));
+  payload.append("materials_considered", (estimateData.materialsList || []).join(", "));
+  payload.append(
+    "calculation_summary",
+    [...(estimateData.adjustments || []), ...(estimateData.internalAdjustments || [])].join(" | ")
+  );
   payload.append("_subject", `${leadType} LEAD - ${formData.projectDisplayName} - ${leadMeta.serviceZone.toUpperCase()} - ${leadMeta.leadPriority.toUpperCase()}`);
 
   // Add payment details if this is a paid lead
@@ -3090,10 +3390,39 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_bed_frame_assembly") {
+      if (!bedType?.value || !bedBrand?.value || !bedAlreadyInRoom?.value || !bedOldFurniture?.value) {
+        showValidation(validationStep3, "Please complete the bed frame basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
     clearValidation(validationStep4);
+
+    if (projectType.value === "furniture_dresser_assembly") {
+      if (
+        dresserHasProductLink?.value === "yes" &&
+        dresserProductLink?.value.trim() &&
+        !isSoftValidProductUrl(dresserProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_bed_frame_assembly") {
+      if (
+        bedHasProductLink?.value === "yes" &&
+        bedProductLink?.value.trim() &&
+        !isSoftValidProductUrl(bedProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
   }
 
   return true;
@@ -3148,33 +3477,58 @@ function renderEstimate(estimateData, formData) {
   } else {
     if (tradeResultsBlock) tradeResultsBlock.classList.remove("hidden");
     if (aiDesignResultsBlock) aiDesignResultsBlock.classList.add("hidden");
-    if (resultsHeading) resultsHeading.textContent = "Project Estimate";
-    if (resultsIntro) {
-      resultsIntro.textContent =
-        "Based on the information provided, here is your estimate range and your clear working price for scheduling.";
+
+    if (estimateData.isManualReviewRequired) {
+      if (resultsHeading) resultsHeading.textContent = "Personalized Estimate Required";
+      if (resultsIntro) {
+        resultsIntro.textContent =
+          "This Murphy bed project needs a personalized Tamay review before pricing can be confirmed.";
+      }
+      if (resultsDisclaimer) {
+        resultsDisclaimer.innerHTML =
+          "Please submit your product link, photos, and assembly manual with <strong>Get My Exact Quote</strong> so Tamay Enterprises can review installation conditions and confirm pricing.";
+      }
+
+      materialsOutput.textContent = "Estimated Materials: Personalized review";
+      laborOutput.textContent = "Estimated Labor: Personalized review";
+      totalOutput.textContent = "Estimated Total Range: Personalized review required";
+      workingPriceOutput.textContent = "Get My Exact Quote";
+
+      if (payNowBtn) payNowBtn.disabled = true;
+      if (hotLeadBtn) {
+        hotLeadBtn.disabled = false;
+        hotLeadBtn.textContent = "Get My Exact Quote";
+      }
+    } else {
+      if (resultsHeading) resultsHeading.textContent = "Project Estimate";
+      if (resultsIntro) {
+        resultsIntro.textContent =
+          "Based on the information provided, here is your estimate range and your clear working price for scheduling.";
+      }
+      if (resultsDisclaimer) {
+        resultsDisclaimer.innerHTML =
+          'This is a <strong>preliminary estimate</strong> based only on the information provided. Final pricing may vary depending on hidden conditions, actual access, protection needs, paint matching, existing texture, additional structural issues, and on-site review.';
+      }
+
+      materialsOutput.textContent = `Estimated Materials: ${currency(estimateData.minMaterials)} - ${currency(estimateData.maxMaterials)}`;
+      laborOutput.textContent = `Estimated Labor: ${currency(estimateData.laborMin)} - ${currency(estimateData.laborMax)}`;
+      totalOutput.textContent = `Estimated Total Range: ${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`;
+
+      const workingPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+      workingPriceOutput.textContent = currency(workingPrice);
+
+      if (payNowBtn) payNowBtn.disabled = false;
+      if (hotLeadBtn) hotLeadBtn.disabled = false;
     }
-    if (resultsDisclaimer) {
-      resultsDisclaimer.innerHTML =
-        'This is a <strong>preliminary estimate</strong> based only on the information provided. Final pricing may vary depending on hidden conditions, actual access, protection needs, paint matching, existing texture, additional structural issues, and on-site review.';
-    }
-
-    materialsOutput.textContent = `Estimated Materials: ${currency(estimateData.minMaterials)} - ${currency(estimateData.maxMaterials)}`;
-    laborOutput.textContent = `Estimated Labor: ${currency(estimateData.laborMin)} - ${currency(estimateData.laborMax)}`;
-    totalOutput.textContent = `Estimated Total Range: ${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`;
-
-    const workingPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
-    workingPriceOutput.textContent = currency(workingPrice);
-
-    if (payNowBtn) payNowBtn.disabled = false;
-    if (hotLeadBtn) hotLeadBtn.disabled = false;
   }
 
-  const summaryItems = estimateData.isAiDesign
-    ? []
-    : [
-        `Estimated crew time: ${estimateData.hours} hours`,
-        `Materials considered: ${estimateData.materialsList.join(", ")}`
-      ];
+  const summaryItems =
+    estimateData.isAiDesign || estimateData.isManualReviewRequired
+      ? []
+      : [
+          `Estimated crew time: ${estimateData.hours} hours`,
+          `Materials considered: ${(estimateData.materialsList || []).join(", ")}`
+        ];
 
   [...summaryItems, ...estimateData.adjustments].forEach((item) => {
     if (!item) return;
@@ -3230,6 +3584,7 @@ function selectAiFinishLevel(finishKey) {
 
 function getWorkingPriceFromEstimate(estimateData) {
   if (!estimateData) return 0;
+  if (estimateData.isManualReviewRequired) return 0;
   if (estimateData.isAiDesign) {
     const key = estimateData.selectedFinishLevel;
     const range = key ? estimateData.ranges?.[key] : null;
@@ -3275,6 +3630,7 @@ function resetExperience() {
   updateTvMountConditionalFields();
   updatePaintConditionalFields();
   updateDresserConditionalFields();
+  updateBedFrameConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -3315,6 +3671,12 @@ if (aiDesignProjectOption) {
 if (dresserAssemblyProjectOption) {
   dresserAssemblyProjectOption.addEventListener("click", () => {
     setSelectedProject("furniture_dresser_assembly", "Dresser Assembly");
+  });
+}
+
+if (bedFrameAssemblyProjectOption) {
+  bedFrameAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_bed_frame_assembly", "Bed Frame Assembly");
   });
 }
 
@@ -3370,9 +3732,13 @@ powerWork.addEventListener("change", updateTvMountConditionalFields);
 if (dresserSize) dresserSize.addEventListener("change", updateDresserConditionalFields);
 if (dresserAlreadyInRoom) dresserAlreadyInRoom.addEventListener("change", updateDresserConditionalFields);
 if (dresserWallAnchoring) dresserWallAnchoring.addEventListener("change", updateDresserConditionalFields);
+if (dresserHasProductLink) dresserHasProductLink.addEventListener("change", updateDresserConditionalFields);
+if (bedHasProductLink) bedHasProductLink.addEventListener("change", updateBedFrameConditionalFields);
+if (bedType) bedType.addEventListener("change", updateBedFrameConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
+updateBedFrameConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -3415,6 +3781,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateAiDesignEstimate(formData);
   } else if (formData.projectType === "furniture_dresser_assembly") {
     latestEstimate = calculateDresserAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_bed_frame_assembly") {
+    latestEstimate = calculateBedFrameAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
@@ -3975,6 +4343,11 @@ if (payNowBtn) {
 
     if (latestEstimate.isAiDesign && !latestEstimate.selectedFinishLevel) {
       alert("Please select Essential, Enhanced, or Premium before scheduling.");
+      return;
+    }
+
+    if (latestEstimate.isManualReviewRequired) {
+      alert("This Murphy bed project needs a personalized estimate. Please use Get My Exact Quote.");
       return;
     }
 
