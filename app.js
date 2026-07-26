@@ -510,45 +510,28 @@ const PRICING = {
 
   furnitureDresser: {
     base: {
-      small: { totalMin: 85, totalMax: 130, hours: 1.5, label: "Small dresser assembly" },
+      small: { totalMin: 80, totalMax: 160, hours: 1.5, label: "Small dresser assembly" },
       medium: { totalMin: 130, totalMax: 190, hours: 2, label: "Medium dresser assembly" },
       large: { totalMin: 190, totalMax: 280, hours: 2.75, label: "Large dresser assembly" },
       xlarge: { totalMin: 280, totalMax: 420, hours: 3.5, label: "Extra-large dresser assembly" },
-      notSure: { totalMin: 150, totalMax: 260, hours: 2.25, label: "Dresser size to be confirmed" }
+      notSure: { totalMin: 130, totalMax: 240, hours: 2.25, label: "Dresser size to be confirmed" }
     },
-    brand: {
-      ikea: { totalMin: 20, totalMax: 60, label: "IKEA complexity adjustment" },
-      wayfair: { totalMin: 0, totalMax: 20, label: "Wayfair brand adjustment" },
-      amazon: { totalMin: 0, totalMax: 20, label: "Amazon brand adjustment" },
-      ashley: { totalMin: 0, totalMax: 20, label: "Ashley brand adjustment" },
-      otherNotSure: { totalMin: 10, totalMax: 30, label: "Brand/instructions to be confirmed" }
-    },
-    heavyCarry: {
-      large: { totalMin: 40, totalMax: 80, label: "Heavy carry upstairs/downstairs (large)" },
-      xlarge: { totalMin: 80, totalMax: 140, label: "Heavy carry upstairs/downstairs (extra large)" }
-    },
-    anchoring: {
-      drywall: { matMin: 35, matMax: 60, label: "Wall anchoring on drywall" },
-      plaster: { matMin: 50, matMax: 80, label: "Wall anchoring on plaster" },
-      brickConcrete: { matMin: 70, matMax: 120, label: "Wall anchoring on brick/concrete" },
-      notSure: { matMin: 45, matMax: 90, label: "Wall anchoring (wall type to confirm)" }
-    },
-    mirror: {
-      yes: { totalMin: 35, totalMax: 75, label: "Mirror attachment included" },
-      notSure: { totalMin: 20, totalMax: 50, label: "Mirror attachment to be confirmed" },
-      no: { totalMin: 0, totalMax: 0 }
-    },
-    packaging: {
-      yes: { totalMin: 20, totalMax: 40, label: "Box and packaging removal" },
-      no: { totalMin: 0, totalMax: 0 }
-    },
+    // Only removeDispose may change price. Other job-prep answers stay $0.
     oldFurniture: {
       no: { totalMin: 0, totalMax: 0 },
-      moveOnly: { totalMin: 40, totalMax: 80, label: "Move old furniture" },
-      removeDispose: { totalMin: 90, totalMax: 180, label: "Remove and dispose old furniture" },
-      notSure: { totalMin: 40, totalMax: 100, label: "Old furniture handling to be confirmed" }
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Old furniture removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Old furniture handling flagged for manual review" }
     },
-    materials: ["Assembly hardware", "Anchoring hardware if selected", "Consumables"]
+    includedServices: [
+      "Professional assembly",
+      "Leveling and adjustments",
+      "Included mirror attachment",
+      "Basic wall anchoring when requested",
+      "Movement within the home",
+      "Work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price", "Anchoring hardware when requested"]
   },
 
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
@@ -1441,10 +1424,9 @@ function updateProjectSpecificUI() {
 function updateDresserConditionalFields() {
   if (!dresserSize || !dresserAlreadyInRoom || !dresserWallAnchoring) return;
 
-  const size = dresserSize.value;
   const alreadyInRoom = dresserAlreadyInRoom.value;
-  const showCarry =
-    ["large", "xlarge"].includes(size) && ["no", "notSure"].includes(alreadyInRoom);
+  // Job-prep only: stairs question when dresser is not already in the assembly room.
+  const showCarry = ["no", "notSure"].includes(alreadyInRoom);
 
   if (dresserCarryStairsField) {
     dresserCarryStairsField.classList.toggle("hidden", !showCarry);
@@ -1469,86 +1451,78 @@ function calculateDresserAssemblyEstimate(formData) {
   const internalAdjustments = [
     `Service zone: ${leadMeta.serviceZone}`,
     `Distance band: ${leadMeta.distanceBand}`,
-    `Lead priority: ${leadMeta.leadPriority}`
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Dresser competitive pricing: base includes normal assembly complexity; only removal/disposal may add cost"
   ];
 
-  let laborMin = 0;
-  let laborMax = 0;
-  let minMaterials = 0;
-  let maxMaterials = 0;
-
   const base = cfg.base[formData.dresserSize] || cfg.base.notSure;
-  laborMin += base.totalMin;
-  laborMax += base.totalMax;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
   adjustments.push(base.label);
+  adjustments.push("Base price includes drawers, hardware, leveling, mirror when included, basic wall anchoring when requested, in-home movement/stairs, packaging handling, and work-area cleanup");
 
-  const brand = cfg.brand[formData.dresserBrand] || cfg.brand.otherNotSure;
-  laborMin += brand.totalMin;
-  laborMax += brand.totalMax;
-  if (brand.label) adjustments.push(brand.label);
-
-  const needsCarryContext =
-    ["large", "xlarge"].includes(formData.dresserSize) &&
-    ["no", "notSure"].includes(formData.dresserAlreadyInRoom) &&
-    ["upstairsDownstairs", "notSure"].includes(formData.dresserCarryStairs);
-
-  if (needsCarryContext) {
-    const carry = cfg.heavyCarry[formData.dresserSize];
-    if (carry) {
-      laborMin += carry.totalMin;
-      laborMax += carry.totalMax;
-      adjustments.push(carry.label);
-    }
+  // Job-prep answers (brand, location, stairs, anchoring, wall, mirror, packaging, moveOnly) do not change price.
+  if (formData.dresserBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.dresserBrand}`);
   }
-
-  if (["yes", "notSure"].includes(formData.dresserWallAnchoring)) {
-    const anchor = cfg.anchoring[formData.dresserWallType] || cfg.anchoring.notSure;
-    minMaterials += anchor.matMin;
-    maxMaterials += anchor.matMax;
-    adjustments.push(anchor.label);
+  if (formData.dresserAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.dresserAlreadyInRoom}`);
   }
-
-  const mirror = cfg.mirror[formData.dresserMirror] || cfg.mirror.no;
-  laborMin += mirror.totalMin;
-  laborMax += mirror.totalMax;
-  if (mirror.label) adjustments.push(mirror.label);
-
-  const packaging = cfg.packaging[formData.dresserPackagingRemoval] || cfg.packaging.no;
-  laborMin += packaging.totalMin;
-  laborMax += packaging.totalMax;
-  if (packaging.label) adjustments.push(packaging.label);
+  if (formData.dresserCarryStairs) {
+    internalAdjustments.push(`Carry stairs (prep only, $0): ${formData.dresserCarryStairs}`);
+  }
+  if (formData.dresserWallAnchoring) {
+    internalAdjustments.push(`Wall anchoring (prep only, $0): ${formData.dresserWallAnchoring}`);
+  }
+  if (formData.dresserWallType) {
+    internalAdjustments.push(`Wall type (prep only, $0): ${formData.dresserWallType}`);
+  }
+  if (formData.dresserMirror) {
+    internalAdjustments.push(`Mirror (prep only, $0): ${formData.dresserMirror}`);
+  }
+  if (formData.dresserPackagingRemoval) {
+    internalAdjustments.push(`Packaging removal (prep only, $0): ${formData.dresserPackagingRemoval}`);
+  }
 
   const oldFurniture = cfg.oldFurniture[formData.dresserOldFurniture] || cfg.oldFurniture.no;
-  laborMin += oldFurniture.totalMin;
-  laborMax += oldFurniture.totalMax;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
   if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: old furniture answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.dresserOldFurniture === "moveOnly") {
+    internalAdjustments.push("Old furniture moveOnly included in base ($0 adder)");
+  }
 
-  minMaterials = Math.max(0, minMaterials);
-  maxMaterials = Math.max(minMaterials, maxMaterials);
+  adjustments.push("Included with your dresser assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
   laborMin = Math.max(0, laborMin);
   laborMax = Math.max(laborMin, laborMax);
 
-  const totalMin = minMaterials + laborMin;
-  const totalMax = maxMaterials + laborMax;
+  const minMaterials = 0;
+  const maxMaterials = 0;
+  const totalMin = laborMin;
+  const totalMax = laborMax;
   const hours = base.hours || 2;
 
-  return applyMarketAndPropertyAdjustments(
-    {
-      hours,
-      minMaterials,
-      maxMaterials,
-      laborMin,
-      laborMax,
-      totalMin,
-      totalMax,
-      materialsList: cfg.materials,
-      adjustments,
-      internalAdjustments,
-      leadMeta
-    },
-    formData,
-    leadMeta
-  );
+  // Flat competitive dresser pricing — do not apply zone/property multipliers.
+  return {
+    hours,
+    minMaterials,
+    maxMaterials,
+    laborMin,
+    laborMax,
+    totalMin,
+    totalMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    dresserRemovalDisposalRequested: formData.dresserOldFurniture === "removeDispose",
+    dresserOldFurnitureManualReview: !!oldFurniture.manualReview
+  };
 }
 
 function resolveAiDesignLocationFactor(zipcodeRaw) {
@@ -2937,6 +2911,13 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     payload.append("dresser_packaging_removal", formData.dresserPackagingRemoval);
     payload.append("dresser_old_furniture", formData.dresserOldFurniture);
     payload.append("dresser_notes", formData.notesDresser);
+    payload.append(
+      "dresser_removal_disposal_requested",
+      formData.dresserOldFurniture === "removeDispose" ? "true" : "false"
+    );
+    if (formData.dresserOldFurniture === "notSure") {
+      payload.append("dresser_old_furniture_manual_review", "true");
+    }
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesDresser);
   } else if (isPlumbingProject(formData.projectType)) {
@@ -3095,9 +3076,7 @@ function validateStep(step) {
         return false;
       }
 
-      const showCarry =
-        ["large", "xlarge"].includes(dresserSize.value) &&
-        ["no", "notSure"].includes(dresserAlreadyInRoom.value);
+      const showCarry = ["no", "notSure"].includes(dresserAlreadyInRoom.value);
       if (showCarry && !dresserCarryStairs?.value) {
         showValidation(validationStep3, "Please tell us if the dresser needs to be carried upstairs or downstairs.");
         return false;
