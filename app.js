@@ -535,6 +535,79 @@ const PROPERTY_TYPE_CONFIG = {
   }
 };
 
+/**
+ * AI Design pricing config (editable later without rewriting the estimator).
+ * REVIEW PLACEHOLDERS: temporary numbers so the live flow can be reviewed.
+ * Replace with Carlos-approved values; keep nulls in locationFactors until real ZIP data exists.
+ */
+const AI_DESIGN_LOCATION_FACTORS = {
+  // Example only — do not treat as approved market data:
+  // "06460": { town: "Milford", factor: null, lastReviewed: null },
+  default: {
+    factor: null
+  }
+};
+
+const AI_DESIGN_FINISH_LEVELS = {
+  essential: {
+    label: "Essential Finish",
+    // TEMP REVIEW PLACEHOLDER — replace with approved adjustment
+    adjustment: 1.0
+  },
+  enhanced: {
+    label: "Enhanced Finish",
+    // TEMP REVIEW PLACEHOLDER — replace with approved adjustment
+    adjustment: 1.25
+  },
+  premium: {
+    label: "Premium Finish",
+    // TEMP REVIEW PLACEHOLDER — replace with approved adjustment
+    adjustment: 1.55
+  }
+};
+
+// TEMP REVIEW PLACEHOLDER base ranges by space type (min/max before ZIP × finish).
+// Replace with Carlos-approved project base ranges.
+const AI_DESIGN_BASE_BY_SPACE = {
+  kitchen: { min: 12000, max: 22000 },
+  bathroom: { min: 8000, max: 15000 },
+  living_area: { min: 7000, max: 14000 },
+  bedroom: { min: 5000, max: 10000 },
+  whole_home_area: { min: 18000, max: 36000 },
+  other: { min: 9000, max: 18000 }
+};
+
+const AI_DESIGN_GOAL_FACTORS = {
+  refresh: 0.75,
+  partial_remodel: 1.0,
+  full_remodel: 1.35,
+  design_consult: 0.55
+};
+
+const AI_DESIGN_SIZE_FACTORS = {
+  small: 0.85,
+  medium: 1.0,
+  large: 1.3,
+  not_sure: 1.05
+};
+
+const AI_DESIGN_CONDITION_FACTORS = {
+  good: 0.95,
+  fair: 1.0,
+  poor: 1.18,
+  not_sure: 1.08
+};
+
+const AI_DESIGN_LAYOUT_FACTORS = {
+  none: 1.0,
+  minor: 1.12,
+  major: 1.35,
+  not_sure: 1.1
+};
+
+/** Used only when a ZIP/default factor is still null — review display only. */
+const AI_DESIGN_TEMP_DEFAULT_LOCATION_FACTOR = 1.0;
+
 const drywallContextConfig = {
   wall: {
     scopeLabel: "Size of the affected wall or area",
@@ -615,6 +688,7 @@ let currentStep = 1;
 let latestEstimate = null;
 let coldLeadSubmitted = false;
 let hotLeadSubmitted = false;
+let selectedAiFinishLevel = null;
 
 const form = document.getElementById("estimatorForm");
 const results = document.getElementById("results");
@@ -628,6 +702,21 @@ const totalOutput = document.getElementById("total");
 const workingPriceOutput = document.getElementById("workingPriceOutput");
 const breakdownList = document.getElementById("breakdownList");
 const resultsProjectName = document.getElementById("resultsProjectName");
+const resultsHeading = document.getElementById("resultsHeading");
+const resultsIntro = document.getElementById("resultsIntro");
+const resultsDisclaimer = document.getElementById("resultsDisclaimer");
+const tradeResultsBlock = document.getElementById("tradeResultsBlock");
+const aiDesignResultsBlock = document.getElementById("aiDesignResultsBlock");
+const aiDesignZipDisplay = document.getElementById("aiDesignZipDisplay");
+const aiDesignFactorDisplay = document.getElementById("aiDesignFactorDisplay");
+const aiDesignFactorSource = document.getElementById("aiDesignFactorSource");
+const aiRangeEssential = document.getElementById("aiRangeEssential");
+const aiRangeEnhanced = document.getElementById("aiRangeEnhanced");
+const aiRangePremium = document.getElementById("aiRangePremium");
+const aiDesignWorkingPriceOutput = document.getElementById("aiDesignWorkingPriceOutput");
+const aiDesignSelectionNote = document.getElementById("aiDesignSelectionNote");
+const aiDesignFinishGrid = document.getElementById("aiDesignFinishGrid");
+const aiDesignReviewBanner = document.getElementById("aiDesignReviewBanner");
 
 const hotLeadBtn = document.getElementById("hotLeadBtn");
 const doneBtn = document.getElementById("doneBtn");
@@ -652,6 +741,7 @@ const projectSelectorTrigger = document.getElementById("projectSelectorTrigger")
 const drywallProjectOption = document.getElementById("drywallProjectOption");
 const lightingProjectOption = document.getElementById("lightingProjectOption");
 const paintProjectOption = document.getElementById("paintProjectOption");
+const aiDesignProjectOption = document.getElementById("aiDesignProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -676,13 +766,24 @@ const drywallBasicsSection = document.getElementById("drywallBasicsSection");
 const lightingBasicsSection = document.getElementById("lightingBasicsSection");
 const tvMountBasicsSection = document.getElementById("tvMountBasicsSection");
 const paintBasicsSection = document.getElementById("paintBasicsSection");
+const aiDesignBasicsSection = document.getElementById("aiDesignBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
 const lightingDetailsSection = document.getElementById("lightingDetailsSection");
 const tvMountDetailsSection = document.getElementById("tvMountDetailsSection");
 const paintDetailsSection = document.getElementById("paintDetailsSection");
+const aiDesignDetailsSection = document.getElementById("aiDesignDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
+
+const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
+const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
+const aiDesignApproxSize = document.getElementById("aiDesignApproxSize");
+const aiDesignCurrentCondition = document.getElementById("aiDesignCurrentCondition");
+const aiDesignLayoutChange = document.getElementById("aiDesignLayoutChange");
+const aiDesignPriority = document.getElementById("aiDesignPriority");
+const notesAiDesign = document.getElementById("notesAiDesign");
+const projectFilesAiDesign = document.getElementById("projectFilesAiDesign");
 
 const damageLocation = document.getElementById("damageLocation");
 const damageSize = document.getElementById("damageSize");
@@ -923,10 +1024,15 @@ function showStep(step) {
     results.classList.remove("hidden");
     results.classList.add("active");
     // New results step: reset CTAs (e.g. Pay Deposit stays disabled if user used "Get Quote" then "Start New" without reload).
-    if (payNowBtn) payNowBtn.disabled = false;
-    if (hotLeadBtn) {
-      hotLeadBtn.disabled = false;
-      hotLeadBtn.textContent = "Get My Exact Quote";
+    if (latestEstimate?.isAiDesign) {
+      updateAiDesignSelectedPriceDisplay(latestEstimate);
+    } else {
+      if (payNowBtn) payNowBtn.disabled = false;
+      if (hotLeadBtn) {
+        hotLeadBtn.disabled = false;
+        hotLeadBtn.textContent = "Get My Exact Quote";
+      }
+      if (doneBtn) doneBtn.disabled = false;
     }
     if (doneBtn) doneBtn.disabled = false;
   } else {
@@ -992,6 +1098,7 @@ function allProjectOptions() {
     drywallProjectOption,
     lightingProjectOption,
     paintProjectOption,
+    aiDesignProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1005,6 +1112,10 @@ function allProjectOptions() {
 
 function isPlumbingProject(type) {
   return type && type.startsWith("plumbing_");
+}
+
+function isAiDesignProject(type) {
+  return type === "ai_design";
 }
 
 function hideAllPlumbingSubsections() {
@@ -1179,12 +1290,14 @@ function updateProjectSpecificUI() {
   lightingBasicsSection.classList.add("hidden");
   tvMountBasicsSection.classList.add("hidden");
   paintBasicsSection.classList.add("hidden");
+  if (aiDesignBasicsSection) aiDesignBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
   lightingDetailsSection.classList.add("hidden");
   tvMountDetailsSection.classList.add("hidden");
   paintDetailsSection.classList.add("hidden");
+  if (aiDesignDetailsSection) aiDesignDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1222,6 +1335,14 @@ function updateProjectSpecificUI() {
     return;
   }
 
+  if (isAiDesignProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the space so we can shape your AI Design preliminary ranges.";
+    detailsSubtitle.textContent = "A few more details help localize Essential, Enhanced, and Premium finish ranges.";
+    if (aiDesignBasicsSection) aiDesignBasicsSection.classList.remove("hidden");
+    if (aiDesignDetailsSection) aiDesignDetailsSection.classList.remove("hidden");
+    return;
+  }
+
   if (isPlumbingProject(type)) {
     basicsSubtitle.textContent = "Tell us about the plumbing project so we can build a more accurate estimate.";
     detailsSubtitle.textContent = "A few final details help us refine the plumbing estimate more accurately.";
@@ -1236,6 +1357,122 @@ function updateProjectSpecificUI() {
   drywallBasicsSection.classList.remove("hidden");
   drywallDetailsSection.classList.remove("hidden");
 }
+
+function resolveAiDesignLocationFactor(zipcodeRaw) {
+  const zip = String(zipcodeRaw || "").trim().slice(0, 5);
+  const entry = AI_DESIGN_LOCATION_FACTORS[zip];
+
+  if (entry && typeof entry.factor === "number") {
+    return {
+      zip,
+      town: entry.town || "",
+      factor: entry.factor,
+      source: "zip_table",
+      configuredFactor: entry.factor
+    };
+  }
+
+  const configuredDefault = AI_DESIGN_LOCATION_FACTORS.default?.factor;
+  if (typeof configuredDefault === "number") {
+    return {
+      zip,
+      town: entry?.town || "",
+      factor: configuredDefault,
+      source: "configured_default",
+      configuredFactor: configuredDefault
+    };
+  }
+
+  // Review-only fallback so the UI can show ranges before Carlos fills factors.
+  return {
+    zip,
+    town: entry?.town || "",
+    factor: AI_DESIGN_TEMP_DEFAULT_LOCATION_FACTOR,
+    source: "temp_review_default",
+    configuredFactor: null
+  };
+}
+
+function buildAiDesignProjectBaseRange(formData) {
+  const spaceBase = AI_DESIGN_BASE_BY_SPACE[formData.aiDesignSpaceType] || AI_DESIGN_BASE_BY_SPACE.other;
+  const goal = AI_DESIGN_GOAL_FACTORS[formData.aiDesignProjectGoal] ?? 1;
+  const size = AI_DESIGN_SIZE_FACTORS[formData.aiDesignApproxSize] ?? 1;
+  const condition = AI_DESIGN_CONDITION_FACTORS[formData.aiDesignCurrentCondition] ?? 1;
+  const layout = AI_DESIGN_LAYOUT_FACTORS[formData.aiDesignLayoutChange] ?? 1;
+  const scopeFactor = goal * size * condition * layout;
+
+  return {
+    min: Math.round(spaceBase.min * scopeFactor),
+    max: Math.round(spaceBase.max * scopeFactor),
+    scopeFactor,
+    spaceBase
+  };
+}
+
+function calculateAiDesignEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const location = resolveAiDesignLocationFactor(formData.zipcode);
+  const projectBase = buildAiDesignProjectBaseRange(formData);
+  const ranges = {};
+
+  Object.keys(AI_DESIGN_FINISH_LEVELS).forEach((key) => {
+    const finish = AI_DESIGN_FINISH_LEVELS[key];
+    const adjustment = typeof finish.adjustment === "number" ? finish.adjustment : 1;
+    ranges[key] = {
+      label: finish.label,
+      adjustment,
+      min: Math.round(projectBase.min * location.factor * adjustment),
+      max: Math.round(projectBase.max * location.factor * adjustment)
+    };
+  });
+
+  const selectedKey = selectedAiFinishLevel && ranges[selectedAiFinishLevel] ? selectedAiFinishLevel : null;
+  const selectedRange = selectedKey ? ranges[selectedKey] : null;
+  const totalMin = selectedRange ? selectedRange.min : ranges.essential.min;
+  const totalMax = selectedRange ? selectedRange.max : ranges.premium.max;
+
+  return {
+    isAiDesign: true,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin: 0,
+    laborMax: 0,
+    hours: 0,
+    totalMin,
+    totalMax,
+    materialsList: ["Localized AI Design preliminary range (materials/fixtures vary by finish level)"],
+    adjustments: [
+      `Space: ${formData.aiDesignSpaceType}`,
+      `Goal: ${formData.aiDesignProjectGoal}`,
+      `Size: ${formData.aiDesignApproxSize}`,
+      `Condition: ${formData.aiDesignCurrentCondition}`,
+      `Layout change: ${formData.aiDesignLayoutChange}`,
+      `Priority: ${formData.aiDesignPriority}`,
+      `Project base range: ${currency(projectBase.min)} - ${currency(projectBase.max)}`,
+      `ZIP location factor: x${location.factor.toFixed(2)} (${location.source})`,
+      `Essential: ${currency(ranges.essential.min)} - ${currency(ranges.essential.max)}`,
+      `Enhanced: ${currency(ranges.enhanced.min)} - ${currency(ranges.enhanced.max)}`,
+      `Premium: ${currency(ranges.premium.min)} - ${currency(ranges.premium.max)}`
+    ],
+    internalAdjustments: [
+      `AI Design review placeholders in use until approved pricing data is loaded`,
+      `Service zone (lead routing only): ${leadMeta.serviceZone}`,
+      `Distance band: ${leadMeta.distanceBand}`,
+      `Lead priority: ${leadMeta.leadPriority}`
+    ],
+    leadMeta,
+    zipcode: location.zip,
+    locationFactor: location.factor,
+    locationFactorSource: location.source,
+    locationTown: location.town,
+    configuredLocationFactor: location.configuredFactor,
+    projectBaseRange: { min: projectBase.min, max: projectBase.max },
+    ranges,
+    selectedFinishLevel: selectedKey,
+    selectedFinishLabel: selectedRange ? selectedRange.label : null
+  };
+}
+
 function classifyZipBand(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
 
@@ -1306,6 +1543,12 @@ function classifyZipBand(zipcodeRaw) {
 }
 
 function classifyJobSize(formData) {
+  if (formData.projectType === "ai_design") {
+    if (formData.aiDesignApproxSize === "large" || formData.aiDesignProjectGoal === "full_remodel") return "large";
+    if (formData.aiDesignApproxSize === "medium" || formData.aiDesignProjectGoal === "partial_remodel") return "medium";
+    return "small";
+  }
+
   if (formData.projectType === "lighting_add_replace") {
     const count = parseInt(formData.fixtureCount || "1", 10);
     if (count >= 4) return "large";
@@ -2269,6 +2512,7 @@ function getCurrentPlumbingFilesInput() {
 function getUploadedFiles() {
   if (projectType.value === "lighting_add_replace") return projectFilesLighting.files;
   if (projectType.value === "paint_one_room") return projectFilesPaint.files;
+  if (projectType.value === "ai_design") return projectFilesAiDesign ? projectFilesAiDesign.files : null;
   if (isPlumbingProject(projectType.value)) {
     const plumbingFilesInput = getCurrentPlumbingFilesInput();
     return plumbingFilesInput ? plumbingFilesInput.files : null;
@@ -2349,6 +2593,14 @@ function getFormData() {
     mountHeight: mountHeight.value,
     notesTvMount: notesTvMount.value.trim(),
 
+    aiDesignSpaceType: aiDesignSpaceType?.value || "",
+    aiDesignProjectGoal: aiDesignProjectGoal?.value || "",
+    aiDesignApproxSize: aiDesignApproxSize?.value || "",
+    aiDesignCurrentCondition: aiDesignCurrentCondition?.value || "",
+    aiDesignLayoutChange: aiDesignLayoutChange?.value || "",
+    aiDesignPriority: aiDesignPriority?.value || "",
+    notesAiDesign: notesAiDesign?.value.trim() || "",
+
     ...plumbingBasics,
     ...plumbingDetails
   };
@@ -2423,6 +2675,40 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     payload.append("wall_patch_paint", formData.wallPatchPaint);
     payload.append("mount_height", formData.mountHeight);
     payload.append("notes", formData.notesTvMount);
+  } else if (formData.projectType === "ai_design") {
+    payload.append("ai_space_type", formData.aiDesignSpaceType);
+    payload.append("ai_project_goal", formData.aiDesignProjectGoal);
+    payload.append("ai_approx_size", formData.aiDesignApproxSize);
+    payload.append("ai_current_condition", formData.aiDesignCurrentCondition);
+    payload.append("ai_layout_change", formData.aiDesignLayoutChange);
+    payload.append("ai_priority", formData.aiDesignPriority);
+    payload.append("ai_notes", formData.notesAiDesign);
+    payload.append("ai_location_factor", String(estimateData.locationFactor ?? ""));
+    payload.append("ai_location_factor_source", estimateData.locationFactorSource || "");
+    payload.append("ai_location_town", estimateData.locationTown || "");
+    payload.append(
+      "ai_project_base_range",
+      estimateData.projectBaseRange
+        ? `${currency(estimateData.projectBaseRange.min)} - ${currency(estimateData.projectBaseRange.max)}`
+        : ""
+    );
+    if (estimateData.ranges) {
+      payload.append(
+        "ai_finish_essential_range",
+        `${currency(estimateData.ranges.essential.min)} - ${currency(estimateData.ranges.essential.max)}`
+      );
+      payload.append(
+        "ai_finish_enhanced_range",
+        `${currency(estimateData.ranges.enhanced.min)} - ${currency(estimateData.ranges.enhanced.max)}`
+      );
+      payload.append(
+        "ai_finish_premium_range",
+        `${currency(estimateData.ranges.premium.min)} - ${currency(estimateData.ranges.premium.max)}`
+      );
+    }
+    payload.append("ai_selected_finish", estimateData.selectedFinishLevel || "");
+    payload.append("ai_selected_finish_label", estimateData.selectedFinishLabel || "");
+    payload.append("notes", formData.notesAiDesign);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -2577,22 +2863,81 @@ function validateStep(step) {
 }
 
 function renderEstimate(estimateData, formData) {
-  materialsOutput.textContent = `Estimated Materials: ${currency(estimateData.minMaterials)} - ${currency(estimateData.maxMaterials)}`;
-  laborOutput.textContent = `Estimated Labor: ${currency(estimateData.laborMin)} - ${currency(estimateData.laborMax)}`;
-  totalOutput.textContent = `Estimated Total Range: ${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`;
-  
-  // Calculate working price as the average of min and max totals
-  const workingPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
-  workingPriceOutput.textContent = currency(workingPrice);
-  
   resultsProjectName.textContent = `Project Type: ${formData.projectDisplayName}`;
-
   breakdownList.innerHTML = "";
 
-  const summaryItems = [
-    `Estimated crew time: ${estimateData.hours} hours`,
-    `Materials considered: ${estimateData.materialsList.join(", ")}`
-  ];
+  if (estimateData.isAiDesign) {
+    if (tradeResultsBlock) tradeResultsBlock.classList.add("hidden");
+    if (aiDesignResultsBlock) aiDesignResultsBlock.classList.remove("hidden");
+    if (resultsHeading) resultsHeading.textContent = "AI Design Preliminary Ranges";
+    if (resultsIntro) {
+      resultsIntro.textContent =
+        "Based on your answers and ZIP code, here are three localized preliminary finish ranges. Select one level to continue.";
+    }
+    if (resultsDisclaimer) {
+      resultsDisclaimer.innerHTML =
+        "These are <strong>preliminary localized ranges</strong> for review. They are not a final quote. Consultation will compare the AI design with the real space and refine the appropriate project level. Placeholder factors may be in use until approved pricing data is loaded.";
+    }
+
+    if (aiDesignZipDisplay) aiDesignZipDisplay.textContent = estimateData.zipcode || formData.zipcode || "—";
+    if (aiDesignFactorDisplay) aiDesignFactorDisplay.textContent = `x${Number(estimateData.locationFactor).toFixed(2)}`;
+    if (aiDesignFactorSource) {
+      aiDesignFactorSource.textContent =
+        estimateData.locationFactorSource === "temp_review_default"
+          ? "(temporary review default — ZIP table not populated yet)"
+          : `(${estimateData.locationFactorSource})`;
+    }
+    if (aiDesignReviewBanner) {
+      aiDesignReviewBanner.classList.toggle(
+        "hidden",
+        estimateData.locationFactorSource !== "temp_review_default" &&
+          typeof AI_DESIGN_FINISH_LEVELS.essential.adjustment === "number" &&
+          estimateData.configuredLocationFactor != null
+      );
+    }
+
+    if (aiRangeEssential && estimateData.ranges?.essential) {
+      aiRangeEssential.textContent = `${currency(estimateData.ranges.essential.min)} – ${currency(estimateData.ranges.essential.max)}`;
+    }
+    if (aiRangeEnhanced && estimateData.ranges?.enhanced) {
+      aiRangeEnhanced.textContent = `${currency(estimateData.ranges.enhanced.min)} – ${currency(estimateData.ranges.enhanced.max)}`;
+    }
+    if (aiRangePremium && estimateData.ranges?.premium) {
+      aiRangePremium.textContent = `${currency(estimateData.ranges.premium.min)} – ${currency(estimateData.ranges.premium.max)}`;
+    }
+
+    syncAiFinishCardSelection(estimateData.selectedFinishLevel);
+    updateAiDesignSelectedPriceDisplay(estimateData);
+  } else {
+    if (tradeResultsBlock) tradeResultsBlock.classList.remove("hidden");
+    if (aiDesignResultsBlock) aiDesignResultsBlock.classList.add("hidden");
+    if (resultsHeading) resultsHeading.textContent = "Project Estimate";
+    if (resultsIntro) {
+      resultsIntro.textContent =
+        "Based on the information provided, here is your estimate range and your clear working price for scheduling.";
+    }
+    if (resultsDisclaimer) {
+      resultsDisclaimer.innerHTML =
+        'This is a <strong>preliminary estimate</strong> based only on the information provided. Final pricing may vary depending on hidden conditions, actual access, protection needs, paint matching, existing texture, additional structural issues, and on-site review.';
+    }
+
+    materialsOutput.textContent = `Estimated Materials: ${currency(estimateData.minMaterials)} - ${currency(estimateData.maxMaterials)}`;
+    laborOutput.textContent = `Estimated Labor: ${currency(estimateData.laborMin)} - ${currency(estimateData.laborMax)}`;
+    totalOutput.textContent = `Estimated Total Range: ${currency(estimateData.totalMin)} - ${currency(estimateData.totalMax)}`;
+
+    const workingPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    workingPriceOutput.textContent = currency(workingPrice);
+
+    if (payNowBtn) payNowBtn.disabled = false;
+    if (hotLeadBtn) hotLeadBtn.disabled = false;
+  }
+
+  const summaryItems = estimateData.isAiDesign
+    ? []
+    : [
+        `Estimated crew time: ${estimateData.hours} hours`,
+        `Materials considered: ${estimateData.materialsList.join(", ")}`
+      ];
 
   [...summaryItems, ...estimateData.adjustments].forEach((item) => {
     if (!item) return;
@@ -2600,6 +2945,61 @@ function renderEstimate(estimateData, formData) {
     li.textContent = item;
     breakdownList.appendChild(li);
   });
+}
+
+function syncAiFinishCardSelection(selectedKey) {
+  if (!aiDesignFinishGrid) return;
+  aiDesignFinishGrid.querySelectorAll(".ai-finish-card").forEach((card) => {
+    const isSelected = card.dataset.finish === selectedKey;
+    card.setAttribute("aria-pressed", isSelected ? "true" : "false");
+    card.classList.toggle("selected", isSelected);
+  });
+}
+
+function updateAiDesignSelectedPriceDisplay(estimateData) {
+  const selected = estimateData?.selectedFinishLevel && estimateData.ranges?.[estimateData.selectedFinishLevel];
+  if (!selected) {
+    if (aiDesignWorkingPriceOutput) aiDesignWorkingPriceOutput.textContent = "Select a finish level";
+    if (aiDesignSelectionNote) {
+      aiDesignSelectionNote.textContent =
+        "Choose Essential, Enhanced, or Premium above to continue with Pay Deposit & Schedule or Get My Exact Quote.";
+    }
+    if (payNowBtn) payNowBtn.disabled = true;
+    if (hotLeadBtn) hotLeadBtn.disabled = true;
+    return;
+  }
+
+  const workingPrice = Math.round((selected.min + selected.max) / 2);
+  if (aiDesignWorkingPriceOutput) aiDesignWorkingPriceOutput.textContent = currency(workingPrice);
+  if (aiDesignSelectionNote) {
+    aiDesignSelectionNote.textContent = `${selected.label} selected. Booking price uses the midpoint of that localized range.`;
+  }
+  if (payNowBtn) payNowBtn.disabled = false;
+  if (hotLeadBtn) hotLeadBtn.disabled = false;
+}
+
+function selectAiFinishLevel(finishKey) {
+  if (!latestEstimate?.isAiDesign || !latestEstimate.ranges?.[finishKey]) return;
+
+  selectedAiFinishLevel = finishKey;
+  latestEstimate.selectedFinishLevel = finishKey;
+  latestEstimate.selectedFinishLabel = latestEstimate.ranges[finishKey].label;
+  latestEstimate.totalMin = latestEstimate.ranges[finishKey].min;
+  latestEstimate.totalMax = latestEstimate.ranges[finishKey].max;
+
+  syncAiFinishCardSelection(finishKey);
+  updateAiDesignSelectedPriceDisplay(latestEstimate);
+}
+
+function getWorkingPriceFromEstimate(estimateData) {
+  if (!estimateData) return 0;
+  if (estimateData.isAiDesign) {
+    const key = estimateData.selectedFinishLevel;
+    const range = key ? estimateData.ranges?.[key] : null;
+    if (!range) return 0;
+    return Math.round((range.min + range.max) / 2);
+  }
+  return Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
 }
 
 function resetExperience() {
@@ -2613,6 +3013,7 @@ function resetExperience() {
   latestEstimate = null;
   coldLeadSubmitted = false;
   hotLeadSubmitted = false;
+  selectedAiFinishLevel = null;
 
   if (hotLeadBtn) {
     hotLeadBtn.disabled = false;
@@ -2628,6 +3029,8 @@ function resetExperience() {
   }
 
   breakdownList.innerHTML = "";
+  if (tradeResultsBlock) tradeResultsBlock.classList.remove("hidden");
+  if (aiDesignResultsBlock) aiDesignResultsBlock.classList.add("hidden");
 
   setSelectedProject("drywall_patch_wall_repair", "Drywall Patch / Wall Repair");
   updateDrywallContextUI();
@@ -2664,6 +3067,12 @@ lightingProjectOption.addEventListener("click", () => {
 paintProjectOption.addEventListener("click", () => {
   setSelectedProject("paint_one_room", "Paint One Room");
 });
+
+if (aiDesignProjectOption) {
+  aiDesignProjectOption.addEventListener("click", () => {
+    setSelectedProject("ai_design", "AI Design");
+  });
+}
 
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
@@ -2752,6 +3161,9 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculatePaintEstimate(formData);
   } else if (formData.projectType === "tv_mount_install") {
     latestEstimate = calculateTvMountEstimate(formData);
+  } else if (formData.projectType === "ai_design") {
+    selectedAiFinishLevel = null;
+    latestEstimate = calculateAiDesignEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
@@ -3257,6 +3669,11 @@ function calculatePlumbingEstimate(formData) {
 hotLeadBtn.addEventListener("click", async () => {
   if (!latestEstimate) return;
 
+  if (latestEstimate.isAiDesign && !latestEstimate.selectedFinishLevel) {
+    alert("Please select Essential, Enhanced, or Premium before requesting an exact quote.");
+    return;
+  }
+
   if (hotLeadSubmitted) {
     showHotCompletion();
     return;
@@ -3285,6 +3702,14 @@ doneBtn.addEventListener("click", () => {
   showDoneCompletion();
 });
 
+if (aiDesignFinishGrid) {
+  aiDesignFinishGrid.addEventListener("click", (e) => {
+    const card = e.target.closest(".ai-finish-card");
+    if (!card) return;
+    selectAiFinishLevel(card.dataset.finish);
+  });
+}
+
 // PAYMENT FLOW HANDLERS
 if (payNowBtn) {
   payNowBtn.addEventListener("click", async (e) => {
@@ -3294,6 +3719,11 @@ if (payNowBtn) {
     // Verify we have an estimate
     if (!latestEstimate) {
       alert("No estimate available");
+      return;
+    }
+
+    if (latestEstimate.isAiDesign && !latestEstimate.selectedFinishLevel) {
+      alert("Please select Essential, Enhanced, or Premium before scheduling.");
       return;
     }
 
@@ -3309,10 +3739,11 @@ if (payNowBtn) {
       return;
     }
 
-    // Calculate working price
-    const workingPrice = Math.round(
-      (latestEstimate.totalMin + latestEstimate.totalMax) / 2
-    );
+    const workingPrice = getWorkingPriceFromEstimate(latestEstimate);
+    if (!workingPrice) {
+      alert("Unable to determine booking price. Please select a finish level.");
+      return;
+    }
 
     // Build URL with parameters for the scheduler
     const params = new URLSearchParams({
@@ -3324,6 +3755,8 @@ if (payNowBtn) {
       projectType: projectType.value,
       projectDisplayName: projectDisplayName.value,
       workingPrice: `$${workingPrice}`,
+      finishLevel: latestEstimate.selectedFinishLevel || "",
+      finishLabel: latestEstimate.selectedFinishLabel || ""
     });
     
     // Scheduler lives next to index on whatever origin hosts the app (Render, GitHub Pages, localhost).

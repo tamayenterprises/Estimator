@@ -74,6 +74,12 @@
                     <div class="badge live">Available</div>
                   </div>
 
+                  <div class="project-option selectable" id="aiDesignProjectOption" data-value="ai_design" data-display="AI Design">
+                    <h4>AI Design</h4>
+                    <p>Preview a localized preliminary range for your remodel concept across Essential, Enhanced, and Premium finish levels.</p>
+                    <div class="badge live">Available</div>
+                  </div>
+
                   <div class="accordion-group open" data-accordion="plumbing">
                     <button type="button" class="accordion-button">
                       <div>
@@ -316,6 +322,37 @@
                   <option value="nearby">Nearby, but not behind TV</option>
                   <option value="no">No</option>
                   <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- AI DESIGN BASICS -->
+              <div id="aiDesignBasicsSection" class="hidden">
+                <p class="small-note">These questions shape a preliminary AI Design range. Final scope is refined in consultation against the real space.</p>
+
+                <label for="aiDesignSpaceType">What space is this design for?</label>
+                <select id="aiDesignSpaceType">
+                  <option value="kitchen">Kitchen</option>
+                  <option value="bathroom">Bathroom</option>
+                  <option value="living_area">Living area / family room</option>
+                  <option value="bedroom">Bedroom</option>
+                  <option value="whole_home_area">Multiple rooms / open area</option>
+                  <option value="other">Other / not listed</option>
+                </select>
+
+                <label for="aiDesignProjectGoal">What is the main project goal?</label>
+                <select id="aiDesignProjectGoal">
+                  <option value="refresh">Refresh / update finishes</option>
+                  <option value="partial_remodel">Partial remodel</option>
+                  <option value="full_remodel">Full remodel</option>
+                  <option value="design_consult">Design direction + consult first</option>
+                </select>
+
+                <label for="aiDesignApproxSize">Approximate size of the project area</label>
+                <select id="aiDesignApproxSize">
+                  <option value="small">Small (compact area / powder room scale)</option>
+                  <option value="medium">Medium (standard room / galley kitchen scale)</option>
+                  <option value="large">Large (open plan / primary suite / large kitchen)</option>
+                  <option value="not_sure">Not sure yet</option>
                 </select>
               </div>
 
@@ -767,6 +804,40 @@
 
                 <label for="notesTvMount">Additional Notes</label>
                 <textarea id="notesTvMount" placeholder="Anything else we should know about the installation?"></textarea>
+              </div>
+
+              <!-- AI DESIGN DETAILS -->
+              <div id="aiDesignDetailsSection" class="hidden">
+                <label for="aiDesignCurrentCondition">What is the current condition of the space?</label>
+                <select id="aiDesignCurrentCondition">
+                  <option value="good">Good — mostly cosmetic updates needed</option>
+                  <option value="fair">Fair — some repairs / prep expected</option>
+                  <option value="poor">Poor — significant prep or replacement likely</option>
+                  <option value="not_sure">Not sure</option>
+                </select>
+
+                <label for="aiDesignLayoutChange">Are layout or structural changes expected?</label>
+                <select id="aiDesignLayoutChange">
+                  <option value="none">No layout changes</option>
+                  <option value="minor">Minor layout tweaks</option>
+                  <option value="major">Major layout changes</option>
+                  <option value="not_sure">Not sure</option>
+                </select>
+
+                <label for="aiDesignPriority">What matters most for this design?</label>
+                <select id="aiDesignPriority">
+                  <option value="function">Function and durability</option>
+                  <option value="balance">Balanced look and function</option>
+                  <option value="statement">Statement finishes / customization</option>
+                  <option value="not_sure">Not sure yet</option>
+                </select>
+
+                <label for="projectFilesAiDesign">Upload photos, floor plans, or PDFs (optional)</label>
+                <input type="file" id="projectFilesAiDesign" accept=".jpg,.jpeg,.png,.webp,.pdf" multiple />
+                <div class="small-note">Photos or sketches help us compare the AI design concept with your real space during consultation.</div>
+
+                <label for="notesAiDesign">Additional Notes</label>
+                <textarea id="notesAiDesign" placeholder="Describe the look you want, must-have features, or constraints we should know."></textarea>
               </div>
 
               <!-- PAINT DETAILS -->
@@ -1234,27 +1305,74 @@
 
           <!-- RESULTS -->
           <div id="results" class="results hidden">
-            <h2>Project Estimate</h2>
+            <h2 id="resultsHeading">Project Estimate</h2>
             <p id="resultsProjectName">Project Type: Drywall Patch / Wall Repair</p>
-            <p class="results-intro">Based on the information provided, here is your estimate range and your clear working price for scheduling.</p>
+            <p class="results-intro" id="resultsIntro">Based on the information provided, here is your estimate range and your clear working price for scheduling.</p>
 
-            <p id="materials">Estimated Materials: $0</p>
-            <p id="labor">Estimated Labor: $0</p>
-            <p id="total">Estimated Total Range: $0</p>
+            <div id="tradeResultsBlock">
+              <p id="materials">Estimated Materials: $0</p>
+              <p id="labor">Estimated Labor: $0</p>
+              <p id="total">Estimated Total Range: $0</p>
 
-            <div class="working-price-card">
-              <div class="working-price-label">Based on the details you provided, we can complete this project for:</div>
-              <div class="working-price-value" id="workingPriceOutput">$0</div>
-              <div class="working-price-note">
-                If you are sure that the conditions you provided are accurate then select Pay Deposit and Schedule. Otherwise, if you need reassurance, select Get Your Exact Quote and a Tamay member will get back to you.
+              <div class="working-price-card">
+                <div class="working-price-label">Based on the details you provided, we can complete this project for:</div>
+                <div class="working-price-value" id="workingPriceOutput">$0</div>
+                <div class="working-price-note">
+                  If you are sure that the conditions you provided are accurate then select Pay Deposit and Schedule. Otherwise, if you need reassurance, select Get Your Exact Quote and a Tamay member will get back to you.
+                </div>
+              </div>
+            </div>
+
+            <div id="aiDesignResultsBlock" class="hidden">
+              <div class="ai-review-banner" id="aiDesignReviewBanner">
+                Review mode: placeholder location factors and finish adjustments are shown so you can evaluate the flow. Final pricing data will replace these values later.
               </div>
 
-              <div class="cta-panel">
-                <div class="actions actions-split">
-                  <button type="button" id="payNowBtn" class="btn btn-gold">Pay Deposit & Schedule</button>
-                  <button type="button" id="hotLeadBtn" class="btn btn-gold">Get My Exact Quote</button>
-                  <button type="button" id="doneBtn" class="btn btn-muted">Done</button>
+              <p class="ai-results-lead">
+                All three levels maintain professional Tamay Enterprises workmanship. Differences reflect materials, fixtures, customization, complexity, and finish selections. Ranges are localized using your project ZIP code. Consultation will compare the AI design with the real space and help refine the appropriate project level.
+              </p>
+
+              <div class="ai-meta-row">
+                <span>ZIP: <strong id="aiDesignZipDisplay">—</strong></span>
+                <span>Location factor: <strong id="aiDesignFactorDisplay">—</strong></span>
+                <span id="aiDesignFactorSource" class="ai-factor-source"></span>
+              </div>
+
+              <div class="ai-finish-grid" id="aiDesignFinishGrid" role="radiogroup" aria-label="Select finish level">
+                <button type="button" class="ai-finish-card" data-finish="essential" aria-pressed="false">
+                  <div class="ai-finish-title">Essential Finish</div>
+                  <div class="ai-finish-range" id="aiRangeEssential">$0 – $0</div>
+                  <div class="ai-finish-note">Solid professional result with practical materials and straightforward selections.</div>
+                  <div class="ai-finish-select-label">Select Essential</div>
+                </button>
+                <button type="button" class="ai-finish-card" data-finish="enhanced" aria-pressed="false">
+                  <div class="ai-finish-title">Enhanced Finish</div>
+                  <div class="ai-finish-range" id="aiRangeEnhanced">$0 – $0</div>
+                  <div class="ai-finish-note">Upgraded materials, more refined fixtures, and added design flexibility.</div>
+                  <div class="ai-finish-select-label">Select Enhanced</div>
+                </button>
+                <button type="button" class="ai-finish-card" data-finish="premium" aria-pressed="false">
+                  <div class="ai-finish-title">Premium Finish</div>
+                  <div class="ai-finish-range" id="aiRangePremium">$0 – $0</div>
+                  <div class="ai-finish-note">Higher-end finishes, greater customization, and more complex detailing.</div>
+                  <div class="ai-finish-select-label">Select Premium</div>
+                </button>
+              </div>
+
+              <div class="working-price-card ai-selected-price-card">
+                <div class="working-price-label">Selected level booking price (midpoint of selected range):</div>
+                <div class="working-price-value" id="aiDesignWorkingPriceOutput">Select a finish level</div>
+                <div class="working-price-note" id="aiDesignSelectionNote">
+                  Choose Essential, Enhanced, or Premium above to continue with Pay Deposit &amp; Schedule or Get My Exact Quote.
                 </div>
+              </div>
+            </div>
+
+            <div class="cta-panel">
+              <div class="actions actions-split">
+                <button type="button" id="payNowBtn" class="btn btn-gold">Pay Deposit & Schedule</button>
+                <button type="button" id="hotLeadBtn" class="btn btn-gold">Get My Exact Quote</button>
+                <button type="button" id="doneBtn" class="btn btn-muted">Done</button>
               </div>
             </div>
 
@@ -1263,7 +1381,7 @@
               <ul id="breakdownList"></ul>
             </div>
 
-            <div class="disclaimer">
+            <div class="disclaimer" id="resultsDisclaimer">
               This is a <strong>preliminary estimate</strong> based only on the information provided. Final pricing may vary depending on hidden conditions, actual access, protection needs, paint matching, existing texture, additional structural issues, and on-site review.
             </div>
           </div>
