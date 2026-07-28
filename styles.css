@@ -106,28 +106,24 @@ body {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px 12px;
+  gap: 12px 14px;
 }
 
-.hero-brand-mark {
-  width: 40px;
-  height: auto;
+.hero-brand-logo {
+  width: auto;
+  height: 72px;
+  max-width: 160px;
   display: block;
   flex: 0 0 auto;
-}
-
-.hero-brand-name {
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
+  object-fit: contain;
+  border-radius: 12px;
+  background: #000;
 }
 
 .hero-brand-divider {
   display: none;
   width: 1px;
-  height: 26px;
+  height: 36px;
   background: rgba(255, 255, 255, 0.4);
 }
 
@@ -278,7 +274,7 @@ a.hero-cta:focus-visible {
   margin: 0;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.78rem;
   font-weight: 600;
@@ -288,11 +284,14 @@ a.hero-cta:focus-visible {
   box-shadow: none;
 }
 
-.hero-powered img {
-  width: 22px;
+.hero-powered-logo {
+  width: 40px;
   height: auto;
   display: block;
   flex: 0 0 auto;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #000;
 }
 
 #projectSelectorShell {
