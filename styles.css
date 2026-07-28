@@ -114,7 +114,9 @@ body {
   display: block;
   object-fit: contain;
   border-radius: 12px;
-  background: #000;
+  background: #fff;
+  padding: 4px;
+  box-sizing: content-box;
 }
 
 .hero-actions {
@@ -176,7 +178,9 @@ a.hero-cta:focus-visible {
   flex: 0 0 auto;
   object-fit: contain;
   border-radius: 10px;
-  background: #000;
+  background: #fff;
+  padding: 3px;
+  box-sizing: content-box;
 }
 
 .hero-lockup-divider {
