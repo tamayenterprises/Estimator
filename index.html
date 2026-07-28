@@ -112,6 +112,12 @@
                         <p>Assemble writing, office, L-shaped, standing, gaming, and hutch desks with optional packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="diningTableAssemblyProjectOption" data-value="furniture_dining_table_assembly" data-display="Dining Table Assembly">
+                        <h4>Dining Table Assembly</h4>
+                        <p>Assemble dining tables with optional chair assembly, final placement, and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -532,6 +538,57 @@
 
                 <label for="deskOldFurniture">Does an existing desk need to be moved or removed?</label>
                 <select id="deskOldFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- DINING TABLE ASSEMBLY BASICS -->
+              <div id="diningTableBasicsSection" class="hidden">
+                <label for="diningTableSize">What size dining table are we assembling?</label>
+                <select id="diningTableSize">
+                  <option value="small">Small (seats approximately 2–4 people)</option>
+                  <option value="medium">Medium (seats approximately 4–6 people)</option>
+                  <option value="large">Large (seats approximately 6–8 people)</option>
+                  <option value="extraLarge">Extra large (seats approximately 8–12+ people)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="diningTableChairQuantity">How many chairs would you like us to assemble?</label>
+                <select id="diningTableChairQuantity">
+                  <option value="none">None</option>
+                  <option value="2">2 chairs</option>
+                  <option value="4">4 chairs</option>
+                  <option value="6">6 chairs</option>
+                  <option value="8">8 chairs</option>
+                  <option value="10">10 chairs</option>
+                  <option value="12">12 chairs</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="diningTableBrand">What brand or store is it from?</label>
+                <select id="diningTableBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="homeDepot">Home Depot</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="diningTableAlreadyInRoom">Is the dining table already in the room where it will be assembled?</label>
+                <select id="diningTableAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="diningTableExistingTable">Does an existing dining table need to be moved or removed?</label>
+                <select id="diningTableExistingTable">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1240,6 +1297,54 @@
 
                 <label for="notesDesk">Anything else we should know?</label>
                 <textarea id="notesDesk" placeholder="Share access notes, stairs, outlet location, or other details."></textarea>
+              </div>
+
+              <!-- DINING TABLE ASSEMBLY DETAILS -->
+              <div id="diningTableDetailsSection" class="hidden">
+                <label for="diningTableExtensionLeaf">Does the table include an extension leaf?</label>
+                <select id="diningTableExtensionLeaf">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="diningTableGlassTop">Does the table include a glass top?</label>
+                <select id="diningTableGlassTop">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="diningTableFinalPositioning">Would you like us to place the dining table and chairs in their final position?</label>
+                <select id="diningTableFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="diningTablePackagingCleanup">Should we remove the boxes and packaging after assembly?</label>
+                <select id="diningTablePackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="diningTableHasProductLink">Do you have a product link?</label>
+                <select id="diningTableHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="diningTableProductLinkField" class="hidden">
+                  <label for="diningTableProductLink">Paste the product link</label>
+                  <input type="url" id="diningTableProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from Amazon, Wayfair, IKEA, Ashley, Home Depot, Target, Walmart, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesDiningTable">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesDiningTable" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, product screenshots, or assembly manuals help us prepare for the job.</div>
+
+                <label for="notesDiningTable">Anything else we should know?</label>
+                <textarea id="notesDiningTable" placeholder="Share access notes, stairs, chair style notes, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

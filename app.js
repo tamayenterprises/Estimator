@@ -629,6 +629,41 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureDiningTable: {
+    base: {
+      small: { totalMin: 90, totalMax: 150, hours: 1.75, label: "Small dining table assembly" },
+      medium: { totalMin: 130, totalMax: 210, hours: 2.25, label: "Medium dining table assembly" },
+      large: { totalMin: 180, totalMax: 280, hours: 2.75, label: "Large dining table assembly" },
+      extraLarge: { totalMin: 240, totalMax: 360, hours: 3.25, label: "Extra-large dining table assembly" },
+      notSure: { totalMin: 150, totalMax: 260, hours: 2.5, label: "Dining table size to be confirmed", manualReview: true }
+    },
+    chairs: {
+      none: { totalMin: 0, totalMax: 0 },
+      "2": { totalMin: 25, totalMax: 40, label: "Chair assembly (2 chairs)" },
+      "4": { totalMin: 50, totalMax: 80, label: "Chair assembly (4 chairs)" },
+      "6": { totalMin: 75, totalMax: 120, label: "Chair assembly (6 chairs)" },
+      "8": { totalMin: 100, totalMax: 160, label: "Chair assembly (8 chairs)" },
+      "10": { totalMin: 125, totalMax: 200, label: "Chair assembly (10 chairs)" },
+      "12": { totalMin: 150, totalMax: 240, label: "Chair assembly (12 chairs)" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Chair quantity flagged for manual review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing dining table removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing dining table handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional table assembly",
+      "Chair assembly (based on selected quantity)",
+      "Final positioning",
+      "Hardware installation",
+      "Leveling and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -867,6 +902,7 @@ const dresserAssemblyProjectOption = document.getElementById("dresserAssemblyPro
 const bedFrameAssemblyProjectOption = document.getElementById("bedFrameAssemblyProjectOption");
 const tvStandAssemblyProjectOption = document.getElementById("tvStandAssemblyProjectOption");
 const deskAssemblyProjectOption = document.getElementById("deskAssemblyProjectOption");
+const diningTableAssemblyProjectOption = document.getElementById("diningTableAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -896,6 +932,7 @@ const dresserBasicsSection = document.getElementById("dresserBasicsSection");
 const bedFrameBasicsSection = document.getElementById("bedFrameBasicsSection");
 const tvStandBasicsSection = document.getElementById("tvStandBasicsSection");
 const deskBasicsSection = document.getElementById("deskBasicsSection");
+const diningTableBasicsSection = document.getElementById("diningTableBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -907,6 +944,7 @@ const dresserDetailsSection = document.getElementById("dresserDetailsSection");
 const bedFrameDetailsSection = document.getElementById("bedFrameDetailsSection");
 const tvStandDetailsSection = document.getElementById("tvStandDetailsSection");
 const deskDetailsSection = document.getElementById("deskDetailsSection");
+const diningTableDetailsSection = document.getElementById("diningTableDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -972,6 +1010,21 @@ const deskProductLinkField = document.getElementById("deskProductLinkField");
 const deskElectricNote = document.getElementById("deskElectricNote");
 const notesDesk = document.getElementById("notesDesk");
 const projectFilesDesk = document.getElementById("projectFilesDesk");
+
+const diningTableSize = document.getElementById("diningTableSize");
+const diningTableChairQuantity = document.getElementById("diningTableChairQuantity");
+const diningTableBrand = document.getElementById("diningTableBrand");
+const diningTableAlreadyInRoom = document.getElementById("diningTableAlreadyInRoom");
+const diningTableExistingTable = document.getElementById("diningTableExistingTable");
+const diningTableExtensionLeaf = document.getElementById("diningTableExtensionLeaf");
+const diningTableGlassTop = document.getElementById("diningTableGlassTop");
+const diningTableFinalPositioning = document.getElementById("diningTableFinalPositioning");
+const diningTablePackagingCleanup = document.getElementById("diningTablePackagingCleanup");
+const diningTableHasProductLink = document.getElementById("diningTableHasProductLink");
+const diningTableProductLink = document.getElementById("diningTableProductLink");
+const diningTableProductLinkField = document.getElementById("diningTableProductLinkField");
+const notesDiningTable = document.getElementById("notesDiningTable");
+const projectFilesDiningTable = document.getElementById("projectFilesDiningTable");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1307,6 +1360,7 @@ function allProjectOptions() {
     bedFrameAssemblyProjectOption,
     tvStandAssemblyProjectOption,
     deskAssemblyProjectOption,
+    diningTableAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1344,6 +1398,10 @@ function isTvStandAssemblyProject(type) {
 
 function isDeskAssemblyProject(type) {
   return type === "furniture_desk_assembly";
+}
+
+function isDiningTableAssemblyProject(type) {
+  return type === "furniture_dining_table_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1541,6 +1599,7 @@ function updateProjectSpecificUI() {
   if (bedFrameBasicsSection) bedFrameBasicsSection.classList.add("hidden");
   if (tvStandBasicsSection) tvStandBasicsSection.classList.add("hidden");
   if (deskBasicsSection) deskBasicsSection.classList.add("hidden");
+  if (diningTableBasicsSection) diningTableBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1552,6 +1611,7 @@ function updateProjectSpecificUI() {
   if (bedFrameDetailsSection) bedFrameDetailsSection.classList.add("hidden");
   if (tvStandDetailsSection) tvStandDetailsSection.classList.add("hidden");
   if (deskDetailsSection) deskDetailsSection.classList.add("hidden");
+  if (diningTableDetailsSection) diningTableDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1630,6 +1690,15 @@ function updateProjectSpecificUI() {
     if (deskBasicsSection) deskBasicsSection.classList.remove("hidden");
     if (deskDetailsSection) deskDetailsSection.classList.remove("hidden");
     updateDeskConditionalFields();
+    return;
+  }
+
+  if (isDiningTableAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the dining table so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for extension leaves, glass tops, placement, and packaging cleanup.";
+    if (diningTableBasicsSection) diningTableBasicsSection.classList.remove("hidden");
+    if (diningTableDetailsSection) diningTableDetailsSection.classList.remove("hidden");
+    updateDiningTableConditionalFields();
     return;
   }
 
@@ -1716,6 +1785,16 @@ function updateDeskConditionalFields() {
   const isElectric = deskType?.value === "standingDeskElectric";
   if (deskElectricNote) {
     deskElectricNote.classList.toggle("hidden", !isElectric);
+  }
+}
+
+function updateDiningTableConditionalFields() {
+  const showProductLink = diningTableHasProductLink?.value === "yes";
+  if (diningTableProductLinkField) {
+    diningTableProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && diningTableProductLink) {
+      diningTableProductLink.value = "";
+    }
   }
 }
 
@@ -2108,6 +2187,95 @@ function calculateDeskAssemblyEstimate(formData) {
   };
 }
 
+function calculateDiningTableAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureDiningTable;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Dining table competitive pricing: base includes normal assembly complexity; only chair quantity groups and removeDispose may add cost"
+  ];
+
+  const base = cfg.base[formData.diningTableSize] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price includes hardware, leveling, final placement when requested, in-home movement, extension leaf handling when included, and basic packaging cleanup"
+  );
+
+  if (formData.diningTableBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.diningTableBrand}`);
+  }
+  if (formData.diningTableAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.diningTableAlreadyInRoom}`);
+  }
+  if (formData.diningTableExtensionLeaf) {
+    internalAdjustments.push(`Extension leaf (prep only, $0): ${formData.diningTableExtensionLeaf}`);
+  }
+  if (formData.diningTableGlassTop) {
+    internalAdjustments.push(`Glass top (prep only, $0): ${formData.diningTableGlassTop}`);
+  }
+  if (formData.diningTableFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.diningTableFinalPositioning}`);
+  }
+  if (formData.diningTablePackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.diningTablePackagingCleanup}`);
+  }
+  if (formData.diningTableHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.diningTableProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  const chairs = cfg.chairs[formData.diningTableChairQuantity] || cfg.chairs.none;
+  laborMin += chairs.totalMin || 0;
+  laborMax += chairs.totalMax || 0;
+  if (chairs.label) adjustments.push(chairs.label);
+  if (chairs.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: chair quantity is notSure — no automatic chair adder applied");
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.diningTableExistingTable] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing dining table answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.diningTableExistingTable === "moveOnly") {
+    internalAdjustments.push("Existing dining table moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Dining Table Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.diningTableSize === "notSure" ||
+    formData.diningTableChairQuantity === "notSure" ||
+    formData.diningTableExistingTable === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    diningTableManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -2325,6 +2493,11 @@ function classifyJobSize(formData) {
     ) {
       return "medium";
     }
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_dining_table_assembly") {
+    if (formData.diningTableSize === "extraLarge" || formData.diningTableSize === "large") return "medium";
     return "small";
   }
 
@@ -3304,6 +3477,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_desk_assembly") {
     return projectFilesDesk ? projectFilesDesk.files : null;
   }
+  if (projectType.value === "furniture_dining_table_assembly") {
+    return projectFilesDiningTable ? projectFilesDiningTable.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -3450,6 +3626,22 @@ function getFormData() {
     deskProductLink:
       deskHasProductLink?.value === "yes" ? normalizeProductUrl(deskProductLink?.value || "") : "",
     notesDesk: notesDesk?.value.trim() || "",
+
+    diningTableSize: diningTableSize?.value || "",
+    diningTableChairQuantity: diningTableChairQuantity?.value || "",
+    diningTableBrand: diningTableBrand?.value || "",
+    diningTableAlreadyInRoom: diningTableAlreadyInRoom?.value || "",
+    diningTableExistingTable: diningTableExistingTable?.value || "",
+    diningTableExtensionLeaf: diningTableExtensionLeaf?.value || "",
+    diningTableGlassTop: diningTableGlassTop?.value || "",
+    diningTableFinalPositioning: diningTableFinalPositioning?.value || "",
+    diningTablePackagingCleanup: diningTablePackagingCleanup?.value || "",
+    diningTableHasProductLink: diningTableHasProductLink?.value || "no",
+    diningTableProductLink:
+      diningTableHasProductLink?.value === "yes"
+        ? normalizeProductUrl(diningTableProductLink?.value || "")
+        : "",
+    notesDiningTable: notesDiningTable?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -3677,6 +3869,24 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     );
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesDesk);
+  } else if (formData.projectType === "furniture_dining_table_assembly") {
+    const suggestedPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("dining_table_size", formData.diningTableSize);
+    payload.append("dining_table_chair_quantity", formData.diningTableChairQuantity);
+    payload.append("dining_table_brand", formData.diningTableBrand);
+    payload.append("dining_table_already_in_room", formData.diningTableAlreadyInRoom);
+    payload.append("dining_table_existing_table", formData.diningTableExistingTable);
+    payload.append("dining_table_glass_top", formData.diningTableGlassTop);
+    payload.append("dining_table_extension_leaf", formData.diningTableExtensionLeaf);
+    payload.append("dining_table_has_product_link", formData.diningTableHasProductLink || "no");
+    payload.append("dining_table_product_link", formData.diningTableProductLink || "");
+    payload.append("dining_table_notes", formData.notesDiningTable);
+    payload.append(
+      "manual_review_required",
+      estimateData.diningTableManualReviewRequired ? "true" : "false"
+    );
+    payload.append("suggested_price", currency(suggestedPrice));
+    payload.append("notes", formData.notesDiningTable);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -3886,6 +4096,19 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_dining_table_assembly") {
+      if (
+        !diningTableSize?.value ||
+        !diningTableChairQuantity?.value ||
+        !diningTableBrand?.value ||
+        !diningTableAlreadyInRoom?.value ||
+        !diningTableExistingTable?.value
+      ) {
+        showValidation(validationStep3, "Please complete the dining table basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -3933,6 +4156,17 @@ function validateStep(step) {
         deskHasProductLink?.value === "yes" &&
         deskProductLink?.value.trim() &&
         !isSoftValidProductUrl(deskProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_dining_table_assembly") {
+      if (
+        diningTableHasProductLink?.value === "yes" &&
+        diningTableProductLink?.value.trim() &&
+        !isSoftValidProductUrl(diningTableProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -4148,6 +4382,7 @@ function resetExperience() {
   updateBedFrameConditionalFields();
   updateTvStandConditionalFields();
   updateDeskConditionalFields();
+  updateDiningTableConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -4209,6 +4444,12 @@ if (deskAssemblyProjectOption) {
   });
 }
 
+if (diningTableAssemblyProjectOption) {
+  diningTableAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_dining_table_assembly", "Dining Table Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -4267,12 +4508,16 @@ if (bedType) bedType.addEventListener("change", updateBedFrameConditionalFields)
 if (tvStandHasProductLink) tvStandHasProductLink.addEventListener("change", updateTvStandConditionalFields);
 if (deskHasProductLink) deskHasProductLink.addEventListener("change", updateDeskConditionalFields);
 if (deskType) deskType.addEventListener("change", updateDeskConditionalFields);
+if (diningTableHasProductLink) {
+  diningTableHasProductLink.addEventListener("change", updateDiningTableConditionalFields);
+}
 
 setupAccordions();
 updateDresserConditionalFields();
 updateBedFrameConditionalFields();
 updateTvStandConditionalFields();
 updateDeskConditionalFields();
+updateDiningTableConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -4321,6 +4566,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateTvStandAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_desk_assembly") {
     latestEstimate = calculateDeskAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_dining_table_assembly") {
+    latestEstimate = calculateDiningTableAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
