@@ -124,6 +124,12 @@
                         <p>Assemble freestanding bookshelves and bookcases, including multi-unit jobs, wall anchoring, and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="coffeeTableAssemblyProjectOption" data-value="furniture_coffee_table_assembly" data-display="Coffee Table Assembly">
+                        <h4>Coffee Table Assembly</h4>
+                        <p>Assemble coffee tables with optional storage, lift-top mechanisms, glass tops, and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -658,6 +664,45 @@
 
                 <label for="bookcaseExistingFurniture">Does an existing bookshelf or bookcase need to be moved or removed?</label>
                 <select id="bookcaseExistingFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- COFFEE TABLE ASSEMBLY BASICS -->
+              <div id="coffeeTableBasicsSection" class="hidden">
+                <label for="coffeeTableSize">What size coffee table are we assembling?</label>
+                <select id="coffeeTableSize">
+                  <option value="small">Small (compact coffee table)</option>
+                  <option value="medium">Medium (standard living room coffee table)</option>
+                  <option value="large">Large (oversized coffee table)</option>
+                  <option value="extraLarge">Extra large (extra-wide or designer coffee table)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="coffeeTableBrand">What brand or store is it from?</label>
+                <select id="coffeeTableBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="target">Target</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="homeDepot">Home Depot</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="coffeeTableAlreadyInRoom">Is the coffee table already in the room where it will be assembled?</label>
+                <select id="coffeeTableAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="coffeeTableExistingTable">Does an existing coffee table need to be moved or removed?</label>
+                <select id="coffeeTableExistingTable">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1494,6 +1539,61 @@
 
                 <label for="notesBookcase">Anything else we should know?</label>
                 <textarea id="notesBookcase" placeholder="Share access notes, stairs, wall conditions, or other details."></textarea>
+              </div>
+
+              <!-- COFFEE TABLE ASSEMBLY DETAILS -->
+              <div id="coffeeTableDetailsSection" class="hidden">
+                <label for="coffeeTableStorage">Does the coffee table include drawers or storage?</label>
+                <select id="coffeeTableStorage">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="coffeeTableLiftTop">Does it include a lift-top mechanism?</label>
+                <select id="coffeeTableLiftTop">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="coffeeTableGlass">Does it include a glass top?</label>
+                <select id="coffeeTableGlass">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="coffeeTableFinalPositioning">Would you like us to place it in its final location after assembly?</label>
+                <select id="coffeeTableFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="coffeeTablePackagingCleanup">Should we remove the boxes and packaging?</label>
+                <select id="coffeeTablePackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="coffeeTableHasProductLink">Do you have a product link?</label>
+                <select id="coffeeTableHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="coffeeTableProductLinkField" class="hidden">
+                  <label for="coffeeTableProductLink">Paste the product link</label>
+                  <input type="url" id="coffeeTableProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Ashley, Target, Walmart, Home Depot, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesCoffeeTable">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesCoffeeTable" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, product screenshots, or assembly manuals help us prepare for the job.</div>
+
+                <label for="notesCoffeeTable">Anything else we should know?</label>
+                <textarea id="notesCoffeeTable" placeholder="Share access notes, stairs, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

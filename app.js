@@ -697,6 +697,32 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureCoffeeTable: {
+    base: {
+      small: { totalMin: 60, totalMax: 100, hours: 1.25, label: "Small coffee table assembly" },
+      medium: { totalMin: 80, totalMax: 130, hours: 1.5, label: "Medium coffee table assembly" },
+      large: { totalMin: 110, totalMax: 170, hours: 1.75, label: "Large coffee table assembly" },
+      extraLarge: { totalMin: 140, totalMax: 220, hours: 2.0, label: "Extra-large coffee table assembly" },
+      notSure: { totalMin: 80, totalMax: 150, hours: 1.5, label: "Coffee table size to be confirmed", manualReview: true }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing coffee table removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing coffee table handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional assembly",
+      "Hardware installation",
+      "Lift-top assembly",
+      "Storage compartment assembly",
+      "Final positioning",
+      "Leveling and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -937,6 +963,7 @@ const tvStandAssemblyProjectOption = document.getElementById("tvStandAssemblyPro
 const deskAssemblyProjectOption = document.getElementById("deskAssemblyProjectOption");
 const diningTableAssemblyProjectOption = document.getElementById("diningTableAssemblyProjectOption");
 const bookcaseAssemblyProjectOption = document.getElementById("bookcaseAssemblyProjectOption");
+const coffeeTableAssemblyProjectOption = document.getElementById("coffeeTableAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -968,6 +995,7 @@ const tvStandBasicsSection = document.getElementById("tvStandBasicsSection");
 const deskBasicsSection = document.getElementById("deskBasicsSection");
 const diningTableBasicsSection = document.getElementById("diningTableBasicsSection");
 const bookcaseBasicsSection = document.getElementById("bookcaseBasicsSection");
+const coffeeTableBasicsSection = document.getElementById("coffeeTableBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -981,6 +1009,7 @@ const tvStandDetailsSection = document.getElementById("tvStandDetailsSection");
 const deskDetailsSection = document.getElementById("deskDetailsSection");
 const diningTableDetailsSection = document.getElementById("diningTableDetailsSection");
 const bookcaseDetailsSection = document.getElementById("bookcaseDetailsSection");
+const coffeeTableDetailsSection = document.getElementById("coffeeTableDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -1083,6 +1112,21 @@ const bookcaseProductLink = document.getElementById("bookcaseProductLink");
 const bookcaseProductLinkField = document.getElementById("bookcaseProductLinkField");
 const notesBookcase = document.getElementById("notesBookcase");
 const projectFilesBookcase = document.getElementById("projectFilesBookcase");
+
+const coffeeTableSize = document.getElementById("coffeeTableSize");
+const coffeeTableBrand = document.getElementById("coffeeTableBrand");
+const coffeeTableAlreadyInRoom = document.getElementById("coffeeTableAlreadyInRoom");
+const coffeeTableExistingTable = document.getElementById("coffeeTableExistingTable");
+const coffeeTableStorage = document.getElementById("coffeeTableStorage");
+const coffeeTableLiftTop = document.getElementById("coffeeTableLiftTop");
+const coffeeTableGlass = document.getElementById("coffeeTableGlass");
+const coffeeTableFinalPositioning = document.getElementById("coffeeTableFinalPositioning");
+const coffeeTablePackagingCleanup = document.getElementById("coffeeTablePackagingCleanup");
+const coffeeTableHasProductLink = document.getElementById("coffeeTableHasProductLink");
+const coffeeTableProductLink = document.getElementById("coffeeTableProductLink");
+const coffeeTableProductLinkField = document.getElementById("coffeeTableProductLinkField");
+const notesCoffeeTable = document.getElementById("notesCoffeeTable");
+const projectFilesCoffeeTable = document.getElementById("projectFilesCoffeeTable");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1420,6 +1464,7 @@ function allProjectOptions() {
     deskAssemblyProjectOption,
     diningTableAssemblyProjectOption,
     bookcaseAssemblyProjectOption,
+    coffeeTableAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1465,6 +1510,10 @@ function isDiningTableAssemblyProject(type) {
 
 function isBookcaseAssemblyProject(type) {
   return type === "furniture_bookcase_assembly";
+}
+
+function isCoffeeTableAssemblyProject(type) {
+  return type === "furniture_coffee_table_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1664,6 +1713,7 @@ function updateProjectSpecificUI() {
   if (deskBasicsSection) deskBasicsSection.classList.add("hidden");
   if (diningTableBasicsSection) diningTableBasicsSection.classList.add("hidden");
   if (bookcaseBasicsSection) bookcaseBasicsSection.classList.add("hidden");
+  if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1677,6 +1727,7 @@ function updateProjectSpecificUI() {
   if (deskDetailsSection) deskDetailsSection.classList.add("hidden");
   if (diningTableDetailsSection) diningTableDetailsSection.classList.add("hidden");
   if (bookcaseDetailsSection) bookcaseDetailsSection.classList.add("hidden");
+  if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1773,6 +1824,15 @@ function updateProjectSpecificUI() {
     if (bookcaseBasicsSection) bookcaseBasicsSection.classList.remove("hidden");
     if (bookcaseDetailsSection) bookcaseDetailsSection.classList.remove("hidden");
     updateBookcaseConditionalFields();
+    return;
+  }
+
+  if (isCoffeeTableAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the coffee table so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for storage, lift-top mechanisms, glass tops, and packaging cleanup.";
+    if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.remove("hidden");
+    if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.remove("hidden");
+    updateCoffeeTableConditionalFields();
     return;
   }
 
@@ -1896,6 +1956,16 @@ function updateBookcaseConditionalFields() {
     bookcaseProductLinkField.classList.toggle("hidden", !showProductLink);
     if (!showProductLink && bookcaseProductLink) {
       bookcaseProductLink.value = "";
+    }
+  }
+}
+
+function updateCoffeeTableConditionalFields() {
+  const showProductLink = coffeeTableHasProductLink?.value === "yes";
+  if (coffeeTableProductLinkField) {
+    coffeeTableProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && coffeeTableProductLink) {
+      coffeeTableProductLink.value = "";
     }
   }
 }
@@ -2528,6 +2598,88 @@ function calculateBookcaseAssemblyEstimate(formData) {
   };
 }
 
+function calculateCoffeeTableAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureCoffeeTable;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Coffee table competitive pricing: base includes normal assembly complexity; only removeDispose may add cost"
+  ];
+
+  const base = cfg.base[formData.coffeeTableSize] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price includes storage/drawers when included, lift-top mechanism assembly when included, glass top handling when included, final placement when requested, in-home movement, and basic packaging cleanup"
+  );
+
+  if (formData.coffeeTableBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.coffeeTableBrand}`);
+  }
+  if (formData.coffeeTableAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.coffeeTableAlreadyInRoom}`);
+  }
+  if (formData.coffeeTableStorage) {
+    internalAdjustments.push(`Storage/drawers (prep only, $0): ${formData.coffeeTableStorage}`);
+  }
+  if (formData.coffeeTableLiftTop) {
+    internalAdjustments.push(`Lift-top (prep only, $0): ${formData.coffeeTableLiftTop}`);
+  }
+  if (formData.coffeeTableGlass) {
+    internalAdjustments.push(`Glass top (prep only, $0): ${formData.coffeeTableGlass}`);
+  }
+  if (formData.coffeeTableFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.coffeeTableFinalPositioning}`);
+  }
+  if (formData.coffeeTablePackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.coffeeTablePackagingCleanup}`);
+  }
+  if (formData.coffeeTableHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.coffeeTableProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.coffeeTableExistingTable] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing coffee table answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.coffeeTableExistingTable === "moveOnly") {
+    internalAdjustments.push("Existing coffee table moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Coffee Table Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.coffeeTableSize === "notSure" || formData.coffeeTableExistingTable === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 1.5,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    coffeeTableManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -2762,6 +2914,11 @@ function classifyJobSize(formData) {
     ) {
       return "medium";
     }
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_coffee_table_assembly") {
+    if (formData.coffeeTableSize === "extraLarge" || formData.coffeeTableSize === "large") return "medium";
     return "small";
   }
 
@@ -3747,6 +3904,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_bookcase_assembly") {
     return projectFilesBookcase ? projectFilesBookcase.files : null;
   }
+  if (projectType.value === "furniture_coffee_table_assembly") {
+    return projectFilesCoffeeTable ? projectFilesCoffeeTable.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -3931,6 +4091,22 @@ function getFormData() {
         ? normalizeProductUrl(bookcaseProductLink?.value || "")
         : "",
     notesBookcase: notesBookcase?.value.trim() || "",
+
+    coffeeTableSize: coffeeTableSize?.value || "",
+    coffeeTableBrand: coffeeTableBrand?.value || "",
+    coffeeTableAlreadyInRoom: coffeeTableAlreadyInRoom?.value || "",
+    coffeeTableExistingTable: coffeeTableExistingTable?.value || "",
+    coffeeTableStorage: coffeeTableStorage?.value || "",
+    coffeeTableLiftTop: coffeeTableLiftTop?.value || "",
+    coffeeTableGlass: coffeeTableGlass?.value || "",
+    coffeeTableFinalPositioning: coffeeTableFinalPositioning?.value || "",
+    coffeeTablePackagingCleanup: coffeeTablePackagingCleanup?.value || "",
+    coffeeTableHasProductLink: coffeeTableHasProductLink?.value || "no",
+    coffeeTableProductLink:
+      coffeeTableHasProductLink?.value === "yes"
+        ? normalizeProductUrl(coffeeTableProductLink?.value || "")
+        : "",
+    notesCoffeeTable: notesCoffeeTable?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -4216,6 +4392,24 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
       payload.append("suggested_price", "manual_review");
     }
     payload.append("notes", formData.notesBookcase);
+  } else if (formData.projectType === "furniture_coffee_table_assembly") {
+    const suggestedPrice = Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("coffee_table_size", formData.coffeeTableSize);
+    payload.append("coffee_table_brand", formData.coffeeTableBrand);
+    payload.append("coffee_table_already_in_room", formData.coffeeTableAlreadyInRoom);
+    payload.append("coffee_table_existing_table", formData.coffeeTableExistingTable);
+    payload.append("coffee_table_storage", formData.coffeeTableStorage);
+    payload.append("coffee_table_lift_top", formData.coffeeTableLiftTop);
+    payload.append("coffee_table_glass", formData.coffeeTableGlass);
+    payload.append("coffee_table_has_product_link", formData.coffeeTableHasProductLink || "no");
+    payload.append("coffee_table_product_link", formData.coffeeTableProductLink || "");
+    payload.append("coffee_table_notes", formData.notesCoffeeTable);
+    payload.append(
+      "manual_review_required",
+      estimateData.coffeeTableManualReviewRequired ? "true" : "false"
+    );
+    payload.append("suggested_price", currency(suggestedPrice));
+    payload.append("notes", formData.notesCoffeeTable);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -4452,6 +4646,18 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_coffee_table_assembly") {
+      if (
+        !coffeeTableSize?.value ||
+        !coffeeTableBrand?.value ||
+        !coffeeTableAlreadyInRoom?.value ||
+        !coffeeTableExistingTable?.value
+      ) {
+        showValidation(validationStep3, "Please complete the coffee table basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -4521,6 +4727,17 @@ function validateStep(step) {
         bookcaseHasProductLink?.value === "yes" &&
         bookcaseProductLink?.value.trim() &&
         !isSoftValidProductUrl(bookcaseProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_coffee_table_assembly") {
+      if (
+        coffeeTableHasProductLink?.value === "yes" &&
+        coffeeTableProductLink?.value.trim() &&
+        !isSoftValidProductUrl(coffeeTableProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -4742,6 +4959,7 @@ function resetExperience() {
   updateDeskConditionalFields();
   updateDiningTableConditionalFields();
   updateBookcaseConditionalFields();
+  updateCoffeeTableConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -4815,6 +5033,12 @@ if (bookcaseAssemblyProjectOption) {
   });
 }
 
+if (coffeeTableAssemblyProjectOption) {
+  coffeeTableAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_coffee_table_assembly", "Coffee Table Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -4881,6 +5105,9 @@ if (bookcaseHasProductLink) {
 }
 if (bookcaseProjectType) bookcaseProjectType.addEventListener("change", updateBookcaseConditionalFields);
 if (bookcaseQuantity) bookcaseQuantity.addEventListener("change", updateBookcaseConditionalFields);
+if (coffeeTableHasProductLink) {
+  coffeeTableHasProductLink.addEventListener("change", updateCoffeeTableConditionalFields);
+}
 
 setupAccordions();
 updateDresserConditionalFields();
@@ -4889,6 +5116,7 @@ updateTvStandConditionalFields();
 updateDeskConditionalFields();
 updateDiningTableConditionalFields();
 updateBookcaseConditionalFields();
+updateCoffeeTableConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -4941,6 +5169,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateDiningTableAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_bookcase_assembly") {
     latestEstimate = calculateBookcaseAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_coffee_table_assembly") {
+    latestEstimate = calculateCoffeeTableAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
