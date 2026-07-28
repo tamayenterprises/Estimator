@@ -118,6 +118,12 @@
                         <p>Assemble dining tables with optional chair assembly, final placement, and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="bookcaseAssemblyProjectOption" data-value="furniture_bookcase_assembly" data-display="Bookshelf / Bookcase Assembly">
+                        <h4>Bookshelf / Bookcase Assembly</h4>
+                        <p>Assemble freestanding bookshelves and bookcases, including multi-unit jobs, wall anchoring, and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -589,6 +595,69 @@
 
                 <label for="diningTableExistingTable">Does an existing dining table need to be moved or removed?</label>
                 <select id="diningTableExistingTable">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- BOOKCASE ASSEMBLY BASICS -->
+              <div id="bookcaseBasicsSection" class="hidden">
+                <label for="bookcaseProjectType">Is this a freestanding store-bought unit or a custom built-in project?</label>
+                <select id="bookcaseProjectType">
+                  <option value="freestanding">Freestanding store-bought unit</option>
+                  <option value="customBuiltIn">Custom built-in project</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note hidden" id="bookcaseCustomHelpNote">
+                  Custom or built-in bookcases require measurements, wall-condition review, material planning, and a personalized construction estimate. Use Get My Accurate Estimate after completing the remaining questions.
+                </div>
+
+                <label for="bookcaseSize">What size bookshelf or bookcase are we assembling?</label>
+                <select id="bookcaseSize">
+                  <option value="small">Small (short or narrow, generally up to ~36&quot; tall)</option>
+                  <option value="medium">Medium (standard, generally ~37–60&quot; tall)</option>
+                  <option value="large">Large (tall or wide, generally ~61–78&quot; tall)</option>
+                  <option value="extraLarge">Extra large (oversized, extra-wide, display-style, or multi-section)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bookcaseQuantity">How many separate bookshelf or bookcase units should we assemble?</label>
+                <select id="bookcaseQuantity">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5OrMore">5 or more</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note hidden" id="bookcaseQuantityHelpNote">
+                  Five or more units require a personalized review. An automatic final price is not available for this quantity.
+                </div>
+
+                <label for="bookcaseBrand">What brand or store is it from?</label>
+                <select id="bookcaseBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="homeDepot">Home Depot</option>
+                  <option value="lowes">Lowe’s</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="bookcaseAlreadyInRoom">Are the boxes already in the room where the furniture will be assembled?</label>
+                <select id="bookcaseAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bookcaseExistingFurniture">Does an existing bookshelf or bookcase need to be moved or removed?</label>
+                <select id="bookcaseExistingFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1345,6 +1414,86 @@
 
                 <label for="notesDiningTable">Anything else we should know?</label>
                 <textarea id="notesDiningTable" placeholder="Share access notes, stairs, chair style notes, or other details."></textarea>
+              </div>
+
+              <!-- BOOKCASE ASSEMBLY DETAILS -->
+              <div id="bookcaseDetailsSection" class="hidden">
+                <label for="bookcaseHasDoorsDrawers">Does the unit include doors or drawers?</label>
+                <select id="bookcaseHasDoorsDrawers">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bookcaseHasGlass">Does it include glass doors or glass shelves?</label>
+                <select id="bookcaseHasGlass">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="bookcaseHasLighting">Does it include built-in lighting?</label>
+                <select id="bookcaseHasLighting">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Lighting covers assembling and connecting included components to an existing accessible outlet only — not new outlets, wiring changes, hardwiring, or electrical repairs.
+                </div>
+
+                <label for="bookcaseWallAnchoring">Would you like the bookshelf secured to the wall for stability?</label>
+                <select id="bookcaseWallAnchoring">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Basic anti-tip wall anchoring is included when manufacturer or standard compatible hardware can be used in a normal accessible wall location. Unusual structural conditions are reviewed separately.
+                </div>
+
+                <div id="bookcaseConnectUnitsField" class="hidden">
+                  <label for="bookcaseConnectUnits">Should multiple units be connected together?</label>
+                  <select id="bookcaseConnectUnits">
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                    <option value="notSure">Not sure</option>
+                  </select>
+                  <div class="small-note">
+                    Connecting compatible adjacent units with manufacturer-provided hardware is included. Custom fillers, trim, framing, or permanent cabinetry are not included.
+                  </div>
+                </div>
+
+                <label for="bookcaseFinalPositioning">Would you like the furniture placed in its final position after assembly?</label>
+                <select id="bookcaseFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="bookcasePackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="bookcasePackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="bookcaseHasProductLink">Do you have a product link?</label>
+                <select id="bookcaseHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="bookcaseProductLinkField" class="hidden">
+                  <label for="bookcaseProductLink">Paste the product link</label>
+                  <input type="url" id="bookcaseProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Ashley, Home Depot, Lowe’s, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesBookcase">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesBookcase" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, assembly manuals, anchoring instructions, or wall-condition photos help us prepare for the job.</div>
+
+                <label for="notesBookcase">Anything else we should know?</label>
+                <textarea id="notesBookcase" placeholder="Share access notes, stairs, wall conditions, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

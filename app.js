@@ -664,6 +664,39 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureBookcase: {
+    base: {
+      small: { totalMin: 70, totalMax: 110, hours: 1.5, label: "Small bookshelf / bookcase assembly" },
+      medium: { totalMin: 90, totalMax: 140, hours: 1.75, label: "Medium bookshelf / bookcase assembly" },
+      large: { totalMin: 120, totalMax: 190, hours: 2.25, label: "Large bookshelf / bookcase assembly" },
+      extraLarge: { totalMin: 160, totalMax: 260, hours: 2.75, label: "Extra-large bookshelf / bookcase assembly" },
+      notSure: { totalMin: 100, totalMax: 180, hours: 2.0, label: "Bookshelf / bookcase size to be confirmed", manualReview: true }
+    },
+    quantity: {
+      "1": { totalMin: 0, totalMax: 0 },
+      "2": { totalMin: 60, totalMax: 100, label: "Additional bookshelf/bookcase units" },
+      "3": { totalMin: 120, totalMax: 200, label: "Additional bookshelf/bookcase units" },
+      "4": { totalMin: 180, totalMax: 300, label: "Additional bookshelf/bookcase units" },
+      "5OrMore": { noAutoPrice: true, manualReview: true, label: "Five or more units require personalized review" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Unit quantity flagged for manual review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing furniture removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing furniture handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional furniture assembly",
+      "Shelf, door, and drawer installation",
+      "Basic anti-tip wall anchoring when requested",
+      "Connecting compatible adjacent units when requested",
+      "Final positioning and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -903,6 +936,7 @@ const bedFrameAssemblyProjectOption = document.getElementById("bedFrameAssemblyP
 const tvStandAssemblyProjectOption = document.getElementById("tvStandAssemblyProjectOption");
 const deskAssemblyProjectOption = document.getElementById("deskAssemblyProjectOption");
 const diningTableAssemblyProjectOption = document.getElementById("diningTableAssemblyProjectOption");
+const bookcaseAssemblyProjectOption = document.getElementById("bookcaseAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -933,6 +967,7 @@ const bedFrameBasicsSection = document.getElementById("bedFrameBasicsSection");
 const tvStandBasicsSection = document.getElementById("tvStandBasicsSection");
 const deskBasicsSection = document.getElementById("deskBasicsSection");
 const diningTableBasicsSection = document.getElementById("diningTableBasicsSection");
+const bookcaseBasicsSection = document.getElementById("bookcaseBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -945,6 +980,7 @@ const bedFrameDetailsSection = document.getElementById("bedFrameDetailsSection")
 const tvStandDetailsSection = document.getElementById("tvStandDetailsSection");
 const deskDetailsSection = document.getElementById("deskDetailsSection");
 const diningTableDetailsSection = document.getElementById("diningTableDetailsSection");
+const bookcaseDetailsSection = document.getElementById("bookcaseDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -1025,6 +1061,28 @@ const diningTableProductLink = document.getElementById("diningTableProductLink")
 const diningTableProductLinkField = document.getElementById("diningTableProductLinkField");
 const notesDiningTable = document.getElementById("notesDiningTable");
 const projectFilesDiningTable = document.getElementById("projectFilesDiningTable");
+
+const bookcaseProjectType = document.getElementById("bookcaseProjectType");
+const bookcaseCustomHelpNote = document.getElementById("bookcaseCustomHelpNote");
+const bookcaseSize = document.getElementById("bookcaseSize");
+const bookcaseQuantity = document.getElementById("bookcaseQuantity");
+const bookcaseQuantityHelpNote = document.getElementById("bookcaseQuantityHelpNote");
+const bookcaseBrand = document.getElementById("bookcaseBrand");
+const bookcaseAlreadyInRoom = document.getElementById("bookcaseAlreadyInRoom");
+const bookcaseExistingFurniture = document.getElementById("bookcaseExistingFurniture");
+const bookcaseHasDoorsDrawers = document.getElementById("bookcaseHasDoorsDrawers");
+const bookcaseHasGlass = document.getElementById("bookcaseHasGlass");
+const bookcaseHasLighting = document.getElementById("bookcaseHasLighting");
+const bookcaseWallAnchoring = document.getElementById("bookcaseWallAnchoring");
+const bookcaseConnectUnits = document.getElementById("bookcaseConnectUnits");
+const bookcaseConnectUnitsField = document.getElementById("bookcaseConnectUnitsField");
+const bookcaseFinalPositioning = document.getElementById("bookcaseFinalPositioning");
+const bookcasePackagingCleanup = document.getElementById("bookcasePackagingCleanup");
+const bookcaseHasProductLink = document.getElementById("bookcaseHasProductLink");
+const bookcaseProductLink = document.getElementById("bookcaseProductLink");
+const bookcaseProductLinkField = document.getElementById("bookcaseProductLinkField");
+const notesBookcase = document.getElementById("notesBookcase");
+const projectFilesBookcase = document.getElementById("projectFilesBookcase");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1361,6 +1419,7 @@ function allProjectOptions() {
     tvStandAssemblyProjectOption,
     deskAssemblyProjectOption,
     diningTableAssemblyProjectOption,
+    bookcaseAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1402,6 +1461,10 @@ function isDeskAssemblyProject(type) {
 
 function isDiningTableAssemblyProject(type) {
   return type === "furniture_dining_table_assembly";
+}
+
+function isBookcaseAssemblyProject(type) {
+  return type === "furniture_bookcase_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1600,6 +1663,7 @@ function updateProjectSpecificUI() {
   if (tvStandBasicsSection) tvStandBasicsSection.classList.add("hidden");
   if (deskBasicsSection) deskBasicsSection.classList.add("hidden");
   if (diningTableBasicsSection) diningTableBasicsSection.classList.add("hidden");
+  if (bookcaseBasicsSection) bookcaseBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1612,6 +1676,7 @@ function updateProjectSpecificUI() {
   if (tvStandDetailsSection) tvStandDetailsSection.classList.add("hidden");
   if (deskDetailsSection) deskDetailsSection.classList.add("hidden");
   if (diningTableDetailsSection) diningTableDetailsSection.classList.add("hidden");
+  if (bookcaseDetailsSection) bookcaseDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1699,6 +1764,15 @@ function updateProjectSpecificUI() {
     if (diningTableBasicsSection) diningTableBasicsSection.classList.remove("hidden");
     if (diningTableDetailsSection) diningTableDetailsSection.classList.remove("hidden");
     updateDiningTableConditionalFields();
+    return;
+  }
+
+  if (isBookcaseAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the bookshelf or bookcase so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for doors, glass, lighting, wall anchoring, and packaging cleanup.";
+    if (bookcaseBasicsSection) bookcaseBasicsSection.classList.remove("hidden");
+    if (bookcaseDetailsSection) bookcaseDetailsSection.classList.remove("hidden");
+    updateBookcaseConditionalFields();
     return;
   }
 
@@ -1794,6 +1868,34 @@ function updateDiningTableConditionalFields() {
     diningTableProductLinkField.classList.toggle("hidden", !showProductLink);
     if (!showProductLink && diningTableProductLink) {
       diningTableProductLink.value = "";
+    }
+  }
+}
+
+function updateBookcaseConditionalFields() {
+  const projectKind = bookcaseProjectType?.value || "freestanding";
+  if (bookcaseCustomHelpNote) {
+    bookcaseCustomHelpNote.classList.toggle("hidden", projectKind === "freestanding");
+  }
+
+  const qty = bookcaseQuantity?.value || "1";
+  if (bookcaseQuantityHelpNote) {
+    bookcaseQuantityHelpNote.classList.toggle("hidden", qty !== "5OrMore");
+  }
+
+  const showConnect = ["2", "3", "4", "5OrMore"].includes(qty);
+  if (bookcaseConnectUnitsField) {
+    bookcaseConnectUnitsField.classList.toggle("hidden", !showConnect);
+    if (!showConnect && bookcaseConnectUnits) {
+      bookcaseConnectUnits.value = "no";
+    }
+  }
+
+  const showProductLink = bookcaseHasProductLink?.value === "yes";
+  if (bookcaseProductLinkField) {
+    bookcaseProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && bookcaseProductLink) {
+      bookcaseProductLink.value = "";
     }
   }
 }
@@ -2276,6 +2378,156 @@ function calculateDiningTableAssemblyEstimate(formData) {
   };
 }
 
+function calculateBookcaseAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureBookcase;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Bookcase competitive pricing: first-unit base + grouped additional-unit adder (2–4) + removeDispose only"
+  ];
+
+  const projectKind = formData.bookcaseProjectType || "freestanding";
+  const quantity = formData.bookcaseQuantity || "1";
+  const quantityCfg = cfg.quantity[quantity] || cfg.quantity["1"];
+  const quantityAdderApplied = ["2", "3", "4"].includes(quantity);
+  const blocksAutoPrice =
+    projectKind === "customBuiltIn" || projectKind === "notSure" || quantity === "5OrMore";
+
+  if (formData.bookcaseBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.bookcaseBrand}`);
+  }
+  if (formData.bookcaseAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.bookcaseAlreadyInRoom}`);
+  }
+  if (formData.bookcaseHasDoorsDrawers) {
+    internalAdjustments.push(`Doors/drawers (prep only, $0): ${formData.bookcaseHasDoorsDrawers}`);
+  }
+  if (formData.bookcaseHasGlass) {
+    internalAdjustments.push(`Glass doors/shelves (prep only, $0): ${formData.bookcaseHasGlass}`);
+  }
+  if (formData.bookcaseHasLighting) {
+    internalAdjustments.push(`Built-in lighting (prep only, $0): ${formData.bookcaseHasLighting}`);
+  }
+  if (formData.bookcaseWallAnchoring) {
+    internalAdjustments.push(`Wall anchoring (included $0): ${formData.bookcaseWallAnchoring}`);
+  }
+  if (formData.bookcaseConnectUnits) {
+    internalAdjustments.push(`Connect units (included $0): ${formData.bookcaseConnectUnits}`);
+  }
+  if (formData.bookcaseFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.bookcaseFinalPositioning}`);
+  }
+  if (formData.bookcasePackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.bookcasePackagingCleanup}`);
+  }
+  if (formData.bookcaseHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.bookcaseProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  if (blocksAutoPrice) {
+    if (projectKind === "customBuiltIn" || projectKind === "notSure") {
+      adjustments.push(
+        "Custom or built-in bookcases require measurements, wall-condition review, material planning, and a personalized construction estimate."
+      );
+      adjustments.push(
+        "This is not a freestanding Furniture Assembly estimate. Please use Get My Accurate Estimate so Tamay Enterprises can review construction scope."
+      );
+    } else {
+      adjustments.push(quantityCfg.label || "Five or more units require personalized review");
+      adjustments.push(
+        "Five or more separate bookshelf/bookcase units need a personalized review. Please use Get My Accurate Estimate and include product links, photos, and manuals when possible."
+      );
+    }
+
+    const flagReview = true;
+
+    return {
+      hours: 0,
+      minMaterials: 0,
+      maxMaterials: 0,
+      laborMin: 0,
+      laborMax: 0,
+      totalMin: 0,
+      totalMax: 0,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta,
+      isManualReviewRequired: true,
+      manualReviewHeading: "Personalized Estimate Required",
+      manualReviewIntro:
+        projectKind === "customBuiltIn" || projectKind === "notSure"
+          ? "Custom or built-in bookcases need a personalized construction review before pricing can be confirmed."
+          : "Five or more bookshelf/bookcase units need a personalized Tamay review before pricing can be confirmed.",
+      manualReviewDisclaimer:
+        "Please submit product links, photos, and manuals with <strong>Get My Exact Quote</strong> so Tamay Enterprises can confirm scope and pricing.",
+      bookcaseQuantityAdderApplied: false,
+      bookcaseRemovalDisposalRequested: formData.bookcaseExistingFurniture === "removeDispose",
+      bookcaseManualReviewRequired: flagReview
+    };
+  }
+
+  const base = cfg.base[formData.bookcaseSize] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price covers the first freestanding unit and includes shelves/doors/drawers when included, basic anti-tip anchoring when requested, connecting compatible units when requested, final placement, in-home movement, and basic packaging cleanup"
+  );
+
+  laborMin += quantityCfg.totalMin || 0;
+  laborMax += quantityCfg.totalMax || 0;
+  if (quantityCfg.label) adjustments.push(quantityCfg.label);
+  if (quantityCfg.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: quantity is notSure — no automatic quantity adder applied");
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.bookcaseExistingFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: existing furniture answer is notSure — no automatic removal fee applied");
+  }
+  if (formData.bookcaseExistingFurniture === "moveOnly") {
+    internalAdjustments.push("Existing furniture moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Bookshelf / Bookcase Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.bookcaseSize === "notSure" ||
+    formData.bookcaseQuantity === "notSure" ||
+    formData.bookcaseExistingFurniture === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    isManualReviewRequired: false,
+    bookcaseQuantityAdderApplied: quantityAdderApplied,
+    bookcaseRemovalDisposalRequested: formData.bookcaseExistingFurniture === "removeDispose",
+    bookcaseManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -2498,6 +2750,18 @@ function classifyJobSize(formData) {
 
   if (formData.projectType === "furniture_dining_table_assembly") {
     if (formData.diningTableSize === "extraLarge" || formData.diningTableSize === "large") return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_bookcase_assembly") {
+    if (formData.bookcaseQuantity === "5OrMore" || formData.bookcaseQuantity === "4") return "large";
+    if (
+      formData.bookcaseSize === "extraLarge" ||
+      formData.bookcaseSize === "large" ||
+      ["2", "3"].includes(formData.bookcaseQuantity)
+    ) {
+      return "medium";
+    }
     return "small";
   }
 
@@ -3480,6 +3744,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_dining_table_assembly") {
     return projectFilesDiningTable ? projectFilesDiningTable.files : null;
   }
+  if (projectType.value === "furniture_bookcase_assembly") {
+    return projectFilesBookcase ? projectFilesBookcase.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -3642,6 +3909,28 @@ function getFormData() {
         ? normalizeProductUrl(diningTableProductLink?.value || "")
         : "",
     notesDiningTable: notesDiningTable?.value.trim() || "",
+
+    bookcaseProjectType: bookcaseProjectType?.value || "",
+    bookcaseSize: bookcaseSize?.value || "",
+    bookcaseQuantity: bookcaseQuantity?.value || "",
+    bookcaseBrand: bookcaseBrand?.value || "",
+    bookcaseAlreadyInRoom: bookcaseAlreadyInRoom?.value || "",
+    bookcaseExistingFurniture: bookcaseExistingFurniture?.value || "",
+    bookcaseHasDoorsDrawers: bookcaseHasDoorsDrawers?.value || "",
+    bookcaseHasGlass: bookcaseHasGlass?.value || "",
+    bookcaseHasLighting: bookcaseHasLighting?.value || "",
+    bookcaseWallAnchoring: bookcaseWallAnchoring?.value || "",
+    bookcaseConnectUnits: ["2", "3", "4", "5OrMore"].includes(bookcaseQuantity?.value)
+      ? bookcaseConnectUnits?.value || ""
+      : "",
+    bookcaseFinalPositioning: bookcaseFinalPositioning?.value || "",
+    bookcasePackagingCleanup: bookcasePackagingCleanup?.value || "",
+    bookcaseHasProductLink: bookcaseHasProductLink?.value || "no",
+    bookcaseProductLink:
+      bookcaseHasProductLink?.value === "yes"
+        ? normalizeProductUrl(bookcaseProductLink?.value || "")
+        : "",
+    notesBookcase: notesBookcase?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -3887,6 +4176,46 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     );
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesDiningTable);
+  } else if (formData.projectType === "furniture_bookcase_assembly") {
+    const suggestedPrice = estimateData.isManualReviewRequired
+      ? null
+      : Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("bookcase_project_type", formData.bookcaseProjectType);
+    payload.append("bookcase_size", formData.bookcaseSize);
+    payload.append("bookcase_quantity", formData.bookcaseQuantity);
+    payload.append("bookcase_brand", formData.bookcaseBrand);
+    payload.append("bookcase_already_in_room", formData.bookcaseAlreadyInRoom);
+    payload.append("bookcase_existing_furniture", formData.bookcaseExistingFurniture);
+    payload.append("bookcase_has_doors_drawers", formData.bookcaseHasDoorsDrawers);
+    payload.append("bookcase_has_glass", formData.bookcaseHasGlass);
+    payload.append("bookcase_has_lighting", formData.bookcaseHasLighting);
+    payload.append("bookcase_wall_anchoring", formData.bookcaseWallAnchoring);
+    payload.append("bookcase_connect_units", formData.bookcaseConnectUnits || "");
+    payload.append("bookcase_final_positioning", formData.bookcaseFinalPositioning);
+    payload.append("bookcase_packaging_cleanup", formData.bookcasePackagingCleanup);
+    payload.append("bookcase_has_product_link", formData.bookcaseHasProductLink || "no");
+    payload.append("bookcase_product_link", formData.bookcaseProductLink || "");
+    payload.append("bookcase_notes", formData.notesBookcase);
+    payload.append(
+      "bookcase_quantity_adder_applied",
+      estimateData.bookcaseQuantityAdderApplied ? "true" : "false"
+    );
+    payload.append(
+      "bookcase_removal_disposal_requested",
+      formData.bookcaseExistingFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "bookcase_manual_review_required",
+      estimateData.bookcaseManualReviewRequired || estimateData.isManualReviewRequired
+        ? "true"
+        : "false"
+    );
+    if (!estimateData.isManualReviewRequired) {
+      payload.append("suggested_price", currency(suggestedPrice));
+    } else {
+      payload.append("suggested_price", "manual_review");
+    }
+    payload.append("notes", formData.notesBookcase);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -4109,6 +4438,20 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_bookcase_assembly") {
+      if (
+        !bookcaseProjectType?.value ||
+        !bookcaseSize?.value ||
+        !bookcaseQuantity?.value ||
+        !bookcaseBrand?.value ||
+        !bookcaseAlreadyInRoom?.value ||
+        !bookcaseExistingFurniture?.value
+      ) {
+        showValidation(validationStep3, "Please complete the bookshelf / bookcase basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -4172,6 +4515,17 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_bookcase_assembly") {
+      if (
+        bookcaseHasProductLink?.value === "yes" &&
+        bookcaseProductLink?.value.trim() &&
+        !isSoftValidProductUrl(bookcaseProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
   }
 
   return true;
@@ -4228,13 +4582,17 @@ function renderEstimate(estimateData, formData) {
     if (aiDesignResultsBlock) aiDesignResultsBlock.classList.add("hidden");
 
     if (estimateData.isManualReviewRequired) {
-      if (resultsHeading) resultsHeading.textContent = "Personalized Estimate Required";
+      if (resultsHeading) {
+        resultsHeading.textContent = estimateData.manualReviewHeading || "Personalized Estimate Required";
+      }
       if (resultsIntro) {
         resultsIntro.textContent =
+          estimateData.manualReviewIntro ||
           "This Murphy bed project needs a personalized Tamay review before pricing can be confirmed.";
       }
       if (resultsDisclaimer) {
         resultsDisclaimer.innerHTML =
+          estimateData.manualReviewDisclaimer ||
           "Please submit your product link, photos, and assembly manual with <strong>Get My Exact Quote</strong> so Tamay Enterprises can review installation conditions and confirm pricing.";
       }
 
@@ -4383,6 +4741,7 @@ function resetExperience() {
   updateTvStandConditionalFields();
   updateDeskConditionalFields();
   updateDiningTableConditionalFields();
+  updateBookcaseConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -4450,6 +4809,12 @@ if (diningTableAssemblyProjectOption) {
   });
 }
 
+if (bookcaseAssemblyProjectOption) {
+  bookcaseAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_bookcase_assembly", "Bookshelf / Bookcase Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -4511,6 +4876,11 @@ if (deskType) deskType.addEventListener("change", updateDeskConditionalFields);
 if (diningTableHasProductLink) {
   diningTableHasProductLink.addEventListener("change", updateDiningTableConditionalFields);
 }
+if (bookcaseHasProductLink) {
+  bookcaseHasProductLink.addEventListener("change", updateBookcaseConditionalFields);
+}
+if (bookcaseProjectType) bookcaseProjectType.addEventListener("change", updateBookcaseConditionalFields);
+if (bookcaseQuantity) bookcaseQuantity.addEventListener("change", updateBookcaseConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
@@ -4518,6 +4888,7 @@ updateBedFrameConditionalFields();
 updateTvStandConditionalFields();
 updateDeskConditionalFields();
 updateDiningTableConditionalFields();
+updateBookcaseConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -4568,6 +4939,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateDeskAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_dining_table_assembly") {
     latestEstimate = calculateDiningTableAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_bookcase_assembly") {
+    latestEstimate = calculateBookcaseAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
