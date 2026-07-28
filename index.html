@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Project Cost Estimator</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./styles.css?v=20260728b" />
 </head>
 
 <body>
@@ -14,21 +14,9 @@
       <div class="card">
 
         <div class="hero">
-          <div class="hero-visual" aria-hidden="true">
-            <img
-              src="public/images/small-project-estimator-hero.png"
-              alt=""
-              width="984"
-              height="700"
-              decoding="async"
-              fetchpriority="high"
-            />
-          </div>
-          <div class="hero-shade" aria-hidden="true"></div>
-
-          <div class="hero-copy">
+          <div class="hero-panel">
             <div class="hero-brand">
-              <img src="public/images/tamay-mark.png" alt="" class="hero-brand-mark" width="48" height="40" />
+              <img src="public/images/tamay-mark.png" alt="" class="hero-brand-mark" width="44" height="36" />
               <span class="hero-brand-name">Tamay Enterprises</span>
               <span class="hero-brand-divider" aria-hidden="true"></span>
               <p class="hero-tagline">Real People. <span>Real Solutions.</span></p>
@@ -45,57 +33,64 @@
               From furniture assembly to installations and handyman services, receive a fast, professional estimate based on real contractor pricing.
             </p>
 
-            <ul class="hero-trust" aria-label="Why choose Tamay Enterprises">
-              <li class="hero-trust-item">
+            <ul class="hero-trust">
+              <li>
                 <span class="hero-trust-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/>
-                    <rect x="4" y="7" width="16" height="13" rx="2"/>
-                    <path d="M4 12h16"/>
-                    <path d="M9 16h6"/>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7" stroke="#F2C94C" stroke-width="1.7" stroke-linecap="round"/>
+                    <rect x="4" y="7" width="16" height="13" rx="2" stroke="#F2C94C" stroke-width="1.7"/>
+                    <path d="M4 12h16M9 16h6" stroke="#F2C94C" stroke-width="1.7" stroke-linecap="round"/>
                   </svg>
                 </span>
-                <span class="hero-trust-text">
+                <span class="hero-trust-copy">
                   <strong>Small Projects</strong>
-                  <span>Professional Results</span>
+                  <em>Professional Results</em>
                 </span>
               </li>
-              <li class="hero-trust-item">
+              <li>
                 <span class="hero-trust-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/>
-                    <path d="M9.5 12.2l1.8 1.8 3.7-3.8"/>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z" stroke="#F2C94C" stroke-width="1.7" stroke-linejoin="round"/>
+                    <path d="M9.5 12.2l1.8 1.8 3.7-3.8" stroke="#F2C94C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </span>
-                <span class="hero-trust-text">
+                <span class="hero-trust-copy">
                   <strong>Trusted</strong>
-                  <span>Local Contractor</span>
+                  <em>Local Contractor</em>
                 </span>
               </li>
-              <li class="hero-trust-item">
+              <li>
                 <span class="hero-trust-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M12 7v5l3.2 1.8"/>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                    <circle cx="12" cy="12" r="9" stroke="#F2C94C" stroke-width="1.7"/>
+                    <path d="M12 7v5l3.2 1.8" stroke="#F2C94C" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </span>
-                <span class="hero-trust-text">
+                <span class="hero-trust-copy">
                   <strong>Fast &amp; Transparent</strong>
-                  <span>Estimates</span>
+                  <em>Estimates</em>
                 </span>
               </li>
             </ul>
 
             <div class="hero-actions">
-              <a class="hero-cta" href="#projectSelectorShell">
-                Start My Estimate
-                <span class="hero-cta-arrow" aria-hidden="true">→</span>
-              </a>
-              <div class="hero-powered">
-                <img src="public/images/tamay-mark.png" alt="" class="hero-powered-mark" width="28" height="24" />
-                <span>Powered by Tamay Enterprises Inc.</span>
-              </div>
+              <a class="hero-cta" href="#projectSelectorShell">Start My Estimate <span aria-hidden="true">→</span></a>
+              <p class="hero-powered">
+                <img src="public/images/tamay-mark.png" alt="" width="22" height="18" />
+                Powered by Tamay Enterprises Inc.
+              </p>
             </div>
+          </div>
+
+          <div class="hero-photo">
+            <img
+              src="public/images/small-project-estimator-hero.png"
+              alt="Tamay Enterprises technician assembling furniture in a modern living room"
+              width="984"
+              height="700"
+              decoding="async"
+              fetchpriority="high"
+            />
           </div>
         </div>
 
