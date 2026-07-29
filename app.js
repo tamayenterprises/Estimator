@@ -723,6 +723,38 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureNightstand: {
+    base: {
+      small: { totalMin: 55, totalMax: 90, hours: 1.0, label: "Small nightstand assembly" },
+      standard: { totalMin: 70, totalMax: 115, hours: 1.25, label: "Standard nightstand assembly" },
+      large: { totalMin: 90, totalMax: 145, hours: 1.5, label: "Large nightstand assembly" },
+      notSure: { totalMin: 70, totalMax: 120, hours: 1.25, label: "Nightstand size to be confirmed", manualReview: true }
+    },
+    quantity: {
+      "1": { totalMin: 0, totalMax: 0 },
+      "2": { totalMin: 40, totalMax: 70, label: "Additional nightstand units" },
+      "3": { totalMin: 80, totalMax: 140, label: "Additional nightstand units" },
+      "4": { totalMin: 120, totalMax: 210, label: "Additional nightstand units" },
+      "5OrMore": { noAutoPrice: true, manualReview: true, label: "Five or more nightstands require personalized review" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Nightstand quantity flagged for manual review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 90, totalMax: 180, label: "Existing furniture removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing nightstand handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional furniture assembly",
+      "Drawer, door, and shelf installation",
+      "Included lighting and charging-component connection",
+      "Basic anti-tip wall anchoring when requested",
+      "Final positioning and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -966,6 +998,7 @@ const deskAssemblyProjectOption = document.getElementById("deskAssemblyProjectOp
 const diningTableAssemblyProjectOption = document.getElementById("diningTableAssemblyProjectOption");
 const bookcaseAssemblyProjectOption = document.getElementById("bookcaseAssemblyProjectOption");
 const coffeeTableAssemblyProjectOption = document.getElementById("coffeeTableAssemblyProjectOption");
+const nightstandAssemblyProjectOption = document.getElementById("nightstandAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -998,6 +1031,7 @@ const deskBasicsSection = document.getElementById("deskBasicsSection");
 const diningTableBasicsSection = document.getElementById("diningTableBasicsSection");
 const bookcaseBasicsSection = document.getElementById("bookcaseBasicsSection");
 const coffeeTableBasicsSection = document.getElementById("coffeeTableBasicsSection");
+const nightstandBasicsSection = document.getElementById("nightstandBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -1012,6 +1046,7 @@ const deskDetailsSection = document.getElementById("deskDetailsSection");
 const diningTableDetailsSection = document.getElementById("diningTableDetailsSection");
 const bookcaseDetailsSection = document.getElementById("bookcaseDetailsSection");
 const coffeeTableDetailsSection = document.getElementById("coffeeTableDetailsSection");
+const nightstandDetailsSection = document.getElementById("nightstandDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -1129,6 +1164,25 @@ const coffeeTableProductLink = document.getElementById("coffeeTableProductLink")
 const coffeeTableProductLinkField = document.getElementById("coffeeTableProductLinkField");
 const notesCoffeeTable = document.getElementById("notesCoffeeTable");
 const projectFilesCoffeeTable = document.getElementById("projectFilesCoffeeTable");
+
+const nightstandSize = document.getElementById("nightstandSize");
+const nightstandQuantity = document.getElementById("nightstandQuantity");
+const nightstandQuantityHelpNote = document.getElementById("nightstandQuantityHelpNote");
+const nightstandBrand = document.getElementById("nightstandBrand");
+const nightstandAlreadyInRoom = document.getElementById("nightstandAlreadyInRoom");
+const nightstandExistingFurniture = document.getElementById("nightstandExistingFurniture");
+const nightstandHasDrawers = document.getElementById("nightstandHasDrawers");
+const nightstandHasDoors = document.getElementById("nightstandHasDoors");
+const nightstandHasPowerComponents = document.getElementById("nightstandHasPowerComponents");
+const nightstandHasGlass = document.getElementById("nightstandHasGlass");
+const nightstandWallAnchoring = document.getElementById("nightstandWallAnchoring");
+const nightstandFinalPositioning = document.getElementById("nightstandFinalPositioning");
+const nightstandPackagingCleanup = document.getElementById("nightstandPackagingCleanup");
+const nightstandHasProductLink = document.getElementById("nightstandHasProductLink");
+const nightstandProductLink = document.getElementById("nightstandProductLink");
+const nightstandProductLinkField = document.getElementById("nightstandProductLinkField");
+const notesNightstand = document.getElementById("notesNightstand");
+const projectFilesNightstand = document.getElementById("projectFilesNightstand");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1480,6 +1534,7 @@ function allProjectOptions() {
     diningTableAssemblyProjectOption,
     bookcaseAssemblyProjectOption,
     coffeeTableAssemblyProjectOption,
+    nightstandAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1529,6 +1584,10 @@ function isBookcaseAssemblyProject(type) {
 
 function isCoffeeTableAssemblyProject(type) {
   return type === "furniture_coffee_table_assembly";
+}
+
+function isNightstandAssemblyProject(type) {
+  return type === "furniture_nightstand_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1729,6 +1788,7 @@ function updateProjectSpecificUI() {
   if (diningTableBasicsSection) diningTableBasicsSection.classList.add("hidden");
   if (bookcaseBasicsSection) bookcaseBasicsSection.classList.add("hidden");
   if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.add("hidden");
+  if (nightstandBasicsSection) nightstandBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1743,6 +1803,7 @@ function updateProjectSpecificUI() {
   if (diningTableDetailsSection) diningTableDetailsSection.classList.add("hidden");
   if (bookcaseDetailsSection) bookcaseDetailsSection.classList.add("hidden");
   if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.add("hidden");
+  if (nightstandDetailsSection) nightstandDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1848,6 +1909,15 @@ function updateProjectSpecificUI() {
     if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.remove("hidden");
     if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.remove("hidden");
     updateCoffeeTableConditionalFields();
+    return;
+  }
+
+  if (isNightstandAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the nightstand so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for drawers, doors, charging components, wall anchoring, and packaging cleanup.";
+    if (nightstandBasicsSection) nightstandBasicsSection.classList.remove("hidden");
+    if (nightstandDetailsSection) nightstandDetailsSection.classList.remove("hidden");
+    updateNightstandConditionalFields();
     return;
   }
 
@@ -1981,6 +2051,21 @@ function updateCoffeeTableConditionalFields() {
     coffeeTableProductLinkField.classList.toggle("hidden", !showProductLink);
     if (!showProductLink && coffeeTableProductLink) {
       coffeeTableProductLink.value = "";
+    }
+  }
+}
+
+function updateNightstandConditionalFields() {
+  const qty = nightstandQuantity?.value || "1";
+  if (nightstandQuantityHelpNote) {
+    nightstandQuantityHelpNote.classList.toggle("hidden", qty !== "5OrMore");
+  }
+
+  const showProductLink = nightstandHasProductLink?.value === "yes";
+  if (nightstandProductLinkField) {
+    nightstandProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && nightstandProductLink) {
+      nightstandProductLink.value = "";
     }
   }
 }
@@ -2695,6 +2780,145 @@ function calculateCoffeeTableAssemblyEstimate(formData) {
   };
 }
 
+function calculateNightstandAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureNightstand;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Nightstand competitive pricing: first-unit base + grouped additional-unit adder (2–4) + removeDispose only"
+  ];
+
+  const quantity = formData.nightstandQuantity || "1";
+  const quantityCfg = cfg.quantity[quantity] || cfg.quantity["1"];
+  const quantityAdderApplied = ["2", "3", "4"].includes(quantity);
+  const blocksAutoPrice = quantity === "5OrMore";
+
+  if (formData.nightstandBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.nightstandBrand}`);
+  }
+  if (formData.nightstandAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.nightstandAlreadyInRoom}`);
+  }
+  if (formData.nightstandHasDrawers) {
+    internalAdjustments.push(`Drawers (prep only, $0): ${formData.nightstandHasDrawers}`);
+  }
+  if (formData.nightstandHasDoors) {
+    internalAdjustments.push(`Doors/cabinet (prep only, $0): ${formData.nightstandHasDoors}`);
+  }
+  if (formData.nightstandHasPowerComponents) {
+    internalAdjustments.push(
+      `Lighting/USB/charging (prep only, $0): ${formData.nightstandHasPowerComponents}`
+    );
+  }
+  if (formData.nightstandHasGlass) {
+    internalAdjustments.push(`Glass top/shelf (prep only, $0): ${formData.nightstandHasGlass}`);
+  }
+  if (formData.nightstandWallAnchoring) {
+    internalAdjustments.push(`Wall anchoring (included $0): ${formData.nightstandWallAnchoring}`);
+  }
+  if (formData.nightstandFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.nightstandFinalPositioning}`);
+  }
+  if (formData.nightstandPackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.nightstandPackagingCleanup}`);
+  }
+  if (formData.nightstandHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.nightstandProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  if (blocksAutoPrice) {
+    adjustments.push(quantityCfg.label || "Five or more nightstands require personalized review");
+    adjustments.push(
+      "Five or more separate nightstands need a personalized review. Please use Get My Accurate Estimate and include product links, photos, and manuals when possible."
+    );
+
+    return {
+      hours: 0,
+      minMaterials: 0,
+      maxMaterials: 0,
+      laborMin: 0,
+      laborMax: 0,
+      totalMin: 0,
+      totalMax: 0,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta,
+      isManualReviewRequired: true,
+      manualReviewHeading: "Personalized Estimate Required",
+      manualReviewIntro:
+        "Five or more nightstands need a personalized Tamay review before pricing can be confirmed.",
+      manualReviewDisclaimer:
+        "Please submit product links, photos, and manuals with <strong>Get My Exact Quote</strong> so Tamay Enterprises can confirm scope and pricing.",
+      nightstandQuantityAdderApplied: false,
+      nightstandRemovalDisposalRequested: formData.nightstandExistingFurniture === "removeDispose",
+      nightstandManualReviewRequired: true
+    };
+  }
+
+  const base = cfg.base[formData.nightstandSize] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price covers the first nightstand and includes drawers/doors when included, product lighting and charging-component connection when included, glass components when included, basic anti-tip anchoring when requested, final placement, in-home movement, and basic packaging cleanup"
+  );
+
+  laborMin += quantityCfg.totalMin || 0;
+  laborMax += quantityCfg.totalMax || 0;
+  if (quantityCfg.label) adjustments.push(quantityCfg.label);
+  if (quantityCfg.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: quantity is notSure — no automatic quantity adder applied");
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.nightstandExistingFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push(
+      "MANUAL REVIEW: existing nightstand answer is notSure — no automatic removal fee applied"
+    );
+  }
+  if (formData.nightstandExistingFurniture === "moveOnly") {
+    internalAdjustments.push("Existing nightstand moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Nightstand Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.nightstandSize === "notSure" ||
+    formData.nightstandQuantity === "notSure" ||
+    formData.nightstandExistingFurniture === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 1.25,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    isManualReviewRequired: false,
+    nightstandQuantityAdderApplied: quantityAdderApplied,
+    nightstandRemovalDisposalRequested: formData.nightstandExistingFurniture === "removeDispose",
+    nightstandManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -2934,6 +3158,17 @@ function classifyJobSize(formData) {
 
   if (formData.projectType === "furniture_coffee_table_assembly") {
     if (formData.coffeeTableSize === "extraLarge" || formData.coffeeTableSize === "large") return "medium";
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_nightstand_assembly") {
+    if (formData.nightstandQuantity === "5OrMore" || formData.nightstandQuantity === "4") return "large";
+    if (
+      formData.nightstandSize === "large" ||
+      ["2", "3"].includes(formData.nightstandQuantity)
+    ) {
+      return "medium";
+    }
     return "small";
   }
 
@@ -3922,6 +4157,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_coffee_table_assembly") {
     return projectFilesCoffeeTable ? projectFilesCoffeeTable.files : null;
   }
+  if (projectType.value === "furniture_nightstand_assembly") {
+    return projectFilesNightstand ? projectFilesNightstand.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -4122,6 +4360,25 @@ function getFormData() {
         ? normalizeProductUrl(coffeeTableProductLink?.value || "")
         : "",
     notesCoffeeTable: notesCoffeeTable?.value.trim() || "",
+
+    nightstandSize: nightstandSize?.value || "",
+    nightstandQuantity: nightstandQuantity?.value || "",
+    nightstandBrand: nightstandBrand?.value || "",
+    nightstandAlreadyInRoom: nightstandAlreadyInRoom?.value || "",
+    nightstandExistingFurniture: nightstandExistingFurniture?.value || "",
+    nightstandHasDrawers: nightstandHasDrawers?.value || "",
+    nightstandHasDoors: nightstandHasDoors?.value || "",
+    nightstandHasPowerComponents: nightstandHasPowerComponents?.value || "",
+    nightstandHasGlass: nightstandHasGlass?.value || "",
+    nightstandWallAnchoring: nightstandWallAnchoring?.value || "",
+    nightstandFinalPositioning: nightstandFinalPositioning?.value || "",
+    nightstandPackagingCleanup: nightstandPackagingCleanup?.value || "",
+    nightstandHasProductLink: nightstandHasProductLink?.value || "no",
+    nightstandProductLink:
+      nightstandHasProductLink?.value === "yes"
+        ? normalizeProductUrl(nightstandProductLink?.value || "")
+        : "",
+    notesNightstand: notesNightstand?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -4425,6 +4682,45 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
     );
     payload.append("suggested_price", currency(suggestedPrice));
     payload.append("notes", formData.notesCoffeeTable);
+  } else if (formData.projectType === "furniture_nightstand_assembly") {
+    const suggestedPrice = estimateData.isManualReviewRequired
+      ? null
+      : Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("nightstand_size", formData.nightstandSize);
+    payload.append("nightstand_quantity", formData.nightstandQuantity);
+    payload.append("nightstand_brand", formData.nightstandBrand);
+    payload.append("nightstand_already_in_room", formData.nightstandAlreadyInRoom);
+    payload.append("nightstand_existing_furniture", formData.nightstandExistingFurniture);
+    payload.append("nightstand_has_drawers", formData.nightstandHasDrawers);
+    payload.append("nightstand_has_doors", formData.nightstandHasDoors);
+    payload.append("nightstand_has_power_components", formData.nightstandHasPowerComponents);
+    payload.append("nightstand_has_glass", formData.nightstandHasGlass);
+    payload.append("nightstand_wall_anchoring", formData.nightstandWallAnchoring);
+    payload.append("nightstand_final_positioning", formData.nightstandFinalPositioning);
+    payload.append("nightstand_packaging_cleanup", formData.nightstandPackagingCleanup);
+    payload.append("nightstand_has_product_link", formData.nightstandHasProductLink || "no");
+    payload.append("nightstand_product_link", formData.nightstandProductLink || "");
+    payload.append("nightstand_notes", formData.notesNightstand);
+    payload.append(
+      "nightstand_quantity_adder_applied",
+      estimateData.nightstandQuantityAdderApplied ? "true" : "false"
+    );
+    payload.append(
+      "nightstand_removal_disposal_requested",
+      formData.nightstandExistingFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "nightstand_manual_review_required",
+      estimateData.nightstandManualReviewRequired || estimateData.isManualReviewRequired
+        ? "true"
+        : "false"
+    );
+    if (!estimateData.isManualReviewRequired) {
+      payload.append("suggested_price", currency(suggestedPrice));
+    } else {
+      payload.append("suggested_price", "manual_review");
+    }
+    payload.append("notes", formData.notesNightstand);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -4673,6 +4969,19 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_nightstand_assembly") {
+      if (
+        !nightstandSize?.value ||
+        !nightstandQuantity?.value ||
+        !nightstandBrand?.value ||
+        !nightstandAlreadyInRoom?.value ||
+        !nightstandExistingFurniture?.value
+      ) {
+        showValidation(validationStep3, "Please complete the nightstand basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -4753,6 +5062,17 @@ function validateStep(step) {
         coffeeTableHasProductLink?.value === "yes" &&
         coffeeTableProductLink?.value.trim() &&
         !isSoftValidProductUrl(coffeeTableProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_nightstand_assembly") {
+      if (
+        nightstandHasProductLink?.value === "yes" &&
+        nightstandProductLink?.value.trim() &&
+        !isSoftValidProductUrl(nightstandProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -4975,6 +5295,7 @@ function resetExperience() {
   updateDiningTableConditionalFields();
   updateBookcaseConditionalFields();
   updateCoffeeTableConditionalFields();
+  updateNightstandConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -5071,6 +5392,12 @@ if (coffeeTableAssemblyProjectOption) {
   });
 }
 
+if (nightstandAssemblyProjectOption) {
+  nightstandAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_nightstand_assembly", "Nightstand Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -5140,6 +5467,10 @@ if (bookcaseQuantity) bookcaseQuantity.addEventListener("change", updateBookcase
 if (coffeeTableHasProductLink) {
   coffeeTableHasProductLink.addEventListener("change", updateCoffeeTableConditionalFields);
 }
+if (nightstandHasProductLink) {
+  nightstandHasProductLink.addEventListener("change", updateNightstandConditionalFields);
+}
+if (nightstandQuantity) nightstandQuantity.addEventListener("change", updateNightstandConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
@@ -5149,6 +5480,7 @@ updateDeskConditionalFields();
 updateDiningTableConditionalFields();
 updateBookcaseConditionalFields();
 updateCoffeeTableConditionalFields();
+updateNightstandConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -5203,6 +5535,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateBookcaseAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_coffee_table_assembly") {
     latestEstimate = calculateCoffeeTableAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_nightstand_assembly") {
+    latestEstimate = calculateNightstandAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {

@@ -202,6 +202,12 @@
                         <p>Assemble coffee tables with optional storage, lift-top mechanisms, glass tops, and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="nightstandAssemblyProjectOption" data-value="furniture_nightstand_assembly" data-display="Nightstand Assembly">
+                        <h4>Nightstand Assembly</h4>
+                        <p>Assemble nightstands including multi-unit jobs, drawers, doors, charging components, and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -775,6 +781,57 @@
 
                 <label for="coffeeTableExistingTable">Does an existing coffee table need to be moved or removed?</label>
                 <select id="coffeeTableExistingTable">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- NIGHTSTAND ASSEMBLY BASICS -->
+              <div id="nightstandBasicsSection" class="hidden">
+                <label for="nightstandSize">What size nightstand are we assembling?</label>
+                <select id="nightstandSize">
+                  <option value="small">Small (compact or simple bedside table)</option>
+                  <option value="standard">Standard (one or more drawers or shelves)</option>
+                  <option value="large">Large (wide, cabinet-style, or feature-heavy)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="nightstandQuantity">How many separate nightstands should we assemble?</label>
+                <select id="nightstandQuantity">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5OrMore">5 or more</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note hidden" id="nightstandQuantityHelpNote">
+                  Five or more nightstands require a personalized review. An automatic final price is not available for this quantity. Please provide a product link or photos when possible.
+                </div>
+
+                <label for="nightstandBrand">What brand or store is it from?</label>
+                <select id="nightstandBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="roomsToGo">Rooms To Go</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="nightstandAlreadyInRoom">Are the boxes already in the room where the furniture will be assembled?</label>
+                <select id="nightstandAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="nightstandExistingFurniture">Do existing nightstands need to be moved or removed?</label>
+                <select id="nightstandExistingFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1666,6 +1723,81 @@
 
                 <label for="notesCoffeeTable">Anything else we should know?</label>
                 <textarea id="notesCoffeeTable" placeholder="Share access notes, stairs, or other details."></textarea>
+              </div>
+
+              <!-- NIGHTSTAND ASSEMBLY DETAILS -->
+              <div id="nightstandDetailsSection" class="hidden">
+                <label for="nightstandHasDrawers">Does the nightstand include drawers?</label>
+                <select id="nightstandHasDrawers">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="nightstandHasDoors">Does it include doors or an enclosed cabinet section?</label>
+                <select id="nightstandHasDoors">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="nightstandHasPowerComponents">Does it include built-in lighting, USB ports, or a charging station?</label>
+                <select id="nightstandHasPowerComponents">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Includes assembling and connecting product-supplied lighting, USB ports, charging stations, and adapters to an existing accessible outlet. Household electrical work is not included.
+                </div>
+
+                <label for="nightstandHasGlass">Does it include a glass top or glass shelf?</label>
+                <select id="nightstandHasGlass">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="nightstandWallAnchoring">Would you like the nightstand secured to the wall for stability?</label>
+                <select id="nightstandWallAnchoring">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Basic anti-tip wall anchoring is included when hardware is available and the wall location is normally accessible.
+                </div>
+
+                <label for="nightstandFinalPositioning">Would you like the nightstands placed in their final positions after assembly?</label>
+                <select id="nightstandFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="nightstandPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="nightstandPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="nightstandHasProductLink">Do you have a product link?</label>
+                <select id="nightstandHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="nightstandProductLinkField" class="hidden">
+                  <label for="nightstandProductLink">Paste the product link</label>
+                  <input type="url" id="nightstandProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Ashley, Rooms To Go, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesNightstand">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesNightstand" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, product screenshots, assembly manuals, or room-condition photos help us prepare for the job.</div>
+
+                <label for="notesNightstand">Anything else we should know?</label>
+                <textarea id="notesNightstand" placeholder="Share access notes, stairs, wall conditions, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->
