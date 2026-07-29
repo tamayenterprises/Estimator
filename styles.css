@@ -374,32 +374,43 @@ a.hero-cta:focus-visible {
 
 @media (max-width: 899px) {
   .page {
-    padding: 14px 12px 36px;
+    padding: 0 0 36px;
   }
 
   .page .container .card {
     overflow-x: visible;
     overflow-y: hidden;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
   }
 
-  /* Photo on top on mobile so the scene is visible first */
+  /* Photo on top; hero fills first viewport so estimator starts below */
   .hero {
     grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+    min-height: 100dvh;
   }
 
   .hero-photo {
     order: -1;
-    min-height: 140px;
+    flex: 0 0 auto;
+    min-height: 150px;
   }
 
   .hero-photo img {
-    height: 140px;
+    height: clamp(140px, 22vh, 180px);
     object-position: center 62%;
   }
 
   .hero-panel {
-    gap: 8px;
-    padding: 14px 16px 16px;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 16px 18px 36px;
   }
 
   .hero-brand {
@@ -468,7 +479,7 @@ a.hero-cta:focus-visible {
   }
 
   .hero-actions {
-    margin-top: 4px;
+    margin-top: 8px;
   }
 
   .content {
@@ -1282,32 +1293,9 @@ textarea:focus {
 
 /* RESPONSIVE */
 @media (min-width: 640px) {
-  .page {
-    padding: 24px 18px 48px;
-  }
-
-  .hero-panel {
-    padding: 28px 24px 30px;
-    gap: 14px;
-  }
-
-  .hero-brand-logo {
-    height: 56px;
-    max-width: 128px;
-  }
-
   .hero-trust {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 12px;
-  }
-
-  .hero-photo {
-    min-height: 220px;
-  }
-
-  .hero-photo img {
-    height: 220px;
-    object-position: center 55%;
   }
 
   .content {
@@ -1354,6 +1342,32 @@ textarea:focus {
   }
 }
 
+/* Preserve mobile full-viewport hero between 640px and 899px */
+@media (min-width: 640px) and (max-width: 899px) {
+  .page {
+    padding: 0 0 36px;
+  }
+
+  .hero-panel {
+    padding: 18px 22px 40px;
+    gap: 12px;
+  }
+
+  .hero-brand-logo {
+    height: 48px;
+    max-width: 110px;
+  }
+
+  .hero-photo {
+    min-height: 170px;
+  }
+
+  .hero-photo img {
+    height: clamp(150px, 24vh, 200px);
+    object-position: center 58%;
+  }
+}
+
 @media (min-width: 960px) {
   .page {
     padding: 34px 24px 60px;
@@ -1368,6 +1382,11 @@ textarea:focus {
   .hero-panel {
     padding: 40px 28px 44px 36px;
     gap: 18px;
+  }
+
+  .hero-brand-logo {
+    height: 56px;
+    max-width: 128px;
   }
 
   .hero-title-mobile {
