@@ -77,41 +77,33 @@ body {
   overflow: hidden;
 }
 
-.hero-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 16px;
-  padding: 28px 22px 30px;
-  background: #001B3A;
-  position: relative;
-  z-index: 1;
-}
-
 .hero-photo {
   position: relative;
-  min-height: 240px;
+  min-height: 180px;
   background: #0a2238;
 }
 
 .hero-photo img {
   display: block;
   width: 100%;
-  height: 240px;
+  height: 180px;
   object-fit: cover;
-  object-position: center 35%;
+  /* Keep the assembling technician as the focal point; crop excess ceiling */
+  object-position: center 58%;
 }
 
 .hero-brand {
   display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .hero-brand-logo {
   width: auto;
-  height: 64px;
-  max-width: 140px;
+  height: 52px;
+  max-width: 120px;
   display: block;
+  flex: 0 0 auto;
   object-fit: contain;
   border-radius: 12px;
   background: #fff;
@@ -119,13 +111,47 @@ body {
   box-sizing: content-box;
 }
 
+.hero-brand-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.hero-brand-name {
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.hero-brand-lines {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: 1.35;
+}
+
+.hero-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 18px 20px;
+  background: #001B3A;
+  position: relative;
+  z-index: 1;
+}
+
 .hero-actions {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 14px 18px;
-  margin-top: 4px;
+  gap: 12px;
+  margin-top: 2px;
   width: 100%;
 }
 
@@ -147,68 +173,24 @@ a.hero-cta {
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 a.hero-cta:hover,
 a.hero-cta:focus {
   background: #F7D980 !important;
   color: #001B3A !important;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
+}
+
+a.hero-cta:active {
+  transform: translateY(0);
 }
 
 a.hero-cta:focus-visible {
   outline: 3px solid #fff;
   outline-offset: 3px;
-}
-
-.hero-lockup {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-
-.hero-lockup-logo {
-  width: auto;
-  height: 48px;
-  max-width: 96px;
-  display: block;
-  flex: 0 0 auto;
-  object-fit: contain;
-  border-radius: 10px;
-  background: #fff;
-  padding: 3px;
-  box-sizing: content-box;
-}
-
-.hero-lockup-divider {
-  display: block;
-  width: 1px;
-  height: 30px;
-  flex: 0 0 auto;
-  background: rgba(255, 255, 255, 0.45);
-}
-
-.hero-lockup-tagline {
-  margin: 0;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  color: #fff;
-  line-height: 1.3;
-}
-
-.hero-lockup-tagline span {
-  color: #F2C94C;
-}
-
-@media (max-width: 520px) {
-  .hero-actions {
-    flex-wrap: wrap;
-  }
 }
 
 .hero h1,
@@ -218,7 +200,7 @@ a.hero-cta:focus-visible {
   flex-direction: column;
   align-items: flex-start;
   gap: 0.05em;
-  font-size: clamp(1.5rem, 5vw + 0.4rem, 2.15rem);
+  font-size: clamp(1.35rem, 4.6vw + 0.35rem, 2rem);
   font-weight: 800;
   line-height: 1.08;
   letter-spacing: -0.03em;
@@ -237,17 +219,17 @@ a.hero-cta:focus-visible {
   margin: 0;
   max-width: 34rem;
   color: rgba(255, 255, 255, 0.88);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.55;
 }
 
 .hero-trust {
   list-style: none;
-  margin: 4px 0 0;
+  margin: 2px 0 0;
   padding: 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .hero-trust li {
@@ -302,11 +284,69 @@ a.hero-cta:focus-visible {
   line-height: 1.35;
 }
 
+/* SELECT YOUR PROJECT — premium section header */
+.project-select-section {
+  margin: 0 0 18px;
+  scroll-margin-top: 20px;
+}
+
+.project-section-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: linear-gradient(145deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(11, 60, 93, 0.18);
+}
+
+.project-section-banner-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.project-section-desc {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.project-select-section.is-emphasized .project-section-banner {
+  animation: projectSectionPulse 0.85s ease;
+}
+
+@keyframes projectSectionPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(11, 60, 93, 0.4), 0 10px 24px rgba(11, 60, 93, 0.18);
+    transform: scale(1);
+  }
+  40% {
+    box-shadow: 0 0 0 10px rgba(11, 60, 93, 0), 0 14px 28px rgba(11, 60, 93, 0.22);
+    transform: scale(1.01);
+  }
+  100% {
+    box-shadow: 0 10px 24px rgba(11, 60, 93, 0.18);
+    transform: scale(1);
+  }
+}
+
 #projectSelectorShell {
   scroll-margin-top: 28px;
 }
 
 @media (max-width: 899px) {
+  .page {
+    padding: 14px 12px 36px;
+  }
+
   .page .container .card {
     overflow-x: visible;
     overflow-y: hidden;
@@ -319,16 +359,26 @@ a.hero-cta:focus-visible {
 
   .hero-photo {
     order: -1;
+    min-height: 160px;
   }
 
   .hero-photo img {
-    height: 220px;
+    height: 160px;
+    object-position: center 62%;
+  }
+
+  .content {
+    padding: 18px 16px 24px;
+  }
+
+  .stepper {
+    margin-bottom: 14px;
   }
 }
 
 /* CONTENT */
 .content {
-  padding: 28px 22px 30px;
+  padding: 24px 20px 28px;
 }
 
 /* STEPS */
@@ -1133,7 +1183,13 @@ textarea:focus {
   }
 
   .hero-panel {
-    padding: 34px 28px 36px;
+    padding: 28px 24px 30px;
+    gap: 14px;
+  }
+
+  .hero-brand-logo {
+    height: 56px;
+    max-width: 128px;
   }
 
   .hero-trust {
@@ -1141,12 +1197,13 @@ textarea:focus {
     gap: 12px;
   }
 
-  .hero-lockup-tagline {
-    font-size: 0.72rem;
+  .hero-photo {
+    min-height: 220px;
   }
 
   .hero-photo img {
-    height: 280px;
+    height: 220px;
+    object-position: center 55%;
   }
 
   .content {
@@ -1230,7 +1287,7 @@ textarea:focus {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 45% center;
+    object-position: 42% 55%;
   }
 
   .hero h1.hero-title {

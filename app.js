@@ -952,6 +952,8 @@ const selectedProjectMessageText = document.getElementById("selectedProjectMessa
 const selectedProjectMessage = document.getElementById("selectedProjectMessage");
 const projectSelectorShell = document.getElementById("projectSelectorShell");
 const projectSelectorTrigger = document.getElementById("projectSelectorTrigger");
+const selectProjectSection = document.getElementById("selectProjectSection");
+const startEstimateCta = document.getElementById("startEstimateCta");
 
 const drywallProjectOption = document.getElementById("drywallProjectOption");
 const lightingProjectOption = document.getElementById("lightingProjectOption");
@@ -4965,6 +4967,23 @@ function resetExperience() {
   hideAllEndStates();
   stepper.classList.remove("hidden");
   showStep(1);
+}
+
+if (startEstimateCta && selectProjectSection) {
+  startEstimateCta.addEventListener("click", (e) => {
+    e.preventDefault();
+    selectProjectSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    selectProjectSection.classList.remove("is-emphasized");
+    // Restart emphasis animation
+    void selectProjectSection.offsetWidth;
+    selectProjectSection.classList.add("is-emphasized");
+    window.setTimeout(() => {
+      selectProjectSection.classList.remove("is-emphasized");
+    }, 900);
+    if (history.replaceState) {
+      history.replaceState(null, "", "#selectProjectSection");
+    }
+  });
 }
 
 projectSelectorTrigger.addEventListener("click", (e) => {

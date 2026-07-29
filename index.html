@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Project Cost Estimator</title>
   <link rel="icon" href="logo.png" type="image/png" />
-  <link rel="stylesheet" href="./styles.css?v=20260728f" />
+  <link rel="stylesheet" href="./styles.css?v=20260728g" />
 </head>
 
 <body>
@@ -16,7 +16,11 @@
         <div class="hero">
           <div class="hero-panel">
             <div class="hero-brand">
-              <img src="logo.png" alt="Tamay Enterprises" class="hero-brand-logo" width="160" height="160" />
+              <img src="logo.png" alt="Tamay Enterprises logo" class="hero-brand-logo" width="160" height="160" />
+              <div class="hero-brand-copy">
+                <strong class="hero-brand-name">Tamay Enterprises Inc.</strong>
+                <span class="hero-brand-lines">Real Estate | Construction | Logistics</span>
+              </div>
             </div>
 
             <h1 class="hero-title">
@@ -71,12 +75,7 @@
             </ul>
 
             <div class="hero-actions">
-              <a class="hero-cta" href="#projectSelectorShell">Start My Estimate <span aria-hidden="true">→</span></a>
-              <div class="hero-lockup">
-                <img src="logo.png" alt="Tamay Enterprises" class="hero-lockup-logo" width="120" height="120" />
-                <span class="hero-lockup-divider" aria-hidden="true"></span>
-                <p class="hero-lockup-tagline">Real People. <span>Real Solutions.</span></p>
-              </div>
+              <a class="hero-cta" id="startEstimateCta" href="#selectProjectSection">Start My Estimate <span aria-hidden="true">→</span></a>
             </div>
           </div>
 
@@ -105,8 +104,13 @@
           <form id="estimatorForm" novalidate>
             <!-- STEP 1 -->
             <div class="step step-panel active" data-step="1">
-              <h2>Select Your Project Type</h2>
-              <p class="section-subtitle">Choose the type of project you want to estimate. Start by opening the selector below.</p>
+              <div class="project-select-section" id="selectProjectSection">
+                <div class="project-section-banner" role="heading" aria-level="2">
+                  <span class="project-section-banner-icon" aria-hidden="true">🛠️</span>
+                  <span>SELECT YOUR PROJECT</span>
+                </div>
+                <p class="project-section-desc">Choose the type of project to get started.</p>
+              </div>
 
               <div class="selector-shell" id="projectSelectorShell">
                 <button type="button" class="selector-trigger" id="projectSelectorTrigger" aria-expanded="false">
