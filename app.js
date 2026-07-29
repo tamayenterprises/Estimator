@@ -1413,6 +1413,15 @@ function scrollToEstimatorStep() {
   target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
 }
 
+function scrollToLandingHero() {
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" });
+  if (history.replaceState) {
+    const cleanUrl = window.location.pathname + window.location.search;
+    history.replaceState(null, "", cleanUrl);
+  }
+}
+
 function hideAllEndStates() {
   if (results) {
     results.classList.add("hidden");
@@ -1431,8 +1440,9 @@ function updateStepper(step) {
   });
 }
 
-function showStep(step) {
+function showStep(step, options = {}) {
   currentStep = step;
+  const scrollMode = options.scrollMode || "estimator";
 
   stepPanels.forEach((panel) => {
     panel.classList.remove("active");
@@ -1470,7 +1480,10 @@ function showStep(step) {
 
   stepper.classList.remove("hidden");
   updateStepper(step);
-  requestAnimationFrame(() => scrollToEstimatorStep());
+  requestAnimationFrame(() => {
+    if (scrollMode === "hero") scrollToLandingHero();
+    else if (scrollMode === "estimator") scrollToEstimatorStep();
+  });
 }
 
 function showHotCompletion() {
@@ -5300,7 +5313,7 @@ function resetExperience() {
   updatePropertyTypeMessage();
   hideAllEndStates();
   stepper.classList.remove("hidden");
-  showStep(1);
+  showStep(1, { scrollMode: "hero" });
 }
 
 if (startEstimateCta && selectProjectSection) {
@@ -6072,7 +6085,7 @@ hotLeadBtn.addEventListener("click", async () => {
 });
 
 doneBtn.addEventListener("click", () => {
-  showDoneCompletion();
+  resetExperience();
 });
 
 if (aiDesignFinishGrid) {
@@ -6708,4 +6721,4 @@ updatePaintConditionalFields();
 updatePlumbingConditionalUI();
 updatePropertyTypeMessage();
 hideAllEndStates();
-showStep(1);
+showStep(1, { scrollMode: "none" });
