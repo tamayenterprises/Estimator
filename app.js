@@ -1346,6 +1346,19 @@ function showValidation(box, message) {
   box.classList.add("active");
 }
 
+function scrollToEstimatorStep() {
+  const target =
+    document.querySelector(".step-panel.active") ||
+    document.querySelector(".completion-screen.active") ||
+    document.getElementById("estimator-workspace");
+  if (!target) return;
+  const rect = target.getBoundingClientRect();
+  const alreadyVisible = rect.top >= 0 && rect.top <= window.innerHeight * 0.35;
+  if (alreadyVisible) return;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+}
+
 function hideAllEndStates() {
   if (results) {
     results.classList.add("hidden");
@@ -1403,7 +1416,7 @@ function showStep(step) {
 
   stepper.classList.remove("hidden");
   updateStepper(step);
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  requestAnimationFrame(() => scrollToEstimatorStep());
 }
 
 function showHotCompletion() {
@@ -1412,7 +1425,7 @@ function showHotCompletion() {
   hotCompletionScreen.classList.add("active");
   doneCompletionScreen.classList.remove("active");
   stepper.classList.add("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  requestAnimationFrame(() => scrollToEstimatorStep());
 }
 
 function showDoneCompletion() {
@@ -1421,7 +1434,7 @@ function showDoneCompletion() {
   hotCompletionScreen.classList.remove("active");
   doneCompletionScreen.classList.add("active");
   stepper.classList.add("hidden");
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  requestAnimationFrame(() => scrollToEstimatorStep());
 }
 
 function toggleProjectSelector() {

@@ -338,6 +338,15 @@ a.hero-cta:focus-visible {
   }
 }
 
+#estimator-workspace {
+  scroll-margin-top: 20px;
+}
+
+.step-panel,
+.completion-screen {
+  scroll-margin-top: 24px;
+}
+
 #projectSelectorShell {
   scroll-margin-top: 28px;
 }
