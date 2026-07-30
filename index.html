@@ -218,6 +218,12 @@
                         <p>Assemble nightstands including multi-unit jobs, drawers, doors, charging components, and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="officeChairAssemblyProjectOption" data-value="furniture_office_chair_assembly" data-display="Office Chair Assembly">
+                        <h4>Office Chair Assembly</h4>
+                        <p>Assemble office and gaming chairs, including multi-chair jobs, adjustments, and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -842,6 +848,58 @@
 
                 <label for="nightstandExistingFurniture">Do existing nightstands need to be moved or removed?</label>
                 <select id="nightstandExistingFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- OFFICE CHAIR ASSEMBLY BASICS -->
+              <div id="officeChairBasicsSection" class="hidden">
+                <label for="officeChairType">What type of office chair are we assembling?</label>
+                <select id="officeChairType">
+                  <option value="basic">Basic (simple task or compact office chair)</option>
+                  <option value="standardErgonomic">Standard ergonomic (adjustable arms, lumbar, or headrest)</option>
+                  <option value="executiveGaming">Executive / gaming (large, reclining, or feature-heavy)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="officeChairQuantity">How many separate office chairs should we assemble?</label>
+                <select id="officeChairQuantity">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5OrMore">5 or more</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note hidden" id="officeChairQuantityHelpNote">
+                  Five or more office chairs require a personalized review. An automatic final price is not available for this quantity. Please provide a product link or photos when possible.
+                </div>
+
+                <label for="officeChairBrand">What brand or store is the chair from?</label>
+                <select id="officeChairBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="staples">Staples</option>
+                  <option value="officeDepot">Office Depot</option>
+                  <option value="secretlab">Secretlab</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="officeChairAlreadyInRoom">Are the boxes already in the room where the chairs will be assembled?</label>
+                <select id="officeChairAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="officeChairExistingFurniture">Do existing office chairs need to be moved or removed?</label>
+                <select id="officeChairExistingFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1808,6 +1866,77 @@
 
                 <label for="notesNightstand">Anything else we should know?</label>
                 <textarea id="notesNightstand" placeholder="Share access notes, stairs, wall conditions, or other details."></textarea>
+              </div>
+
+              <!-- OFFICE CHAIR ASSEMBLY DETAILS -->
+              <div id="officeChairDetailsSection" class="hidden">
+                <label for="officeChairHasAdjustableArmrests">Does the chair include adjustable armrests?</label>
+                <select id="officeChairHasAdjustableArmrests">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="officeChairHasHeadrestLumbar">Does the chair include a headrest or separate lumbar-support component?</label>
+                <select id="officeChairHasHeadrestLumbar">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="officeChairHasRecliningFootrest">Does the chair include a footrest, reclining mechanism, or extendable leg support?</label>
+                <select id="officeChairHasRecliningFootrest">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="officeChairHasElectronicFeatures">Does the chair include electronic features?</label>
+                <select id="officeChairHasElectronicFeatures">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Examples include massage, heating, lighting, speakers, USB ports, or a supplied power adapter. Household electrical work is not included.
+                </div>
+
+                <label for="officeChairAdjustmentTesting">Would you like the chair adjusted and tested after assembly?</label>
+                <select id="officeChairAdjustmentTesting">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="officeChairFinalPositioning">Would you like the chairs placed in their final positions after assembly?</label>
+                <select id="officeChairFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="officeChairPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="officeChairPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="officeChairHasProductLink">Do you have a product link?</label>
+                <select id="officeChairHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="officeChairProductLinkField" class="hidden">
+                  <label for="officeChairProductLink">Paste the product link</label>
+                  <input type="url" id="officeChairProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Staples, Office Depot, Secretlab, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesOfficeChair">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesOfficeChair" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, product screenshots, assembly manuals, or room-condition photos help us prepare for the job.</div>
+
+                <label for="notesOfficeChair">Anything else we should know?</label>
+                <textarea id="notesOfficeChair" placeholder="Share access notes, stairs, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->

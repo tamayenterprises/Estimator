@@ -755,6 +755,39 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureOfficeChair: {
+    base: {
+      basic: { totalMin: 50, totalMax: 80, hours: 0.85, label: "Basic office chair assembly" },
+      standardErgonomic: { totalMin: 65, totalMax: 105, hours: 1.1, label: "Standard ergonomic office chair assembly" },
+      executiveGaming: { totalMin: 80, totalMax: 130, hours: 1.35, label: "Executive / gaming chair assembly" },
+      notSure: { totalMin: 65, totalMax: 110, hours: 1.1, label: "Office chair type to be confirmed", manualReview: true }
+    },
+    quantity: {
+      "1": { totalMin: 0, totalMax: 0 },
+      "2": { totalMin: 35, totalMax: 60, label: "Additional office chair units" },
+      "3": { totalMin: 70, totalMax: 120, label: "Additional office chair units" },
+      "4": { totalMin: 105, totalMax: 180, label: "Additional office chair units" },
+      "5OrMore": { noAutoPrice: true, manualReview: true, label: "Five or more office chairs require personalized review" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Office chair quantity flagged for manual review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 75, totalMax: 150, label: "Existing chair removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing office chair handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional office-chair assembly",
+      "Armrest, headrest, and lumbar-support installation",
+      "Reclining and footrest-component installation",
+      "Connection of included electronic components",
+      "Final chair adjustment and functional testing",
+      "Final positioning",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -999,6 +1032,7 @@ const diningTableAssemblyProjectOption = document.getElementById("diningTableAss
 const bookcaseAssemblyProjectOption = document.getElementById("bookcaseAssemblyProjectOption");
 const coffeeTableAssemblyProjectOption = document.getElementById("coffeeTableAssemblyProjectOption");
 const nightstandAssemblyProjectOption = document.getElementById("nightstandAssemblyProjectOption");
+const officeChairAssemblyProjectOption = document.getElementById("officeChairAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -1032,6 +1066,7 @@ const diningTableBasicsSection = document.getElementById("diningTableBasicsSecti
 const bookcaseBasicsSection = document.getElementById("bookcaseBasicsSection");
 const coffeeTableBasicsSection = document.getElementById("coffeeTableBasicsSection");
 const nightstandBasicsSection = document.getElementById("nightstandBasicsSection");
+const officeChairBasicsSection = document.getElementById("officeChairBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -1047,6 +1082,7 @@ const diningTableDetailsSection = document.getElementById("diningTableDetailsSec
 const bookcaseDetailsSection = document.getElementById("bookcaseDetailsSection");
 const coffeeTableDetailsSection = document.getElementById("coffeeTableDetailsSection");
 const nightstandDetailsSection = document.getElementById("nightstandDetailsSection");
+const officeChairDetailsSection = document.getElementById("officeChairDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -1183,6 +1219,25 @@ const nightstandProductLink = document.getElementById("nightstandProductLink");
 const nightstandProductLinkField = document.getElementById("nightstandProductLinkField");
 const notesNightstand = document.getElementById("notesNightstand");
 const projectFilesNightstand = document.getElementById("projectFilesNightstand");
+
+const officeChairType = document.getElementById("officeChairType");
+const officeChairQuantity = document.getElementById("officeChairQuantity");
+const officeChairQuantityHelpNote = document.getElementById("officeChairQuantityHelpNote");
+const officeChairBrand = document.getElementById("officeChairBrand");
+const officeChairAlreadyInRoom = document.getElementById("officeChairAlreadyInRoom");
+const officeChairExistingFurniture = document.getElementById("officeChairExistingFurniture");
+const officeChairHasAdjustableArmrests = document.getElementById("officeChairHasAdjustableArmrests");
+const officeChairHasHeadrestLumbar = document.getElementById("officeChairHasHeadrestLumbar");
+const officeChairHasRecliningFootrest = document.getElementById("officeChairHasRecliningFootrest");
+const officeChairHasElectronicFeatures = document.getElementById("officeChairHasElectronicFeatures");
+const officeChairAdjustmentTesting = document.getElementById("officeChairAdjustmentTesting");
+const officeChairFinalPositioning = document.getElementById("officeChairFinalPositioning");
+const officeChairPackagingCleanup = document.getElementById("officeChairPackagingCleanup");
+const officeChairHasProductLink = document.getElementById("officeChairHasProductLink");
+const officeChairProductLink = document.getElementById("officeChairProductLink");
+const officeChairProductLinkField = document.getElementById("officeChairProductLinkField");
+const notesOfficeChair = document.getElementById("notesOfficeChair");
+const projectFilesOfficeChair = document.getElementById("projectFilesOfficeChair");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1548,6 +1603,7 @@ function allProjectOptions() {
     bookcaseAssemblyProjectOption,
     coffeeTableAssemblyProjectOption,
     nightstandAssemblyProjectOption,
+    officeChairAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1601,6 +1657,10 @@ function isCoffeeTableAssemblyProject(type) {
 
 function isNightstandAssemblyProject(type) {
   return type === "furniture_nightstand_assembly";
+}
+
+function isOfficeChairAssemblyProject(type) {
+  return type === "furniture_office_chair_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1802,6 +1862,7 @@ function updateProjectSpecificUI() {
   if (bookcaseBasicsSection) bookcaseBasicsSection.classList.add("hidden");
   if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.add("hidden");
   if (nightstandBasicsSection) nightstandBasicsSection.classList.add("hidden");
+  if (officeChairBasicsSection) officeChairBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1817,6 +1878,7 @@ function updateProjectSpecificUI() {
   if (bookcaseDetailsSection) bookcaseDetailsSection.classList.add("hidden");
   if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.add("hidden");
   if (nightstandDetailsSection) nightstandDetailsSection.classList.add("hidden");
+  if (officeChairDetailsSection) officeChairDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -1931,6 +1993,15 @@ function updateProjectSpecificUI() {
     if (nightstandBasicsSection) nightstandBasicsSection.classList.remove("hidden");
     if (nightstandDetailsSection) nightstandDetailsSection.classList.remove("hidden");
     updateNightstandConditionalFields();
+    return;
+  }
+
+  if (isOfficeChairAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the office chair so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for armrests, reclining features, electronics, adjustments, and packaging cleanup.";
+    if (officeChairBasicsSection) officeChairBasicsSection.classList.remove("hidden");
+    if (officeChairDetailsSection) officeChairDetailsSection.classList.remove("hidden");
+    updateOfficeChairConditionalFields();
     return;
   }
 
@@ -2079,6 +2150,21 @@ function updateNightstandConditionalFields() {
     nightstandProductLinkField.classList.toggle("hidden", !showProductLink);
     if (!showProductLink && nightstandProductLink) {
       nightstandProductLink.value = "";
+    }
+  }
+}
+
+function updateOfficeChairConditionalFields() {
+  const qty = officeChairQuantity?.value || "1";
+  if (officeChairQuantityHelpNote) {
+    officeChairQuantityHelpNote.classList.toggle("hidden", qty !== "5OrMore");
+  }
+
+  const showProductLink = officeChairHasProductLink?.value === "yes";
+  if (officeChairProductLinkField) {
+    officeChairProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && officeChairProductLink) {
+      officeChairProductLink.value = "";
     }
   }
 }
@@ -2932,6 +3018,153 @@ function calculateNightstandAssemblyEstimate(formData) {
   };
 }
 
+function calculateOfficeChairAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureOfficeChair;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Office chair competitive pricing: first-chair base + grouped additional-chair adder (2–4) + removeDispose only"
+  ];
+
+  const quantity = formData.officeChairQuantity || "1";
+  const quantityCfg = cfg.quantity[quantity] || cfg.quantity["1"];
+  const quantityAdderApplied = ["2", "3", "4"].includes(quantity);
+  const blocksAutoPrice = quantity === "5OrMore";
+
+  if (formData.officeChairBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.officeChairBrand}`);
+  }
+  if (formData.officeChairAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.officeChairAlreadyInRoom}`);
+  }
+  if (formData.officeChairHasAdjustableArmrests) {
+    internalAdjustments.push(
+      `Adjustable armrests (prep only, $0): ${formData.officeChairHasAdjustableArmrests}`
+    );
+  }
+  if (formData.officeChairHasHeadrestLumbar) {
+    internalAdjustments.push(
+      `Headrest/lumbar (prep only, $0): ${formData.officeChairHasHeadrestLumbar}`
+    );
+  }
+  if (formData.officeChairHasRecliningFootrest) {
+    internalAdjustments.push(
+      `Reclining/footrest (prep only, $0): ${formData.officeChairHasRecliningFootrest}`
+    );
+  }
+  if (formData.officeChairHasElectronicFeatures) {
+    internalAdjustments.push(
+      `Electronic features (prep only, $0): ${formData.officeChairHasElectronicFeatures}`
+    );
+  }
+  if (formData.officeChairAdjustmentTesting) {
+    internalAdjustments.push(
+      `Adjustment/testing (included $0): ${formData.officeChairAdjustmentTesting}`
+    );
+  }
+  if (formData.officeChairFinalPositioning) {
+    internalAdjustments.push(`Final positioning (prep only, $0): ${formData.officeChairFinalPositioning}`);
+  }
+  if (formData.officeChairPackagingCleanup) {
+    internalAdjustments.push(`Packaging cleanup (prep only, $0): ${formData.officeChairPackagingCleanup}`);
+  }
+  if (formData.officeChairHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.officeChairProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  if (blocksAutoPrice) {
+    adjustments.push(quantityCfg.label || "Five or more office chairs require personalized review");
+    adjustments.push(
+      "Five or more separate office chairs need a personalized review. Please use Get My Accurate Estimate and include product links, photos, and manuals when possible."
+    );
+
+    return {
+      hours: 0,
+      minMaterials: 0,
+      maxMaterials: 0,
+      laborMin: 0,
+      laborMax: 0,
+      totalMin: 0,
+      totalMax: 0,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta,
+      isManualReviewRequired: true,
+      manualReviewHeading: "Personalized Estimate Required",
+      manualReviewIntro:
+        "Five or more office chairs need a personalized Tamay review before pricing can be confirmed.",
+      manualReviewDisclaimer:
+        "Please submit product links, photos, and manuals with <strong>Get My Exact Quote</strong> so Tamay Enterprises can confirm scope and pricing.",
+      officeChairQuantityAdderApplied: false,
+      officeChairRemovalDisposalRequested: formData.officeChairExistingFurniture === "removeDispose",
+      officeChairManualReviewRequired: true
+    };
+  }
+
+  const base = cfg.base[formData.officeChairType] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price covers the first office chair and includes armrests/headrest/lumbar when included, reclining and footrest components when included, supplied electronic-feature connection when included, final adjustment and testing when requested, final placement, in-home movement, and basic packaging cleanup"
+  );
+
+  laborMin += quantityCfg.totalMin || 0;
+  laborMax += quantityCfg.totalMax || 0;
+  if (quantityCfg.label) adjustments.push(quantityCfg.label);
+  if (quantityCfg.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: quantity is notSure — no automatic quantity adder applied");
+  }
+
+  const oldFurniture = cfg.oldFurniture[formData.officeChairExistingFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push(
+      "MANUAL REVIEW: existing office chair answer is notSure — no automatic removal fee applied"
+    );
+  }
+  if (formData.officeChairExistingFurniture === "moveOnly") {
+    internalAdjustments.push("Existing office chair moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Office Chair Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.officeChairType === "notSure" ||
+    formData.officeChairQuantity === "notSure" ||
+    formData.officeChairExistingFurniture === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 1.1,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    isManualReviewRequired: false,
+    officeChairQuantityAdderApplied: quantityAdderApplied,
+    officeChairRemovalDisposalRequested: formData.officeChairExistingFurniture === "removeDispose",
+    officeChairManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -3179,6 +3412,17 @@ function classifyJobSize(formData) {
     if (
       formData.nightstandSize === "large" ||
       ["2", "3"].includes(formData.nightstandQuantity)
+    ) {
+      return "medium";
+    }
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_office_chair_assembly") {
+    if (formData.officeChairQuantity === "5OrMore" || formData.officeChairQuantity === "4") return "large";
+    if (
+      formData.officeChairType === "executiveGaming" ||
+      ["2", "3"].includes(formData.officeChairQuantity)
     ) {
       return "medium";
     }
@@ -4173,6 +4417,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_nightstand_assembly") {
     return projectFilesNightstand ? projectFilesNightstand.files : null;
   }
+  if (projectType.value === "furniture_office_chair_assembly") {
+    return projectFilesOfficeChair ? projectFilesOfficeChair.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -4392,6 +4639,25 @@ function getFormData() {
         ? normalizeProductUrl(nightstandProductLink?.value || "")
         : "",
     notesNightstand: notesNightstand?.value.trim() || "",
+
+    officeChairType: officeChairType?.value || "",
+    officeChairQuantity: officeChairQuantity?.value || "",
+    officeChairBrand: officeChairBrand?.value || "",
+    officeChairAlreadyInRoom: officeChairAlreadyInRoom?.value || "",
+    officeChairExistingFurniture: officeChairExistingFurniture?.value || "",
+    officeChairHasAdjustableArmrests: officeChairHasAdjustableArmrests?.value || "",
+    officeChairHasHeadrestLumbar: officeChairHasHeadrestLumbar?.value || "",
+    officeChairHasRecliningFootrest: officeChairHasRecliningFootrest?.value || "",
+    officeChairHasElectronicFeatures: officeChairHasElectronicFeatures?.value || "",
+    officeChairAdjustmentTesting: officeChairAdjustmentTesting?.value || "",
+    officeChairFinalPositioning: officeChairFinalPositioning?.value || "",
+    officeChairPackagingCleanup: officeChairPackagingCleanup?.value || "",
+    officeChairHasProductLink: officeChairHasProductLink?.value || "no",
+    officeChairProductLink:
+      officeChairHasProductLink?.value === "yes"
+        ? normalizeProductUrl(officeChairProductLink?.value || "")
+        : "",
+    notesOfficeChair: notesOfficeChair?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -4734,6 +5000,45 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
       payload.append("suggested_price", "manual_review");
     }
     payload.append("notes", formData.notesNightstand);
+  } else if (formData.projectType === "furniture_office_chair_assembly") {
+    const suggestedPrice = estimateData.isManualReviewRequired
+      ? null
+      : Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("office_chair_type", formData.officeChairType);
+    payload.append("office_chair_quantity", formData.officeChairQuantity);
+    payload.append("office_chair_brand", formData.officeChairBrand);
+    payload.append("office_chair_already_in_room", formData.officeChairAlreadyInRoom);
+    payload.append("office_chair_existing_furniture", formData.officeChairExistingFurniture);
+    payload.append("office_chair_has_adjustable_armrests", formData.officeChairHasAdjustableArmrests);
+    payload.append("office_chair_has_headrest_lumbar", formData.officeChairHasHeadrestLumbar);
+    payload.append("office_chair_has_reclining_footrest", formData.officeChairHasRecliningFootrest);
+    payload.append("office_chair_has_electronic_features", formData.officeChairHasElectronicFeatures);
+    payload.append("office_chair_adjustment_testing", formData.officeChairAdjustmentTesting);
+    payload.append("office_chair_final_positioning", formData.officeChairFinalPositioning);
+    payload.append("office_chair_packaging_cleanup", formData.officeChairPackagingCleanup);
+    payload.append("office_chair_has_product_link", formData.officeChairHasProductLink || "no");
+    payload.append("office_chair_product_link", formData.officeChairProductLink || "");
+    payload.append("office_chair_notes", formData.notesOfficeChair);
+    payload.append(
+      "office_chair_quantity_adder_applied",
+      estimateData.officeChairQuantityAdderApplied ? "true" : "false"
+    );
+    payload.append(
+      "office_chair_removal_disposal_requested",
+      formData.officeChairExistingFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "office_chair_manual_review_required",
+      estimateData.officeChairManualReviewRequired || estimateData.isManualReviewRequired
+        ? "true"
+        : "false"
+    );
+    if (!estimateData.isManualReviewRequired) {
+      payload.append("suggested_price", currency(suggestedPrice));
+    } else {
+      payload.append("suggested_price", "manual_review");
+    }
+    payload.append("notes", formData.notesOfficeChair);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -4995,6 +5300,19 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_office_chair_assembly") {
+      if (
+        !officeChairType?.value ||
+        !officeChairQuantity?.value ||
+        !officeChairBrand?.value ||
+        !officeChairAlreadyInRoom?.value ||
+        !officeChairExistingFurniture?.value
+      ) {
+        showValidation(validationStep3, "Please complete the office chair basics before continuing.");
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -5086,6 +5404,17 @@ function validateStep(step) {
         nightstandHasProductLink?.value === "yes" &&
         nightstandProductLink?.value.trim() &&
         !isSoftValidProductUrl(nightstandProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_office_chair_assembly") {
+      if (
+        officeChairHasProductLink?.value === "yes" &&
+        officeChairProductLink?.value.trim() &&
+        !isSoftValidProductUrl(officeChairProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -5309,6 +5638,7 @@ function resetExperience() {
   updateBookcaseConditionalFields();
   updateCoffeeTableConditionalFields();
   updateNightstandConditionalFields();
+  updateOfficeChairConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -5411,6 +5741,12 @@ if (nightstandAssemblyProjectOption) {
   });
 }
 
+if (officeChairAssemblyProjectOption) {
+  officeChairAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_office_chair_assembly", "Office Chair Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -5484,6 +5820,10 @@ if (nightstandHasProductLink) {
   nightstandHasProductLink.addEventListener("change", updateNightstandConditionalFields);
 }
 if (nightstandQuantity) nightstandQuantity.addEventListener("change", updateNightstandConditionalFields);
+if (officeChairHasProductLink) {
+  officeChairHasProductLink.addEventListener("change", updateOfficeChairConditionalFields);
+}
+if (officeChairQuantity) officeChairQuantity.addEventListener("change", updateOfficeChairConditionalFields);
 
 setupAccordions();
 updateDresserConditionalFields();
@@ -5494,6 +5834,7 @@ updateDiningTableConditionalFields();
 updateBookcaseConditionalFields();
 updateCoffeeTableConditionalFields();
 updateNightstandConditionalFields();
+updateOfficeChairConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -5550,6 +5891,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateCoffeeTableAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_nightstand_assembly") {
     latestEstimate = calculateNightstandAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_office_chair_assembly") {
+    latestEstimate = calculateOfficeChairAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {
