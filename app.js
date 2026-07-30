@@ -788,6 +788,39 @@ const PRICING = {
     materials: ["Assembly hardware included in base price"]
   },
 
+  furnitureEntertainmentCenter: {
+    base: {
+      compact: { totalMin: 90, totalMax: 140, hours: 1.75, label: "Compact entertainment center assembly" },
+      standard: { totalMin: 130, totalMax: 210, hours: 2.25, label: "Standard entertainment center assembly" },
+      large: { totalMin: 190, totalMax: 310, hours: 3.0, label: "Large entertainment center assembly" },
+      wallUnit: { totalMin: 260, totalMax: 450, hours: 3.75, label: "Wall-unit entertainment center assembly" },
+      notSure: { totalMin: 150, totalMax: 280, hours: 2.5, label: "Entertainment center type to be confirmed", manualReview: true }
+    },
+    sections: {
+      "1": { totalMin: 0, totalMax: 0 },
+      "2To3": { totalMin: 40, totalMax: 80, label: "Additional entertainment-center sections" },
+      "4To5": { totalMin: 90, totalMax: 170, label: "Additional entertainment-center sections" },
+      "6OrMore": { noAutoPrice: true, manualReview: true, label: "Six or more sections require personalized review" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Section count flagged for manual review" }
+    },
+    oldFurniture: {
+      no: { totalMin: 0, totalMax: 0 },
+      moveOnly: { totalMin: 0, totalMax: 0 },
+      removeDispose: { totalMin: 140, totalMax: 260, label: "Existing entertainment-center removal and disposal" },
+      notSure: { totalMin: 0, totalMax: 0, manualReview: true, label: "Existing entertainment center handling flagged for manual review" }
+    },
+    includedServices: [
+      "Professional furniture assembly",
+      "Drawer, door, shelf, tower, and bridge installation",
+      "Installation of supplied glass components",
+      "Connection of included lighting and electronic components",
+      "Basic anti-tip wall anchoring when requested",
+      "Final positioning, leveling, and adjustments",
+      "Basic work-area cleanup"
+    ],
+    materials: ["Assembly hardware included in base price"]
+  },
+
   serviceZoneMultipliers: { core: 1.0, extended: 1.08, outer: 1.15, distant: 1.22 }
 };
 
@@ -1033,6 +1066,7 @@ const bookcaseAssemblyProjectOption = document.getElementById("bookcaseAssemblyP
 const coffeeTableAssemblyProjectOption = document.getElementById("coffeeTableAssemblyProjectOption");
 const nightstandAssemblyProjectOption = document.getElementById("nightstandAssemblyProjectOption");
 const officeChairAssemblyProjectOption = document.getElementById("officeChairAssemblyProjectOption");
+const entertainmentCenterAssemblyProjectOption = document.getElementById("entertainmentCenterAssemblyProjectOption");
 const tvMountProjectOption = document.getElementById("tvMountProjectOption");
 const plumbingFaucetProjectOption = document.getElementById("plumbingFaucetProjectOption");
 const plumbingToiletProjectOption = document.getElementById("plumbingToiletProjectOption");
@@ -1067,6 +1101,7 @@ const bookcaseBasicsSection = document.getElementById("bookcaseBasicsSection");
 const coffeeTableBasicsSection = document.getElementById("coffeeTableBasicsSection");
 const nightstandBasicsSection = document.getElementById("nightstandBasicsSection");
 const officeChairBasicsSection = document.getElementById("officeChairBasicsSection");
+const entertainmentCenterBasicsSection = document.getElementById("entertainmentCenterBasicsSection");
 const plumbingBasicsSection = document.getElementById("plumbingBasicsSection");
 
 const drywallDetailsSection = document.getElementById("drywallDetailsSection");
@@ -1083,6 +1118,7 @@ const bookcaseDetailsSection = document.getElementById("bookcaseDetailsSection")
 const coffeeTableDetailsSection = document.getElementById("coffeeTableDetailsSection");
 const nightstandDetailsSection = document.getElementById("nightstandDetailsSection");
 const officeChairDetailsSection = document.getElementById("officeChairDetailsSection");
+const entertainmentCenterDetailsSection = document.getElementById("entertainmentCenterDetailsSection");
 const plumbingDetailsSection = document.getElementById("plumbingDetailsSection");
 
 const dresserSize = document.getElementById("dresserSize");
@@ -1238,6 +1274,26 @@ const officeChairProductLink = document.getElementById("officeChairProductLink")
 const officeChairProductLinkField = document.getElementById("officeChairProductLinkField");
 const notesOfficeChair = document.getElementById("notesOfficeChair");
 const projectFilesOfficeChair = document.getElementById("projectFilesOfficeChair");
+
+const entertainmentCenterType = document.getElementById("entertainmentCenterType");
+const entertainmentCenterSectionCount = document.getElementById("entertainmentCenterSectionCount");
+const entertainmentCenterSectionHelpNote = document.getElementById("entertainmentCenterSectionHelpNote");
+const entertainmentCenterBrand = document.getElementById("entertainmentCenterBrand");
+const entertainmentCenterAlreadyInRoom = document.getElementById("entertainmentCenterAlreadyInRoom");
+const entertainmentCenterExistingFurniture = document.getElementById("entertainmentCenterExistingFurniture");
+const entertainmentCenterHasStorageComponents = document.getElementById("entertainmentCenterHasStorageComponents");
+const entertainmentCenterHasTowersBridge = document.getElementById("entertainmentCenterHasTowersBridge");
+const entertainmentCenterHasGlass = document.getElementById("entertainmentCenterHasGlass");
+const entertainmentCenterHasElectronicComponents = document.getElementById("entertainmentCenterHasElectronicComponents");
+const entertainmentCenterWallAnchoring = document.getElementById("entertainmentCenterWallAnchoring");
+const entertainmentCenterTvPlacement = document.getElementById("entertainmentCenterTvPlacement");
+const entertainmentCenterFinalPositioning = document.getElementById("entertainmentCenterFinalPositioning");
+const entertainmentCenterPackagingCleanup = document.getElementById("entertainmentCenterPackagingCleanup");
+const entertainmentCenterHasProductLink = document.getElementById("entertainmentCenterHasProductLink");
+const entertainmentCenterProductLink = document.getElementById("entertainmentCenterProductLink");
+const entertainmentCenterProductLinkField = document.getElementById("entertainmentCenterProductLinkField");
+const notesEntertainmentCenter = document.getElementById("notesEntertainmentCenter");
+const projectFilesEntertainmentCenter = document.getElementById("projectFilesEntertainmentCenter");
 
 const aiDesignSpaceType = document.getElementById("aiDesignSpaceType");
 const aiDesignProjectGoal = document.getElementById("aiDesignProjectGoal");
@@ -1604,6 +1660,7 @@ function allProjectOptions() {
     coffeeTableAssemblyProjectOption,
     nightstandAssemblyProjectOption,
     officeChairAssemblyProjectOption,
+    entertainmentCenterAssemblyProjectOption,
     tvMountProjectOption,
     plumbingFaucetProjectOption,
     plumbingToiletProjectOption,
@@ -1661,6 +1718,10 @@ function isNightstandAssemblyProject(type) {
 
 function isOfficeChairAssemblyProject(type) {
   return type === "furniture_office_chair_assembly";
+}
+
+function isEntertainmentCenterAssemblyProject(type) {
+  return type === "furniture_entertainment_center_assembly";
 }
 
 function isSoftValidProductUrl(value) {
@@ -1863,6 +1924,7 @@ function updateProjectSpecificUI() {
   if (coffeeTableBasicsSection) coffeeTableBasicsSection.classList.add("hidden");
   if (nightstandBasicsSection) nightstandBasicsSection.classList.add("hidden");
   if (officeChairBasicsSection) officeChairBasicsSection.classList.add("hidden");
+  if (entertainmentCenterBasicsSection) entertainmentCenterBasicsSection.classList.add("hidden");
   plumbingBasicsSection.classList.add("hidden");
 
   drywallDetailsSection.classList.add("hidden");
@@ -1879,6 +1941,7 @@ function updateProjectSpecificUI() {
   if (coffeeTableDetailsSection) coffeeTableDetailsSection.classList.add("hidden");
   if (nightstandDetailsSection) nightstandDetailsSection.classList.add("hidden");
   if (officeChairDetailsSection) officeChairDetailsSection.classList.add("hidden");
+  if (entertainmentCenterDetailsSection) entertainmentCenterDetailsSection.classList.add("hidden");
   plumbingDetailsSection.classList.add("hidden");
 
   hideAllPlumbingSubsections();
@@ -2002,6 +2065,15 @@ function updateProjectSpecificUI() {
     if (officeChairBasicsSection) officeChairBasicsSection.classList.remove("hidden");
     if (officeChairDetailsSection) officeChairDetailsSection.classList.remove("hidden");
     updateOfficeChairConditionalFields();
+    return;
+  }
+
+  if (isEntertainmentCenterAssemblyProject(type)) {
+    basicsSubtitle.textContent = "Tell us about the entertainment center so we can build an accurate assembly estimate.";
+    detailsSubtitle.textContent = "A few final details help prepare for towers, glass, electronics, wall anchoring, and packaging cleanup.";
+    if (entertainmentCenterBasicsSection) entertainmentCenterBasicsSection.classList.remove("hidden");
+    if (entertainmentCenterDetailsSection) entertainmentCenterDetailsSection.classList.remove("hidden");
+    updateEntertainmentCenterConditionalFields();
     return;
   }
 
@@ -2165,6 +2237,21 @@ function updateOfficeChairConditionalFields() {
     officeChairProductLinkField.classList.toggle("hidden", !showProductLink);
     if (!showProductLink && officeChairProductLink) {
       officeChairProductLink.value = "";
+    }
+  }
+}
+
+function updateEntertainmentCenterConditionalFields() {
+  const sections = entertainmentCenterSectionCount?.value || "1";
+  if (entertainmentCenterSectionHelpNote) {
+    entertainmentCenterSectionHelpNote.classList.toggle("hidden", sections !== "6OrMore");
+  }
+
+  const showProductLink = entertainmentCenterHasProductLink?.value === "yes";
+  if (entertainmentCenterProductLinkField) {
+    entertainmentCenterProductLinkField.classList.toggle("hidden", !showProductLink);
+    if (!showProductLink && entertainmentCenterProductLink) {
+      entertainmentCenterProductLink.value = "";
     }
   }
 }
@@ -3165,6 +3252,161 @@ function calculateOfficeChairAssemblyEstimate(formData) {
   };
 }
 
+function calculateEntertainmentCenterAssemblyEstimate(formData) {
+  const leadMeta = classifyLead(formData);
+  const cfg = PRICING.furnitureEntertainmentCenter;
+  const adjustments = [];
+  const internalAdjustments = [
+    `Service zone: ${leadMeta.serviceZone}`,
+    `Distance band: ${leadMeta.distanceBand}`,
+    `Lead priority: ${leadMeta.leadPriority}`,
+    "Entertainment center competitive pricing: base + grouped section adder (2To3/4To5) + removeDispose only"
+  ];
+
+  const sectionCount = formData.entertainmentCenterSectionCount || "1";
+  const sectionCfg = cfg.sections[sectionCount] || cfg.sections["1"];
+  const sectionAdderApplied = ["2To3", "4To5"].includes(sectionCount);
+  const blocksAutoPrice = sectionCount === "6OrMore";
+
+  if (formData.entertainmentCenterBrand) {
+    internalAdjustments.push(`Brand/store (prep only, $0): ${formData.entertainmentCenterBrand}`);
+  }
+  if (formData.entertainmentCenterAlreadyInRoom) {
+    internalAdjustments.push(`Already in room (prep only, $0): ${formData.entertainmentCenterAlreadyInRoom}`);
+  }
+  if (formData.entertainmentCenterHasStorageComponents) {
+    internalAdjustments.push(
+      `Drawers/doors/shelves (prep only, $0): ${formData.entertainmentCenterHasStorageComponents}`
+    );
+  }
+  if (formData.entertainmentCenterHasTowersBridge) {
+    internalAdjustments.push(
+      `Towers/bridge (prep only, $0 — section count handles complexity): ${formData.entertainmentCenterHasTowersBridge}`
+    );
+  }
+  if (formData.entertainmentCenterHasGlass) {
+    internalAdjustments.push(`Glass components (prep only, $0): ${formData.entertainmentCenterHasGlass}`);
+  }
+  if (formData.entertainmentCenterHasElectronicComponents) {
+    internalAdjustments.push(
+      `Electronic components (prep only, $0): ${formData.entertainmentCenterHasElectronicComponents}`
+    );
+  }
+  if (formData.entertainmentCenterWallAnchoring) {
+    internalAdjustments.push(`Wall anchoring (included $0): ${formData.entertainmentCenterWallAnchoring}`);
+  }
+  if (formData.entertainmentCenterTvPlacement) {
+    internalAdjustments.push(
+      `TV placement on furniture (prep only, $0 — no wall mount): ${formData.entertainmentCenterTvPlacement}`
+    );
+  }
+  if (formData.entertainmentCenterFinalPositioning) {
+    internalAdjustments.push(
+      `Final positioning (prep only, $0): ${formData.entertainmentCenterFinalPositioning}`
+    );
+  }
+  if (formData.entertainmentCenterPackagingCleanup) {
+    internalAdjustments.push(
+      `Packaging cleanup (prep only, $0): ${formData.entertainmentCenterPackagingCleanup}`
+    );
+  }
+  if (formData.entertainmentCenterHasProductLink === "yes") {
+    const link = normalizeProductUrl(formData.entertainmentCenterProductLink);
+    internalAdjustments.push(`Product link (prep only, $0): ${link || "requested but empty"}`);
+    if (link) adjustments.push(`Product link provided: ${link}`);
+  }
+
+  if (blocksAutoPrice) {
+    adjustments.push(sectionCfg.label || "Six or more sections require personalized review");
+    adjustments.push(
+      "Six or more separate entertainment-center sections need a personalized review. Please use Get My Accurate Estimate and include product links, photos, and manuals when possible."
+    );
+
+    return {
+      hours: 0,
+      minMaterials: 0,
+      maxMaterials: 0,
+      laborMin: 0,
+      laborMax: 0,
+      totalMin: 0,
+      totalMax: 0,
+      materialsList: cfg.materials,
+      adjustments,
+      internalAdjustments,
+      leadMeta,
+      isManualReviewRequired: true,
+      manualReviewHeading: "Personalized Estimate Required",
+      manualReviewIntro:
+        "Six or more entertainment-center sections need a personalized Tamay review before pricing can be confirmed.",
+      manualReviewDisclaimer:
+        "Please submit product links, photos, and manuals with <strong>Get My Exact Quote</strong> so Tamay Enterprises can confirm scope and pricing.",
+      entertainmentCenterSectionAdderApplied: false,
+      entertainmentCenterRemovalDisposalRequested:
+        formData.entertainmentCenterExistingFurniture === "removeDispose",
+      entertainmentCenterManualReviewRequired: true
+    };
+  }
+
+  const base = cfg.base[formData.entertainmentCenterType] || cfg.base.notSure;
+  let laborMin = base.totalMin;
+  let laborMax = base.totalMax;
+  adjustments.push(base.label);
+  adjustments.push(
+    "Base price covers freestanding entertainment-center assembly and includes drawers/doors/shelves when included, glass components when included, supplied electronic-component connection when included, basic anti-tip anchoring when requested, final placement and leveling, in-home movement, and basic packaging cleanup"
+  );
+
+  laborMin += sectionCfg.totalMin || 0;
+  laborMax += sectionCfg.totalMax || 0;
+  if (sectionCfg.label) adjustments.push(sectionCfg.label);
+  if (sectionCfg.manualReview) {
+    internalAdjustments.push("MANUAL REVIEW: section count is notSure — no automatic section adder applied");
+  }
+
+  const oldFurniture =
+    cfg.oldFurniture[formData.entertainmentCenterExistingFurniture] || cfg.oldFurniture.no;
+  laborMin += oldFurniture.totalMin || 0;
+  laborMax += oldFurniture.totalMax || 0;
+  if (oldFurniture.label) adjustments.push(oldFurniture.label);
+  if (oldFurniture.manualReview) {
+    internalAdjustments.push(
+      "MANUAL REVIEW: existing entertainment center answer is notSure — no automatic removal fee applied"
+    );
+  }
+  if (formData.entertainmentCenterExistingFurniture === "moveOnly") {
+    internalAdjustments.push("Existing entertainment center moveOnly included in base ($0 adder)");
+  }
+
+  adjustments.push("Included with your Entertainment Center Assembly:");
+  (cfg.includedServices || []).forEach((item) => adjustments.push(`• ${item}`));
+
+  const manualReviewRequired =
+    formData.entertainmentCenterType === "notSure" ||
+    formData.entertainmentCenterSectionCount === "notSure" ||
+    formData.entertainmentCenterExistingFurniture === "notSure";
+
+  laborMin = Math.max(0, laborMin);
+  laborMax = Math.max(laborMin, laborMax);
+
+  return {
+    hours: base.hours || 2.5,
+    minMaterials: 0,
+    maxMaterials: 0,
+    laborMin,
+    laborMax,
+    totalMin: laborMin,
+    totalMax: laborMax,
+    materialsList: cfg.materials,
+    adjustments,
+    internalAdjustments,
+    leadMeta,
+    isManualReviewRequired: false,
+    entertainmentCenterSectionAdderApplied: sectionAdderApplied,
+    entertainmentCenterRemovalDisposalRequested:
+      formData.entertainmentCenterExistingFurniture === "removeDispose",
+    entertainmentCenterManualReviewRequired: manualReviewRequired
+  };
+}
+
 function resolveAiDesignLocationFactor(zipcodeRaw) {
   const zip = String(zipcodeRaw || "").trim().slice(0, 5);
   const entry = AI_DESIGN_LOCATION_FACTORS[zip];
@@ -3423,6 +3665,23 @@ function classifyJobSize(formData) {
     if (
       formData.officeChairType === "executiveGaming" ||
       ["2", "3"].includes(formData.officeChairQuantity)
+    ) {
+      return "medium";
+    }
+    return "small";
+  }
+
+  if (formData.projectType === "furniture_entertainment_center_assembly") {
+    if (
+      formData.entertainmentCenterSectionCount === "6OrMore" ||
+      formData.entertainmentCenterSectionCount === "4To5" ||
+      formData.entertainmentCenterType === "wallUnit"
+    ) {
+      return "large";
+    }
+    if (
+      formData.entertainmentCenterType === "large" ||
+      formData.entertainmentCenterSectionCount === "2To3"
     ) {
       return "medium";
     }
@@ -4420,6 +4679,9 @@ function getUploadedFiles() {
   if (projectType.value === "furniture_office_chair_assembly") {
     return projectFilesOfficeChair ? projectFilesOfficeChair.files : null;
   }
+  if (projectType.value === "furniture_entertainment_center_assembly") {
+    return projectFilesEntertainmentCenter ? projectFilesEntertainmentCenter.files : null;
+  }
   if (projectType.value === "tv_mount_install") {
     const tvFiles = document.getElementById("projectFilesTvMount");
     return tvFiles ? tvFiles.files : null;
@@ -4658,6 +4920,26 @@ function getFormData() {
         ? normalizeProductUrl(officeChairProductLink?.value || "")
         : "",
     notesOfficeChair: notesOfficeChair?.value.trim() || "",
+
+    entertainmentCenterType: entertainmentCenterType?.value || "",
+    entertainmentCenterSectionCount: entertainmentCenterSectionCount?.value || "",
+    entertainmentCenterBrand: entertainmentCenterBrand?.value || "",
+    entertainmentCenterAlreadyInRoom: entertainmentCenterAlreadyInRoom?.value || "",
+    entertainmentCenterExistingFurniture: entertainmentCenterExistingFurniture?.value || "",
+    entertainmentCenterHasStorageComponents: entertainmentCenterHasStorageComponents?.value || "",
+    entertainmentCenterHasTowersBridge: entertainmentCenterHasTowersBridge?.value || "",
+    entertainmentCenterHasGlass: entertainmentCenterHasGlass?.value || "",
+    entertainmentCenterHasElectronicComponents: entertainmentCenterHasElectronicComponents?.value || "",
+    entertainmentCenterWallAnchoring: entertainmentCenterWallAnchoring?.value || "",
+    entertainmentCenterTvPlacement: entertainmentCenterTvPlacement?.value || "",
+    entertainmentCenterFinalPositioning: entertainmentCenterFinalPositioning?.value || "",
+    entertainmentCenterPackagingCleanup: entertainmentCenterPackagingCleanup?.value || "",
+    entertainmentCenterHasProductLink: entertainmentCenterHasProductLink?.value || "no",
+    entertainmentCenterProductLink:
+      entertainmentCenterHasProductLink?.value === "yes"
+        ? normalizeProductUrl(entertainmentCenterProductLink?.value || "")
+        : "",
+    notesEntertainmentCenter: notesEntertainmentCenter?.value.trim() || "",
 
     ...plumbingBasics,
     ...plumbingDetails
@@ -5039,6 +5321,55 @@ async function submitLead(leadType, estimateData, additionalFormData = null) {
       payload.append("suggested_price", "manual_review");
     }
     payload.append("notes", formData.notesOfficeChair);
+  } else if (formData.projectType === "furniture_entertainment_center_assembly") {
+    const suggestedPrice = estimateData.isManualReviewRequired
+      ? null
+      : Math.round((estimateData.totalMin + estimateData.totalMax) / 2);
+    payload.append("entertainment_center_type", formData.entertainmentCenterType);
+    payload.append("entertainment_center_section_count", formData.entertainmentCenterSectionCount);
+    payload.append("entertainment_center_brand", formData.entertainmentCenterBrand);
+    payload.append("entertainment_center_already_in_room", formData.entertainmentCenterAlreadyInRoom);
+    payload.append("entertainment_center_existing_furniture", formData.entertainmentCenterExistingFurniture);
+    payload.append(
+      "entertainment_center_has_storage_components",
+      formData.entertainmentCenterHasStorageComponents
+    );
+    payload.append("entertainment_center_has_towers_bridge", formData.entertainmentCenterHasTowersBridge);
+    payload.append("entertainment_center_has_glass", formData.entertainmentCenterHasGlass);
+    payload.append(
+      "entertainment_center_has_electronic_components",
+      formData.entertainmentCenterHasElectronicComponents
+    );
+    payload.append("entertainment_center_wall_anchoring", formData.entertainmentCenterWallAnchoring);
+    payload.append("entertainment_center_tv_placement", formData.entertainmentCenterTvPlacement);
+    payload.append("entertainment_center_final_positioning", formData.entertainmentCenterFinalPositioning);
+    payload.append("entertainment_center_packaging_cleanup", formData.entertainmentCenterPackagingCleanup);
+    payload.append(
+      "entertainment_center_has_product_link",
+      formData.entertainmentCenterHasProductLink || "no"
+    );
+    payload.append("entertainment_center_product_link", formData.entertainmentCenterProductLink || "");
+    payload.append("entertainment_center_notes", formData.notesEntertainmentCenter);
+    payload.append(
+      "entertainment_center_section_adder_applied",
+      estimateData.entertainmentCenterSectionAdderApplied ? "true" : "false"
+    );
+    payload.append(
+      "entertainment_center_removal_disposal_requested",
+      formData.entertainmentCenterExistingFurniture === "removeDispose" ? "true" : "false"
+    );
+    payload.append(
+      "entertainment_center_manual_review_required",
+      estimateData.entertainmentCenterManualReviewRequired || estimateData.isManualReviewRequired
+        ? "true"
+        : "false"
+    );
+    if (!estimateData.isManualReviewRequired) {
+      payload.append("suggested_price", currency(suggestedPrice));
+    } else {
+      payload.append("suggested_price", "manual_review");
+    }
+    payload.append("notes", formData.notesEntertainmentCenter);
   } else if (isPlumbingProject(formData.projectType)) {
     payload.append("plumbing_reason", formData.plumbingReason);
     payload.append("plumbing_location", formData.plumbingLocation);
@@ -5313,6 +5644,22 @@ function validateStep(step) {
         return false;
       }
     }
+
+    if (projectType.value === "furniture_entertainment_center_assembly") {
+      if (
+        !entertainmentCenterType?.value ||
+        !entertainmentCenterSectionCount?.value ||
+        !entertainmentCenterBrand?.value ||
+        !entertainmentCenterAlreadyInRoom?.value ||
+        !entertainmentCenterExistingFurniture?.value
+      ) {
+        showValidation(
+          validationStep3,
+          "Please complete the entertainment center basics before continuing."
+        );
+        return false;
+      }
+    }
   }
 
   if (step === 4) {
@@ -5415,6 +5762,17 @@ function validateStep(step) {
         officeChairHasProductLink?.value === "yes" &&
         officeChairProductLink?.value.trim() &&
         !isSoftValidProductUrl(officeChairProductLink.value)
+      ) {
+        showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
+        return false;
+      }
+    }
+
+    if (projectType.value === "furniture_entertainment_center_assembly") {
+      if (
+        entertainmentCenterHasProductLink?.value === "yes" &&
+        entertainmentCenterProductLink?.value.trim() &&
+        !isSoftValidProductUrl(entertainmentCenterProductLink.value)
       ) {
         showValidation(validationStep4, "Please enter a valid product link, or clear the field to continue.");
         return false;
@@ -5639,6 +5997,7 @@ function resetExperience() {
   updateCoffeeTableConditionalFields();
   updateNightstandConditionalFields();
   updateOfficeChairConditionalFields();
+  updateEntertainmentCenterConditionalFields();
   updatePlumbingConditionalUI();
   updatePropertyTypeMessage();
   hideAllEndStates();
@@ -5747,6 +6106,12 @@ if (officeChairAssemblyProjectOption) {
   });
 }
 
+if (entertainmentCenterAssemblyProjectOption) {
+  entertainmentCenterAssemblyProjectOption.addEventListener("click", () => {
+    setSelectedProject("furniture_entertainment_center_assembly", "Entertainment Center Assembly");
+  });
+}
+
 plumbingFaucetProjectOption.addEventListener("click", () => {
   setSelectedProject("plumbing_replace_faucet", "Replace Faucet");
 });
@@ -5824,6 +6189,12 @@ if (officeChairHasProductLink) {
   officeChairHasProductLink.addEventListener("change", updateOfficeChairConditionalFields);
 }
 if (officeChairQuantity) officeChairQuantity.addEventListener("change", updateOfficeChairConditionalFields);
+if (entertainmentCenterHasProductLink) {
+  entertainmentCenterHasProductLink.addEventListener("change", updateEntertainmentCenterConditionalFields);
+}
+if (entertainmentCenterSectionCount) {
+  entertainmentCenterSectionCount.addEventListener("change", updateEntertainmentCenterConditionalFields);
+}
 
 setupAccordions();
 updateDresserConditionalFields();
@@ -5835,6 +6206,7 @@ updateBookcaseConditionalFields();
 updateCoffeeTableConditionalFields();
 updateNightstandConditionalFields();
 updateOfficeChairConditionalFields();
+updateEntertainmentCenterConditionalFields();
 
 nextToStep2.addEventListener("click", () => {
   if (validateStep(1)) showStep(2);
@@ -5893,6 +6265,8 @@ form.addEventListener("submit", async (e) => {
     latestEstimate = calculateNightstandAssemblyEstimate(formData);
   } else if (formData.projectType === "furniture_office_chair_assembly") {
     latestEstimate = calculateOfficeChairAssemblyEstimate(formData);
+  } else if (formData.projectType === "furniture_entertainment_center_assembly") {
+    latestEstimate = calculateEntertainmentCenterAssemblyEstimate(formData);
   } else if (isPlumbingProject(formData.projectType)) {
     latestEstimate = calculatePlumbingEstimate(formData);
   } else {

@@ -224,6 +224,12 @@
                         <p>Assemble office and gaming chairs, including multi-chair jobs, adjustments, and packaging cleanup.</p>
                         <div class="badge live">Available</div>
                       </div>
+
+                      <div class="project-option selectable" id="entertainmentCenterAssemblyProjectOption" data-value="furniture_entertainment_center_assembly" data-display="Entertainment Center Assembly">
+                        <h4>Entertainment Center Assembly</h4>
+                        <p>Assemble media consoles, wall units, and modular entertainment furniture with optional anchoring and packaging cleanup.</p>
+                        <div class="badge live">Available</div>
+                      </div>
                     </div>
                   </div>
 
@@ -900,6 +906,61 @@
 
                 <label for="officeChairExistingFurniture">Do existing office chairs need to be moved or removed?</label>
                 <select id="officeChairExistingFurniture">
+                  <option value="no">No</option>
+                  <option value="moveOnly">Move only</option>
+                  <option value="removeDispose">Remove and dispose</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+              </div>
+
+              <!-- ENTERTAINMENT CENTER ASSEMBLY BASICS -->
+              <div id="entertainmentCenterBasicsSection" class="hidden">
+                <label for="entertainmentCenterType">What type of entertainment center are we assembling?</label>
+                <select id="entertainmentCenterType">
+                  <option value="compact">Compact (small console or low-profile media center)</option>
+                  <option value="standard">Standard (shelves, doors, or storage)</option>
+                  <option value="large">Large (multiple cabinets, towers, shelves, or bridge)</option>
+                  <option value="wallUnit">Wall unit (multi-piece or modular entertainment system)</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="entertainmentCenterSectionCount">How many separate furniture sections or cabinets are included?</label>
+                <select id="entertainmentCenterSectionCount">
+                  <option value="1">1</option>
+                  <option value="2To3">2 to 3</option>
+                  <option value="4To5">4 to 5</option>
+                  <option value="6OrMore">6 or more</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Count physically separate sections such as the main console, side towers, upper bridge, or modular cabinets — not individual shelves, drawers, or doors.
+                </div>
+                <div class="small-note hidden" id="entertainmentCenterSectionHelpNote">
+                  Six or more sections require a personalized review. An automatic final price is not available for this quantity. Please provide a product link or photos when possible.
+                </div>
+
+                <label for="entertainmentCenterBrand">What brand or store is it from?</label>
+                <select id="entertainmentCenterBrand">
+                  <option value="ikea">IKEA</option>
+                  <option value="wayfair">Wayfair</option>
+                  <option value="amazon">Amazon</option>
+                  <option value="walmart">Walmart</option>
+                  <option value="target">Target</option>
+                  <option value="ashley">Ashley</option>
+                  <option value="roomsToGo">Rooms To Go</option>
+                  <option value="bestBuy">Best Buy</option>
+                  <option value="otherNotSure">Other / not sure</option>
+                </select>
+
+                <label for="entertainmentCenterAlreadyInRoom">Are all boxes already in the room where the entertainment center will be assembled?</label>
+                <select id="entertainmentCenterAlreadyInRoom">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="entertainmentCenterExistingFurniture">Does an existing entertainment center need to be moved or removed?</label>
+                <select id="entertainmentCenterExistingFurniture">
                   <option value="no">No</option>
                   <option value="moveOnly">Move only</option>
                   <option value="removeDispose">Remove and dispose</option>
@@ -1937,6 +1998,91 @@
 
                 <label for="notesOfficeChair">Anything else we should know?</label>
                 <textarea id="notesOfficeChair" placeholder="Share access notes, stairs, or other details."></textarea>
+              </div>
+
+              <!-- ENTERTAINMENT CENTER ASSEMBLY DETAILS -->
+              <div id="entertainmentCenterDetailsSection" class="hidden">
+                <label for="entertainmentCenterHasStorageComponents">Does the entertainment center include drawers, doors, or adjustable shelves?</label>
+                <select id="entertainmentCenterHasStorageComponents">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="entertainmentCenterHasTowersBridge">Does it include side towers, an upper bridge, or connecting sections?</label>
+                <select id="entertainmentCenterHasTowersBridge">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="entertainmentCenterHasGlass">Does it include glass doors, glass shelves, or glass panels?</label>
+                <select id="entertainmentCenterHasGlass">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+
+                <label for="entertainmentCenterHasElectronicComponents">Does it include built-in lighting, a power strip, USB ports, speakers, or other supplied electronic components?</label>
+                <select id="entertainmentCenterHasElectronicComponents">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Covers assembling and connecting product-supplied components to an existing accessible outlet. Household electrical or in-wall wiring work is not included.
+                </div>
+
+                <label for="entertainmentCenterWallAnchoring">Would you like the entertainment center secured to the wall for stability?</label>
+                <select id="entertainmentCenterWallAnchoring">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  Basic anti-tip wall anchoring is included when hardware is available and the wall location is normally accessible.
+                </div>
+
+                <label for="entertainmentCenterTvPlacement">Will a television be placed on or inside the entertainment center?</label>
+                <select id="entertainmentCenterTvPlacement">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                  <option value="notSure">Not sure</option>
+                </select>
+                <div class="small-note">
+                  This module does not include wall mounting a television. Use the separate TV Mount Installation service if needed.
+                </div>
+
+                <label for="entertainmentCenterFinalPositioning">Would you like the unit placed, leveled, and adjusted in its final position?</label>
+                <select id="entertainmentCenterFinalPositioning">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="entertainmentCenterPackagingCleanup">Should we remove the boxes and packaging from the work area?</label>
+                <select id="entertainmentCenterPackagingCleanup">
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+
+                <label for="entertainmentCenterHasProductLink">Do you have a product link?</label>
+                <select id="entertainmentCenterHasProductLink">
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+
+                <div id="entertainmentCenterProductLinkField" class="hidden">
+                  <label for="entertainmentCenterProductLink">Paste the product link</label>
+                  <input type="url" id="entertainmentCenterProductLink" placeholder="https://..." inputmode="url" autocomplete="url" />
+                  <div class="small-note">You may paste a link from IKEA, Wayfair, Amazon, Walmart, Target, Ashley, Rooms To Go, Best Buy, the manufacturer, or another retailer.</div>
+                </div>
+
+                <label for="projectFilesEntertainmentCenter">Upload photos, videos, or PDFs (optional)</label>
+                <input type="file" id="projectFilesEntertainmentCenter" accept=".jpg,.jpeg,.png,.webp,.pdf,.mp4,.mov,.webm,video/*" multiple />
+                <div class="small-note">Optional photos, videos, product screenshots, assembly manuals, or room-condition photos help us prepare for the job.</div>
+
+                <label for="notesEntertainmentCenter">Anything else we should know?</label>
+                <textarea id="notesEntertainmentCenter" placeholder="Share access notes, stairs, wall conditions, or other details."></textarea>
               </div>
 
               <!-- AI DESIGN DETAILS -->
